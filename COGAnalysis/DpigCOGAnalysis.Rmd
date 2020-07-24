@@ -1,0 +1,152 @@
+---
+title: "*Dolosigranulum pigrum* COG ANALYSIS"
+output: rmarkdown::github_document
+---
+
+```{r, message = FALSE, include = FALSE}
+library(tidyverse)
+library(readr)
+library(knitr)
+library(rstatix)
+library(ggpubr)
+library(RColorBrewer)
+```
+
+## Data Input
+
+We import the XXXXX and select the most relevant variables for the functional analysis:
+```{r message=FALSE}
+DpigPangenome <- read_csv("Dpi_Prokka_Pan_t28_gene_clusters_summary.csv")
+DpigPangenome <- DpigPangenome %>%
+  select(unique_id, gene_cluster_id, bin_name, genome_name, num_genomes_gene_cluster_has_hits,`Prokka:Prodigal_ACC`, `Prokka:Prodigal`, COG_CATEGORY, COG_FUNCTION, COG_FUNCTION_ACC)
+```
+
+New variable "accessory_vs_core" where we define "core" as "MC_core" + "SC_core" + "soft_core" and "accessory" as "shell" + "cloud":
+```{r}
+DpigPangenome<-DpigPangenome %>%
+  mutate(accessory_vs_core=ifelse(bin_name=="MC_core"|bin_name=="SC_core"|bin_name=="soft_core","core","accessory"))
+```
+
+New variables to identify the ambiguous calls (both COG category and COG function) at the gene level. If the COG_CATEGORY is ambiguous (for example G|S|M) it gets labeled like a mix category ("mixC"). If the COG_FUNCTION_ACC is ambiguous (for example COG4409|COG4932) it gets labeled like a mix function ("mixF"). Also missing values flagged as "NA".
+```{r}
+DpigPangenome$COG_CATEGORY_CLEAN <- DpigPangenome$COG_CATEGORY
+DpigPangenome$COG_CATEGORY_CLEAN[is.na(DpigPangenome$COG_CATEGORY)]<-"NA"
+DpigPangenome$COG_CATEGORY_CLEAN[grepl('|', DpigPangenome$COG_CATEGORY,fixed=TRUE)]<-"mixC"
+DpigPangenome$COG_FUNCTION_CLEAN <- DpigPangenome$COG_FUNCTION_ACC
+DpigPangenome$COG_FUNCTION_CLEAN[is.na(DpigPangenome$COG_FUNCTION_CLEAN)]<-"NA"
+DpigPangenome$COG_FUNCTION_CLEAN[grepl('|', DpigPangenome$COG_FUNCTION_ACC,fixed=TRUE)]<-"mixF"
+```
+
+Adding info at the gene level in a Summary Table: 
+```{r}
+SummTable <- data.frame(
+  "Analysis" = c("Steph", "NewAnvio", "NewProkka"),
+  "GeneCalls" = c(nrow(DpigPangenome), nrow(dpi_enrich_mcl10), nrow(dpi_enrich_prokka)), 
+  "COG_NA" = c(sum(is.na(DpigPangenome$COG_FUNCTION_ACC)), sum(is.na(dpi_enrich_mcl10$COG_FUNCTION_ACC)), sum(is.na(dpi_enrich_prokka$COG_FUNCTION_ACC))),
+  "COG_mixF" = c(nrow(DpigPangenome %>% filter(COG_FUNCTION_CLEAN =="mixF")), nrow(dpi_enrich_mcl10 %>% filter(COG_FUNCTION_CLEAN =="mixF")), nrow(dpi_enrich_prokka %>% filter(COG_FUNCTION_CLEAN =="mixF"))),
+  "COG_mixC" = c(nrow(DpigPangenome %>% filter(COG_CATEGORY_CLEAN =="mixC")), nrow(dpi_enrich_mcl10 %>% filter(COG_CATEGORY_CLEAN =="mixC")), nrow(dpi_enrich_prokka %>% filter(COG_CATEGORY_CLEAN =="mixC")))
+)
+SummTable$COG_F_nonambi <- SummTable$GeneCalls - SummTable$COG_NA - SummTable$COG_mixF
+SummTable$COG_C_nonambi <- SummTable$GeneCalls - SummTable$COG_NA - SummTable$COG_mixC
+```
+
+
+## Analysis by individual genes (Only Steph data)
+
+```{r}
+DpigPangenome_Genome<-DpigPangenome %>%
+  group_by(genome_name, accessory_vs_core, COG_CATEGORY_CLEAN) %>%
+    summarise(num_genes=n()) %>%
+  group_by(genome_name, accessory_vs_core) %>%
+    mutate(num_genes_genome_section=sum(num_genes)) %>%
+    mutate(proportion=100*(num_genes/num_genes_genome_section)) %>%
+  group_by(genome_name) %>%
+    mutate(num_genes_genome=sum(num_genes)) %>%
+    mutate(proportion_genome=100*(num_genes/num_genes_genome))
+  
+DpigPangenome_Genome$COG_CATEGORY_CLEAN <- factor(DpigPangenome_Genome$COG_CATEGORY_CLEAN, levels = c("C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", 'V', 'X', 'mixC', "NA"))
+DpigPangenome_Genome$accessory_vs_core <- factor(DpigPangenome_Genome$accessory_vs_core)
+```
+
+```{r}
+colourCount = length(unique(DpigPangenome_Genome$COG_CATEGORY_CLEAN))
+getPalette = colorRampPalette(brewer.pal(9, "Set1"))
+```
+
+```{r, accesory.byCOG.byGenome}
+ggplot(filter(DpigPangenome_Genome, accessory_vs_core == "accessory"), aes(x=genome_name, y=num_genes, fill=COG_CATEGORY_CLEAN)) +
+  geom_bar(stat="identity") + 
+  scale_y_continuous(expand = c(0,0)) + 
+  scale_fill_manual(values = getPalette(colourCount)) + 
+  labs(fill="COG Categories", x="", y= "Number of Genes", title="Accesory genes by COG category in the 28Dpig strains") +
+  theme_classic() + 
+  theme(axis.text.x = element_text(size=9, angle=90)) +
+  theme(legend.position="right",legend.key.size = unit(0.45, "cm")) +
+  guides(fill=guide_legend(ncol=1, title.position = "top")) 
+```
+```{r, accessory_vs_core.byCOG.proportion}
+ggplot(DpigPangenome_Genome, aes(x = COG_CATEGORY_CLEAN, y = proportion, color = accessory_vs_core)) +
+  geom_boxplot(outlier.size = 0.5) +
+  scale_y_continuous(expand = c(0,0)) + 
+  labs(fill="", x="COG Categories", y= "% Accesory/Core", title="Accesory vs Core by COG category") +
+  theme_classic()
+```
+```{r, accessory_vs_core.byCOG.proportion_genome}
+ggplot(DpigPangenome_Genome, aes(x = COG_CATEGORY_CLEAN, y = proportion_genome, color = accessory_vs_core)) +
+  geom_boxplot(outlier.size = 0.5) +
+  scale_y_continuous(expand = c(0,0)) + 
+  labs(fill="", x="COG Categories", y= "% Genome", title="Accesory vs Core by COG category") +
+  theme_classic()
+```
+
+```{r, accessory_vs_core.sum}
+ggplot(DpigPangenome_Genome, aes(x = accessory_vs_core, y = num_genes, fill = COG_CATEGORY_CLEAN)) +
+  stat_summary(fun=sum ,geom="bar", position = "stack") +
+  scale_fill_manual(values = getPalette(colourCount)) +
+  scale_y_continuous(expand = c(0,0)) + 
+  labs(fill="COG Categories", x="", y= "Number of Genes", title="Accesory vs Core (fun=sum)") +
+  theme_classic()
+```
+```{r, accessory_vs_core.mean}
+ggplot(DpigPangenome_Genome, aes(x = accessory_vs_core, y = num_genes, fill = COG_CATEGORY_CLEAN)) +
+  stat_summary(fun=mean ,geom="bar", position = "stack") +
+  scale_fill_manual(values = getPalette(colourCount)) +
+  scale_y_continuous(expand = c(0,0)) + 
+  labs(fill="COG Categories", x="", y= "Average Number of Genes per Genome", title="Accesory vs Core (fun=mean)") +
+  theme_classic()
+```
+```{r, accessory_vs_core.sum.proportions}
+ggplot(DpigPangenome_Genome, aes(x = accessory_vs_core, y = proportion, fill = COG_CATEGORY_CLEAN)) +
+  stat_summary(fun=sum ,geom="bar", position = "fill") +
+  scale_fill_manual(values = getPalette(colourCount)) +
+  scale_y_continuous(expand = c(0,0)) + 
+  labs(fill="COG Categories", x="", y= "% Accesory/Core", title="Accesory vs Core (%)") +
+  theme_classic()
+```
+```{r, accessory_vs_core.sum.proportion_genome}
+ggplot(DpigPangenome_Genome, aes(x = accessory_vs_core, y = proportion_genome, fill = COG_CATEGORY_CLEAN)) +
+  stat_summary(fun=sum ,geom="bar", position = "fill") +
+  scale_fill_manual(values = getPalette(colourCount)) +
+  scale_y_continuous(expand = c(0,0)) + 
+  labs(fill="COG Categories", x="", y= "% Genome", title="Accesory vs Core (%Genome)") +
+  theme_classic()
+```
+
+This plots can be used to evaluate individual COG categories:
+```{r, eval=FALSE}
+ggpaired(filter(DpigPangenome_Genome, COG_CATEGORY_CLEAN == "X"), x = "accessory_vs_core", y = "proportion", 
+         order = c("accessory", "core"),
+         ylab = "num_genes", xlab = "accessory_vs_core")
+```
+
+```{r}
+stat.wilcox<- compare_means(num_genes ~ accessory_vs_core, DpigPangenome_Genome, method="wilcox.test", p.adjust="fdr", group.by = "COG_CATEGORY_CLEAN")
+stat.wilcox.proportions<- compare_means(proportion ~ accessory_vs_core, DpigPangenome_Genome, method="wilcox.test", p.adjust="fdr", group.by = "COG_CATEGORY_CLEAN")
+stat.wilcox.proportions.genome<- compare_means(proportion_genome ~ accessory_vs_core, DpigPangenome_Genome, method="wilcox.test", p.adjust="fdr", group.by = "COG_CATEGORY_CLEAN")
+```
+
+https://ftp.ncbi.nih.gov/pub/COG/COG2014/static/lists/listCOGs.html
+
+
+
+
