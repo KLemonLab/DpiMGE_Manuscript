@@ -18,13 +18,22 @@ We import the output of `anvi-summarize` and select the most relevant variables 
 ```{r message=FALSE}
 DpigPangenome <- read_csv("Dpi_Prokka_Pan_t28_gene_clusters_summary.csv")
 DpigPangenome <- DpigPangenome %>%
-  select(unique_id, gene_cluster_id, bin_name, genome_name, num_genomes_gene_cluster_has_hits,`Prokka:Prodigal_ACC`, `Prokka:Prodigal`, COG_CATEGORY, COG_FUNCTION, COG_FUNCTION_ACC)
+  select(unique_id, gene_cluster_id, bin_name, genome_name, num_genomes_gene_cluster_has_hits, num_genes_in_gene_cluster, `Prokka:Prodigal_ACC`, `Prokka:Prodigal`, COG_CATEGORY, COG_FUNCTION, COG_FUNCTION_ACC)
 ```
 
 New variable "accessory_vs_core" where we define "core" as "MC_core"+"SC_core"+"soft_core" and "accessory" as "shell"+"cloud":
 ```{r}
 DpigPangenome<-DpigPangenome %>%
   mutate(accessory_vs_core=ifelse(bin_name=="MC_core"|bin_name=="SC_core"|bin_name=="soft_core","core","accessory"))
+```
+
+The number of genes and proportions of accessory vs. core are:
+```{r, message=FALSE}
+nrow(DpigPangenome %>% group_by(gene_cluster_id) %>% filter(accessory_vs_core =="accessory") %>% summarise)
+nrow(DpigPangenome %>% group_by(gene_cluster_id) %>% filter(accessory_vs_core =="core") %>% summarise)
+
+100*nrow(DpigPangenome %>% group_by(gene_cluster_id) %>% filter(accessory_vs_core =="accessory") %>% summarise)/nrow(DpigPangenome %>% group_by(gene_cluster_id) %>% summarise)
+100*nrow(DpigPangenome %>% group_by(gene_cluster_id) %>% filter(accessory_vs_core =="core") %>% summarise)/nrow(DpigPangenome %>% group_by(gene_cluster_id) %>% summarise)
 ```
 
 New variables to identify the ambiguous COG annotations calls, both at the COG category and COG function levels.
@@ -50,7 +59,6 @@ DpigPangenome$UnambiguousCategory[DpigPangenome$COG_CATEGORY_CLEAN =="R"]<- "Amb
 DpigPangenome$UnambiguousCategory[DpigPangenome$COG_CATEGORY_CLEAN =="mixC"]<- "Ambiguous"
 ```
 
-
 ## Data Summary
 
 Summary of GOC annotated genes:
@@ -75,45 +83,59 @@ Summary$Percentage <- round(100*(Summary$Count/49418),2)
 ```{r}
 kable(Summary)
 ```
-60.65% of the gene calls are Unambiguous
+60.65% of the gene calls are Unambiguous: this is COG Category is Non-assigned, Function Unknown, General function predictions only or a mixed Category.
 
+## COG analysis corrected by number of genes in each GC
 
-## COG analysis 
+This analysis was done at the pangenomic gene cluster level (GC). Since many gene clusters had mixed COG category assignments a solution is to assign each individual gene call to their corresponding Genome/AccessoryvsCore/COG grouping weighting their contribution by dividing their count by the number of genes in their GC.
 
-This analysis was done at the individual gene level across genomes, not at the pangenomic gene cluster level, since many gene clusters had mixed COG category assignments, decreasing even more the pool of unambiguous calls.
+The table "DpigCOGsbyGC" groups the genes by genome; and inside genomes by accessory vs. core status, and nested inside as the unambiguous COG category. But, in this case, instead of counting the elements in each group we calculated the sum of 1/num_genes_in_gene_cluster.
 
-The table "DpigCOGs" groups the genes by genome; and inside genomes by accessory vs. core status, and nested inside as the unambiguous COG category. Proportions were calculated for each COG category relative to each pangenomic bin (Accesory/Core) and also relative to each genome.
 ```{r, message=FALSE}
-DpigCOGs<-DpigPangenome %>%
+DpigCOGsbyGC <-DpigPangenome %>%
   group_by(genome_name, accessory_vs_core, UnambiguousCategory) %>%
-    summarise(num_genes=n()) %>%
-  group_by(genome_name, accessory_vs_core) %>%
-    mutate(num_genes_pangenome_bin=sum(num_genes)) %>%
-    mutate(proportion_pangenome_bin=100*(num_genes/num_genes_pangenome_bin)) %>%
-  group_by(genome_name) %>%
-    mutate(num_genes_genome=sum(num_genes)) %>%
-    mutate(proportion_genome=100*(num_genes/num_genes_genome))
+    summarise(num_corrected_genes=sum(1/num_genes_in_gene_cluster))
+```
+
+The total sum of all values in the `num_corrected_genes` variable should add up to the number of CGs:
+```{r, message=FALSE}
+sum(DpigCOGsbyGC$num_corrected_genes)
+nrow(DpigPangenome %>% group_by(gene_cluster_id) %>% summarise)
 ```
 
 Defining order of COG categories and Strains
 ```{r}
-DpigCOGs$accessory_vs_core <- factor(DpigCOGs$accessory_vs_core)
+DpigCOGsbyGC$accessory_vs_core <- factor(DpigCOGsbyGC$accessory_vs_core)
 
-DpigCOGs$UnambiguousCategory <- factor(DpigCOGs$UnambiguousCategory, levels = c("D","M","N","O","T","U","V","J","K","L","X","C","E","F","G","H","I","P","Q","Ambiguous"))
+DpigCOGsbyGC$UnambiguousCategory <- factor(DpigCOGsbyGC$UnambiguousCategory, levels = c("D","M","N","O","T","U","V","J","K","L","X","C","E","F","G","H","I","P","Q","Ambiguous"))
 COGlabels = c("Cell cycle control, cell division, chromosome partitioning","Cell wall/membrane/envelope biogenesis","Cell Motility","Post-translational modification, protein turnover, and chaperones","Signal transduction mechanisms","Intracellular trafficking, secretion, and vesicular transport","Defense mechanisms","Translation, ribosomal structure and biogenesis","Transcription","Replication, recombination and repair","Mobilome: prophages, transposons","Energy production and conversion","Amino acid transport and metabolism","Nucleotide transport and metabolism","Carbohydrate transport and metabolism","Coenzyme transport and metabolism","Lipid transport and metabolism","Inorganic ion transport and metabolism","Secondary metabolites biosynthesis, transport, and catabolism","Ambiguous")
 
-DpigCOGs$genome_name <- factor(DpigCOGs$genome_name, levels = c("Dpigrum_ATCC_51524", "Dpigrum_KPL1939_CDC4792_99","Dpigrum_KPL3250","Dpigrum_KPL1922_CDC39_95","Dpigrum_KPL1934_CDC4709_98","Dpigrum_KPL1930_CDC2949_98","Dpigrum_KPL1933_CDC4545_98","Dpigrum_KPL3033","Dpigrum_KPL3256","Dpigrum_KPL3264","Dpigrum_KPL1914","Dpigrum_KPL1931_CDC4294_98","Dpigrum_KPL3077","Dpigrum_KPL1932_CDC4420_98","Dpigrum_KPL1938_CDC4791_99","Dpigrum_KPL3050","Dpigrum_KPL3274","Dpigrum_KPL1937_CDC4199_99","Dpigrum_KPL3246","Dpigrum_KPL3070","Dpigrum_KPL3084","Dpigrum_KPL3911","Dpigrum_KPL3043","Dpigrum_KPL3065","Dpigrum_KPL3086","Dpigrum_KPL3090","Dpigrum_KPL3052","Dpigrum_KPL3069"))
+DpigCOGsbyGC$genome_name <- factor(DpigCOGsbyGC$genome_name, levels = c("Dpigrum_ATCC_51524", "Dpigrum_KPL1939_CDC4792_99","Dpigrum_KPL3250","Dpigrum_KPL1922_CDC39_95","Dpigrum_KPL1934_CDC4709_98","Dpigrum_KPL1930_CDC2949_98","Dpigrum_KPL1933_CDC4545_98","Dpigrum_KPL3033","Dpigrum_KPL3256","Dpigrum_KPL3264","Dpigrum_KPL1914","Dpigrum_KPL1931_CDC4294_98","Dpigrum_KPL3077","Dpigrum_KPL1932_CDC4420_98","Dpigrum_KPL1938_CDC4791_99","Dpigrum_KPL3050","Dpigrum_KPL3274","Dpigrum_KPL1937_CDC4199_99","Dpigrum_KPL3246","Dpigrum_KPL3070","Dpigrum_KPL3084","Dpigrum_KPL3911","Dpigrum_KPL3043","Dpigrum_KPL3065","Dpigrum_KPL3086","Dpigrum_KPL3090","Dpigrum_KPL3052","Dpigrum_KPL3069"))
 strainlabels = c("ATCC 51524", "CDC 4792-99","KPL3250","CDC39-95","CDC 4709-98","CDC 2949-98","CDC 4545-98","KPL3033","KPL3256","KPL3264","KPL1914","CDC 4294-98","KPL3077","CDC 4420-98","CDC 4791-99","KPL3050","KPL3274","CDC 4199-99","KPL3246","KPL3070","KPL3084","KPL3911","KPL3043","KPL3065","KPL3086","KPL3090","KPL3052","KPL3069")
 ```
 
-### COG Plots 
+Color Palette
 ```{r}
-colourCount = length(unique(DpigCOGs$UnambiguousCategory))
+colourCount = length(unique(DpigCOGsbyGC$UnambiguousCategory))
 getPalette = colorRampPalette(brewer.pal(9, "Set1"))
 ```
 
+### COG Plots Accessory vs. Core
+
+```{r, accessory_vs_core}
+ggplot(DpigCOGsbyGC, aes(x = accessory_vs_core, y = num_corrected_genes, fill = UnambiguousCategory)) +
+  stat_summary(fun=sum ,geom="bar", position = "stack") +
+  scale_fill_manual(values = getPalette(colourCount), labels=COGlabels) +
+  scale_y_continuous(expand = c(0,0)) + 
+  labs(fill="COG Categories", x="", y= "Number of Genes", title="Total number of genes in the Accesory vs Core (fun=sum)") +
+  theme_classic() +
+  theme(legend.key.size = unit(0.45, "cm")) 
+```
+
+### COG Plots by Genome
+
 ```{r, accesory.byCOG.byGenome}
-ggplot(filter(DpigCOGs, accessory_vs_core == "accessory"), aes(x=genome_name, y=num_genes, fill=UnambiguousCategory)) +
+ggplot(filter(DpigCOGsbyGC, accessory_vs_core == "accessory"), aes(x=genome_name, y=num_corrected_genes, fill=UnambiguousCategory)) +
   geom_bar(stat="identity") + 
   scale_y_continuous(expand = c(0,0)) + 
   scale_x_discrete(labels = strainlabels) +
@@ -126,7 +148,7 @@ ggplot(filter(DpigCOGs, accessory_vs_core == "accessory"), aes(x=genome_name, y=
 ```
 
 ```{r, accesory.byUnambiguousCOG.byGenome}
-ggplot(filter(DpigCOGs %>% filter(UnambiguousCategory !="Ambiguous"), accessory_vs_core == "accessory"), aes(x=genome_name, y=num_genes, fill=UnambiguousCategory)) +
+ggplot(filter(DpigCOGsbyGC %>% filter(UnambiguousCategory !="Ambiguous"), accessory_vs_core == "accessory"), aes(x=genome_name, y=num_corrected_genes, fill=UnambiguousCategory)) +
   geom_bar(stat="identity") + 
   scale_y_continuous(expand = c(0,0)) + 
   scale_x_discrete(labels = strainlabels) +
@@ -138,93 +160,54 @@ ggplot(filter(DpigCOGs %>% filter(UnambiguousCategory !="Ambiguous"), accessory_
   guides(fill=guide_legend(ncol=1, title.position = "top")) 
 ```
 
-```{r, accessory_vs_core.sum}
-ggplot(DpigCOGs, aes(x = accessory_vs_core, y = num_genes, fill = UnambiguousCategory)) +
-  stat_summary(fun=sum ,geom="bar", position = "stack") +
-  scale_fill_manual(values = getPalette(colourCount), labels=COGlabels) +
-  scale_y_continuous(expand = c(0,0)) + 
-  labs(fill="COG Categories", x="", y= "Number of Genes", title="Total number of genes in the Accesory vs Core (fun=sum)") +
-  theme_classic() +
-  theme(legend.key.size = unit(0.45, "cm")) 
-```
-```{r, accessory_vs_core.mean}
-ggplot(DpigCOGs, aes(x = accessory_vs_core, y = num_genes, fill = UnambiguousCategory)) +
-  stat_summary(fun=mean ,geom="bar", position = "stack") +
-  scale_fill_manual(values = getPalette(colourCount), labels=COGlabels) +
-  scale_y_continuous(expand = c(0,0)) + 
-  labs(fill="COG Categories", x="", y= "Average Number of Genes per Genome", title="Average Number of Genes in the Accesory vs Core (fun=mean)") +
-  theme_classic() +
-  theme(legend.key.size = unit(0.45, "cm"))
-```
-```{r, accessory_vs_core.sum.proportions}
-ggplot(DpigCOGs, aes(x = accessory_vs_core, y = proportion_pangenome_bin, fill = UnambiguousCategory)) +
-  stat_summary(fun=mean, geom="bar", position = "stack") +
-  scale_fill_manual(values = getPalette(colourCount), labels=COGlabels) +
-  scale_y_continuous(expand = c(0,0)) + 
-  labs(fill="COG Categories", x="", y= "% Accesory/Core", title="Accesory vs Core (%)") +
-  theme_classic() +
-  theme(legend.key.size = unit(0.45, "cm")) 
-```
-```{r, accessory_vs_core.sum.proportion_genome}
-ggplot(DpigCOGs, aes(x = accessory_vs_core, y = proportion_genome, fill = UnambiguousCategory)) +
-  stat_summary(fun=mean, geom="bar", position = "stack") +
-  scale_fill_manual(values = getPalette(colourCount), labels=COGlabels) +
-  scale_y_continuous(expand = c(0,0)) + 
-  labs(fill="COG Categories", x="", y= "% Genome", title="Accesory vs Core (%Genome)") +
-  theme_classic() +
-  theme(legend.key.size = unit(0.45, "cm")) 
-```
-
-This plot can be used to evaluate individual COG categories. Substitute UnambiguousCategory == "X" for the desired COG category.
-```{r, eval=FALSE}
-ggpaired(filter(DpigCOGs, UnambiguousCategory == "X"), x = "accessory_vs_core", y = "proportion_pangenome_bin", 
-         order = c("accessory", "core"),
-         ylab = "num_genes", xlab = "accessory_vs_core") +
-    theme_classic()
-```
+### COG Plots by COG Category
 
 ```{r, accessory_vs_core.byCOG}
-ggplot(DpigCOGs, aes(x = UnambiguousCategory, y = num_genes, fill = accessory_vs_core)) +
+ggplot(DpigCOGsbyGC, aes(x = UnambiguousCategory, y = num_corrected_genes, fill = accessory_vs_core)) +
   stat_summary(fun=sum ,geom="bar", position = "stack") +
   scale_y_continuous(expand = c(0,0)) + 
-  labs(fill="", x="COG Categories", y= "Number of Genes", title="Genes by COG category") +
-  scale_x_discrete(labels = rev(COGlabels), limits = rev(levels(DpigCOGs$UnambiguousCategory))) +
+  labs(fill="", x="COG Categories", y= "Number of GCs", title="GC by COG category") +
+  scale_x_discrete(labels = rev(COGlabels), limits = rev(levels(DpigCOGsbyGC$UnambiguousCategory))) +
   theme_classic() +
   coord_flip()
 ```
 
-The table "COGSummary" groups the genes by accessory vs. core status, and nested inside as the unambiguous COG category. Table converted to the wide format: "COGSummary_Table"
+The table "COGTotalGC" groups the genes by accessory vs. core status, and nested inside as the unambiguous COG category. Table converted to the wide format.
 ```{r, message=FALSE}
-COGSummary<-DpigPangenome %>%
-group_by(accessory_vs_core, UnambiguousCategory) %>%
-summarise(num_genes=n())
+COGTotalGC<-DpigPangenome %>%
+  group_by(accessory_vs_core, UnambiguousCategory) %>%
+  summarise(num_corrected_genes=sum(1/num_genes_in_gene_cluster))
 
-COGSummary$UnambiguousCategory <- factor(COGSummary$UnambiguousCategory, levels = c("D","M","N","O","T","U","V","J","K","L","X","C","E","F","G","H","I","P","Q","Ambiguous"))
+COGTotalGC$UnambiguousCategory <- factor(COGTotalGC$UnambiguousCategory, levels = c("D","M","N","O","T","U","V","J","K","L","X","C","E","F","G","H","I","P","Q","Ambiguous"))
 
-COGSummary_Table <- spread(COGSummary, accessory_vs_core, num_genes)
+COGTotalGC <- spread(COGTotalGC, accessory_vs_core, num_corrected_genes)
 ```
 
 ```{r}
-A <- round(100*sum(COGSummary_Table$accessory)/(sum(COGSummary_Table$accessory)+sum(COGSummary_Table$core)), 2)
-C <- round(100*sum(COGSummary_Table$core)/(sum(COGSummary_Table$accessory)+sum(COGSummary_Table$core)), 2)
+A <- round(100*sum(COGTotalGC$accessory)/(sum(COGTotalGC$accessory)+sum(COGTotalGC$core)), 2)
+C <- round(100*sum(COGTotalGC$core)/(sum(COGTotalGC$accessory)+sum(COGTotalGC$core)), 2)
 ```
 
 The proportions are `r A`% accessory vs. `r C`% core at the pangenome level. We calculate the accessory vs. core proportions by COG category, to see the COG categories that are enriched in the accessory. 
 ```{r}
-COGSummary_Table$total <- COGSummary_Table$accessory + COGSummary_Table$core
-COGSummary_Table$p.accessory <- round(100*(COGSummary_Table$accessory/COGSummary_Table$total), 2)
-COGSummary_Table$p.core <- round(100*(COGSummary_Table$core/COGSummary_Table$total), 2)
-COGSummary_Table$enrichment <- round(COGSummary_Table$p.accessory/A, 2)
+COGTotalGC$total <- COGTotalGC$accessory + COGTotalGC$core
+COGTotalGC$p.accessory <- round(100*(COGTotalGC$accessory/COGTotalGC$total), 2)
+COGTotalGC$p.core <- round(100*(COGTotalGC$core/COGTotalGC$total), 2)
+COGTotalGC$enrichment <- round(COGTotalGC$p.accessory/A, 2)
 ```
 
 ```{r}
-kable(COGSummary_Table)
+kable(COGTotalGC)
 ```
 
-### COG Statistics
-
-```{r, message=FALSE}
-stat.wilcox<- compare_means(num_genes ~ accessory_vs_core, DpigCOGs, method="wilcox.test", p.adjust="fdr", group.by = "UnambiguousCategory")
-stat.wilcox.proportions<- compare_means(proportion_pangenome_bin ~ accessory_vs_core, DpigCOGs, method="wilcox.test", p.adjust="fdr", group.by = "UnambiguousCategory")
-stat.wilcox.proportions.genome<- compare_means(proportion_genome ~ accessory_vs_core, DpigCOGs, method="wilcox.test", p.adjust="fdr", group.by = "UnambiguousCategory")
+```{r, accesory.byUnambiguousCOG.byGenome}
+ggplot(COGTotalGC, aes(x=UnambiguousCategory, y=enrichment)) +
+  geom_bar(stat="identity") + 
+  scale_y_continuous(trans = "log2", expand = c(0,0)) + 
+  labs(x="", y= "log2(% COG in accesory / average % accesory)", title="GC Enrichment by COG category") +
+  scale_x_discrete(labels = rev(COGlabels), limits = rev(levels(DpigCOGsbyGC$UnambiguousCategory))) +
+  coord_flip() +
+  theme_classic() +
+  theme(axis.ticks.y = element_blank(), axis.line.y = element_blank()) +
+  geom_hline(yintercept=1)
 ```
