@@ -151,7 +151,7 @@ nrow(DpigPangenome %>% group_by(gene_cluster_id) %>% summarise)
 Defining order of COG categories and Strains
 
 ``` r
-DpigCOGsbyGC$accessory_vs_core <- factor(DpigCOGsbyGC$accessory_vs_core)
+DpigCOGsbyGC$accessory_vs_core <- factor(DpigCOGsbyGC$accessory_vs_core, levels =c("core", "accessory"))
 
 DpigCOGsbyGC$UnambiguousCategory <- factor(DpigCOGsbyGC$UnambiguousCategory, levels = c("D","M","N","O","T","U","V","J","K","L","X","C","E","F","G","H","I","P","Q","Ambiguous"))
 COGlabels = c("Cell cycle control, cell division, chromosome partitioning","Cell wall/membrane/envelope biogenesis","Cell Motility","Post-translational modification, protein turnover, and chaperones","Signal transduction mechanisms","Intracellular trafficking, secretion, and vesicular transport","Defense mechanisms","Translation, ribosomal structure and biogenesis","Transcription","Replication, recombination and repair","Mobilome: prophages, transposons","Energy production and conversion","Amino acid transport and metabolism","Nucleotide transport and metabolism","Carbohydrate transport and metabolism","Coenzyme transport and metabolism","Lipid transport and metabolism","Inorganic ion transport and metabolism","Secondary metabolites biosynthesis, transport, and catabolism","Ambiguous")
@@ -174,12 +174,24 @@ ggplot(DpigCOGsbyGC, aes(x = accessory_vs_core, y = num_corrected_genes, fill = 
   stat_summary(fun=sum ,geom="bar", position = "stack") +
   scale_fill_manual(values = getPalette(colourCount), labels=COGlabels) +
   scale_y_continuous(expand = c(0,0)) + 
-  labs(fill="COG Categories", x="", y= "Number of Genes", title="Total number of genes in the Accesory vs Core (fun=sum)") +
+  labs(fill="COG Categories", x="", y= "Number of Gene Clusters") +
   theme_classic() +
   theme(legend.key.size = unit(0.45, "cm")) 
 ```
 
-![](DpigCOGAnalysis_files/figure-gfm/accessory_vs_core-1.png)<!-- -->
+![](DpigCOGAnalysis_files/figure-gfm/TotalGCs.accessory_vs_core-1.png)<!-- -->
+
+``` r
+ggplot(filter(DpigCOGsbyGC, UnambiguousCategory != "Ambiguous"), aes(x = accessory_vs_core, y = num_corrected_genes, fill = UnambiguousCategory)) +
+  stat_summary(fun=sum ,geom="bar", position = "stack") +
+  scale_fill_manual(values = getPalette(colourCount), labels=COGlabels) +
+  scale_y_continuous(expand = c(0,0)) + 
+  labs(fill="COG Categories", x="", y= "Number of Unambiguous Gene Clusters") +
+  theme_classic() +
+  theme(legend.key.size = unit(0.45, "cm")) 
+```
+
+![](DpigCOGAnalysis_files/figure-gfm/UnambiguousGCs.accessory_vs_core-1.png)<!-- -->
 
 ### COG Plots by Genome
 
@@ -189,14 +201,14 @@ ggplot(filter(DpigCOGsbyGC, accessory_vs_core == "accessory"), aes(x=genome_name
   scale_y_continuous(expand = c(0,0)) + 
   scale_x_discrete(labels = strainlabels) +
   scale_fill_manual(values = getPalette(colourCount), labels=COGlabels) + 
-  labs(fill="COG Categories", x="", y= "Number of Genes", title="Accesory genes by COG category") +
+  labs(fill="COG Categories", x="", y= "Number of Gene Clusters") +
   theme_classic() + 
   theme(axis.text.x = element_text(size=8, angle=75, hjust=1)) +
   theme(legend.position="right",legend.key.size = unit(0.3, "cm")) +
   guides(fill=guide_legend(ncol=1, title.position = "top")) 
 ```
 
-![](DpigCOGAnalysis_files/figure-gfm/accesory.byCOG.byGenome-1.png)<!-- -->
+![](DpigCOGAnalysis_files/figure-gfm/TotalGCs.accesory.byGenome-1.png)<!-- -->
 
 ``` r
 ggplot(filter(DpigCOGsbyGC %>% filter(UnambiguousCategory !="Ambiguous"), accessory_vs_core == "accessory"), aes(x=genome_name, y=num_corrected_genes, fill=UnambiguousCategory)) +
@@ -204,28 +216,42 @@ ggplot(filter(DpigCOGsbyGC %>% filter(UnambiguousCategory !="Ambiguous"), access
   scale_y_continuous(expand = c(0,0)) + 
   scale_x_discrete(labels = strainlabels) +
   scale_fill_manual(values = getPalette(colourCount), labels=COGlabels) + 
-  labs(fill="COG Categories", x="", y= "Number of Genes", title="Unambiguous accesory genes by COG category") +
+  labs(fill="COG Categories", x="", y= "Number of Unambiguous Gene Clusters") +
   theme_classic() + 
   theme(axis.text.x = element_text(size=8, angle=75, hjust=1)) +
   theme(legend.position="right",legend.key.size = unit(0.3, "cm")) +
   guides(fill=guide_legend(ncol=1, title.position = "top")) 
 ```
 
-![](DpigCOGAnalysis_files/figure-gfm/accesory.byUnambiguousCOG.byGenome-1.png)<!-- -->
+![](DpigCOGAnalysis_files/figure-gfm/UnambiguousGCs.accesory.byGenome-1.png)<!-- -->
 
 ### COG Plots by COG Category
 
 ``` r
 ggplot(DpigCOGsbyGC, aes(x = UnambiguousCategory, y = num_corrected_genes, fill = accessory_vs_core)) +
   stat_summary(fun=sum ,geom="bar", position = "stack") +
+  scale_fill_manual(values = c("skyblue2", "skyblue4")) +
   scale_y_continuous(expand = c(0,0)) + 
-  labs(fill="", x="COG Categories", y= "Number of GCs", title="GC by COG category") +
   scale_x_discrete(labels = rev(COGlabels), limits = rev(levels(DpigCOGsbyGC$UnambiguousCategory))) +
+  labs(fill="", x="COG Categories", y= "Number of Gene Clusters") +
   theme_classic() +
   coord_flip()
 ```
 
-![](DpigCOGAnalysis_files/figure-gfm/accessory_vs_core.byCOG-1.png)<!-- -->
+![](DpigCOGAnalysis_files/figure-gfm/TotalGCs.byCOG-1.png)<!-- -->
+
+``` r
+ggplot(filter(DpigCOGsbyGC %>% filter(UnambiguousCategory !="Ambiguous")), aes(x = UnambiguousCategory, y = num_corrected_genes, fill = accessory_vs_core)) +
+  stat_summary(fun=sum ,geom="bar", position = "stack") +
+  scale_fill_manual(values = c("skyblue2", "skyblue4")) +
+  scale_y_continuous(expand = c(0,0)) + 
+  scale_x_discrete(labels = rev(COGlabels), limits = rev(levels(DpigCOGsbyGC$UnambiguousCategory))) +
+  labs(fill="", x="COG Categories", y= "Number of Gene Clusters") +
+  theme_classic() +
+  coord_flip()
+```
+
+![](DpigCOGAnalysis_files/figure-gfm/UnambiguousGCs.byCOG-1.png)<!-- -->
 
 The table “COGTotalGC” groups the genes by accessory vs. core status,
 and nested inside as the unambiguous COG category. Table converted to
@@ -283,3 +309,18 @@ kable(COGTotalGC)
 | P                   |  10.800000 |  66.005681 |   76.805681 |       14.06 |  85.94 |       0.27 |
 | Q                   |   1.000000 |   5.000000 |    6.000000 |       16.67 |  83.33 |       0.32 |
 | Ambiguous           | 990.045348 | 477.715753 | 1467.761101 |       67.45 |  32.55 |       1.30 |
+
+``` r
+ggplot(COGTotalGC, aes(x=UnambiguousCategory, y=enrichment, fill = ifelse(enrichment < 1, "core", "accessory"))) +
+  geom_bar(stat="identity") + 
+  scale_fill_manual(values = c("skyblue4", "skyblue2"), guide = guide_legend(reverse=TRUE)) +
+  scale_y_continuous(trans = "log2", expand = c(0,0)) + 
+  scale_x_discrete(labels = rev(COGlabels), limits = rev(levels(DpigCOGsbyGC$UnambiguousCategory))) +
+  labs(x="", y= "log2(% COG in accesory / average % accesory)") +
+  coord_flip() +
+  theme_classic() +
+  theme(axis.ticks.y = element_blank(), axis.line.y = element_blank(), legend.title = element_blank(), legend.direction = "horizontal", legend.position=c(0.8,1.05), plot.margin=unit(c(25,25,25,25),"pt")) +
+  geom_hline(yintercept=1)
+```
+
+![](DpigCOGAnalysis_files/figure-gfm/enrichment.byCOG-1.png)<!-- -->
