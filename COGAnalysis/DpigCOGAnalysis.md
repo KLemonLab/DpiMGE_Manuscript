@@ -167,9 +167,12 @@ palette3 <- c("grey60", "grey40", "grey20", "white") # 4 elements: White + Grays
 
 ### Plots Accessory vs. Core
 
+Panel A in main figure:
+
 ``` r
 pA <- ggplot(DpigCOGsbyGC, aes(x = accessory_vs_core, y = num_corrected_genes, fill = fct_rev(COGs))) +
   stat_summary(fun=sum ,geom="bar", position = "stack") +
+  scale_x_discrete(labels = c("Soft/Core", "Accessory")) +
   scale_fill_manual(values = palette1) +
   scale_y_continuous(expand = c(0,0), breaks=seq(0, 1500, by = 250)) +
   labs(fill="COG Categories", x=" ", y= "Number of Gene Clusters") +
@@ -180,9 +183,12 @@ pA
 
 ![](DpigCOGAnalysis_files/figure-gfm/TotalGCs.accessory_vs_core-1.png)<!-- -->
 
+This plot is used for the grayscale legend:
+
 ``` r
 pB <- ggplot(DpigCOGsbyGC, aes(x = accessory_vs_core, y = num_corrected_genes, fill = fct_rev(Assignment))) +
   stat_summary(fun=sum ,geom="bar", position = "stack") +
+  scale_x_discrete(labels = c("Soft/Core", "Accessory")) +
   scale_fill_manual(values = palette3) +
   scale_y_continuous(expand = c(0,0), breaks=seq(0, 1500, by = 250)) +
   labs(fill=" ", x=" ", y= "Number of Gene Clusters") +
@@ -195,6 +201,8 @@ pB
 ![](DpigCOGAnalysis_files/figure-gfm/InformativeGCs.accessory_vs_core-1.png)<!-- -->
 
 ### Plots by Genome
+
+Panel A in supplemental figure:
 
 ``` r
 pC <- ggplot(filter(DpigCOGsbyGC, accessory_vs_core == "Accessory"), aes(x=genome_name, y=num_corrected_genes, fill = fct_rev(COGs))) +
@@ -210,6 +218,7 @@ pC
 ```
 
 ![](DpigCOGAnalysis_files/figure-gfm/TotalGCs.accesory.byGenome-1.png)<!-- -->
+Panel B in supplemental figure:
 
 ``` r
 pD <- ggplot(filter(DpigCOGsbyGC %>% filter(COGs != "Uninformative", COGs !="Ambiguous", COGs != "Unclassified"), accessory_vs_core == "Accessory"), aes(x=genome_name, y=num_corrected_genes, fill = fct_rev(COGs))) +
@@ -225,6 +234,7 @@ pD
 ```
 
 ![](DpigCOGAnalysis_files/figure-gfm/InformativeGCs.accesory.byGenome-1.png)<!-- -->
+This plot is used for the grayscale legend:
 
 ``` r
 pE <- ggplot(filter(DpigCOGsbyGC, accessory_vs_core == "Accessory"), aes(x=genome_name, y=num_corrected_genes, fill = fct_rev(Assignment))) +
@@ -321,7 +331,7 @@ pF <- ggplot(filter(COGTotalGCLong, COGs != "Uninformative", COGs != "Ambiguous"
   coord_flip() +
   scale_y_continuous(limits = c(-170, 170), breaks = c(-150, -100, -50, 0, 50, 100, 150), label = c(150, 100, 50, 0, 50, 100, 150)) +
   geom_segment(aes(x=0,xend=19.5,y=0,yend=0)) +
-  geom_label(aes(x = 20.5, y = -95, label = "          Core           "), fontface="bold", size=3, fill = "grey90", label.size=NA, label.padding = unit(0.3, "lines")) +
+  geom_label(aes(x = 20.5, y = -95, label = "      Soft/Core       "), fontface="bold", size=3, fill = "grey90", label.size=NA, label.padding = unit(0.3, "lines")) +
   geom_label(aes(x = 20.5, y = 95, label = "     Accessory      "), fontface="bold", size=3, fill = "grey90", label.size=NA, label.padding = unit(0.3, "lines")) +
   theme_classic() +
   theme(axis.title = element_text(size = 9), axis.text.x = element_text(size=7), axis.ticks.y = element_blank(), axis.line.y = element_blank(), legend.position = "none", plot.margin=unit(c(5,10,10,25),"pt"), plot.title=element_text(face="bold", hjust=3, vjust=-3.9)) 
@@ -336,44 +346,7 @@ gpF <- ggplotGrob(pF)
 gpF$layout$clip[gpF$layout$name=="panel"] <- "off"
 ```
 
-``` r
-COGTotalGCLong2 <- gather(COGTotalGC, accessory_vs_core, plotting, Core, Accessory)
-COGTotalGCLong2$accessory_vs_core <- factor(COGTotalGCLong2$accessory_vs_core, levels =c("Core", "Accessory"))
-```
-
-``` r
-pF2 <- ggplot(filter(COGTotalGCLong2, COGs != "Uninformative", COGs != "Ambiguous", COGs != "Unclassified"), aes(x = COGs, y = plotting, fill = COGs)) +
-  geom_bar(stat="identity") + 
-  scale_fill_manual(values = rev(palette2)) + 
-  scale_x_discrete(position = "top") +
-  scale_y_continuous(expand = c(0,0)) + 
-  coord_flip()+
-  facet_grid(. ~ accessory_vs_core) +
-  labs(x="", y= "Number of Gene Clusters", title="COG Categories") +
-  theme_classic() +
-  theme(axis.title = element_text(size = 9), axis.text.x = element_text(size=7), axis.ticks.y = element_blank(), axis.line.y = element_blank(), legend.position = "none", plot.title = element_text(hjust = 3, vjust = -6, face="bold"), plot.margin=unit(c(0,10,10,25),"pt"),
-  strip.text.x = element_text(size=9, face="bold"), strip.background = element_rect(colour="white", fill="grey90"))
-pF2
-```
-
-![](DpigCOGAnalysis_files/figure-gfm/InformativeGCs.byCOGv2-1.png)<!-- -->
-
-### Enrichment Plot
-
-``` r
-pG <- ggplot(COGTotalGC, aes(x=COGs, y=enrichment, fill = ifelse(enrichment < 1, "Core", "Accessory"))) +
-  geom_bar(stat="identity") + 
-  scale_fill_manual(values = c("skyblue4", "skyblue2")) +
-  scale_y_continuous(trans = "log2", expand = c(0,0)) + 
-  labs(x="", y= "log2(% COG in accesory / average % accesory)") +
-  coord_flip() +
-  theme_classic() +
-  theme(axis.ticks.y = element_blank(), axis.line.y = element_blank(), legend.position = "none", plot.margin=unit(c(25,25,25,25),"pt")) +
-  geom_hline(yintercept=1)
-pG
-```
-
-![](DpigCOGAnalysis_files/figure-gfm/foldchange.byCOG-1.png)<!-- -->
+This is used for the clade labels:
 
 ``` r
 clades <- ggplot() +
@@ -391,35 +364,22 @@ clades <- ggplot() +
 clades
 ```
 
-![](DpigCOGAnalysis_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
+![](DpigCOGAnalysis_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
 
-## Final Files
+## Final Figures
 
 ``` r
-pMain1 <- ggarrange(ggarrange(get_legend(pB), pA, ncol = 1, heights = c(0.2, 1)),
+pMain <- ggarrange(ggarrange(get_legend(pB), pA, ncol = 1, heights = c(0.2, 1)),
                    gpF, ncol = 2, labels = c("A", "B"), hjust=-0.5, vjust=2, widths = c(0.7, 2))
 
-ggsave("IFE2020_0729_FigCOGMain1.tiff", pMain1, width = 9, height = 4, dpi = 150)
+ggsave("IFE2020_0729_FigCOGMain.tiff", pMain, width = 9, height = 4, dpi = 150)
 ```
 
 ``` r
-pMain2 <- ggarrange(ggarrange(get_legend(pB), pA, ncol = 1, heights = c(0.2, 1)),
-                   pF2, ncol = 2, labels = c("A", "B"), hjust=-0.5, vjust=2, widths = c(0.7, 2))
-
-ggsave("IFE2020_0729_FigCOGMain2.tiff", pMain2, width = 9, height = 4, dpi = 150)
-```
-
-``` r
-pSupple1 <- ggarrange(get_legend(pE),
+pSupple <- ggarrange(get_legend(pE),
                       ggarrange(pC+theme(axis.text.x = element_blank(), axis.ticks.x = element_blank()), pD+theme(legend.position="none"), ncol = 1,  align = "v", labels = c("A", "B"), hjust=-0.5, vjust=1, heights = c(1, 1)),
                       clades, 
                       get_legend(pD), ncol = 1, heights = c(0.2, 2, 0.2, 0.6))
 
-ggsave("IFE2020_0729_FigCOGSupple1.tiff", pSupple1, width = 8, height = 10, dpi = 150)
-```
-
-``` r
-pSupple2 <- ggarrange(get_legend(pE), pC, clades, get_legend(pD), ncol = 1, hjust=-0.5, vjust=-1, heights = c(0.2, 2.5, 0.2, 0.6))
-
-ggsave("IFE2020_0729_FigCOGSupple2.tiff", pSupple2, width = 8, height = 10, dpi = 150)
+ggsave("IFE2020_0729_FigCOGSupple.tiff", pSupple, width = 8, height = 10, dpi = 150)
 ```
