@@ -151,7 +151,8 @@ DpigCOGsbyGC$COGs <- recode_factor(DpigCOGsbyGC$COGs, "Q"="Secondary metabolites
 
 DpigCOGsbyGC$Assignment <- factor(DpigCOGsbyGC$Assignment, levels =c(" ", "Uninformative", "Ambiguous", "Unclassified"))
 
-DpigCOGsbyGC$genome_name <- recode_factor(DpigCOGsbyGC$genome_name, "Dpigrum_ATCC_51524"="ATCC 51524","Dpigrum_KPL1939_CDC4792_99"="CDC 4792-99","Dpigrum_KPL3250"="KPL3250","Dpigrum_KPL1922_CDC39_95"="CDC39-95","Dpigrum_KPL1934_CDC4709_98"="CDC 4709-98","Dpigrum_KPL1930_CDC2949_98"="CDC 2949-98","Dpigrum_KPL1933_CDC4545_98"="CDC 4545-98","Dpigrum_KPL3033"="KPL3033","Dpigrum_KPL3256"="KPL3256","Dpigrum_KPL3264"="KPL3264","Dpigrum_KPL1914"="KPL1914","Dpigrum_KPL1931_CDC4294_98"="CDC 4294-98","Dpigrum_KPL3077"="KPL3077","Dpigrum_KPL1932_CDC4420_98"="CDC 4420-98","Dpigrum_KPL1938_CDC4791_99"="CDC 4791-99","Dpigrum_KPL3050"="KPL3050","Dpigrum_KPL3274"="KPL3274","Dpigrum_KPL1937_CDC4199_99"="CDC 4199-99","Dpigrum_KPL3246"="KPL3246","Dpigrum_KPL3070"="KPL3070","Dpigrum_KPL3084"="KPL3084","Dpigrum_KPL3911"="KPL3911","Dpigrum_KPL3043"="KPL3043","Dpigrum_KPL3065"="KPL3065","Dpigrum_KPL3086"="KPL3086","Dpigrum_KPL3090"="KPL3090","Dpigrum_KPL3052"="KPL3052","Dpigrum_KPL3069"="KPL3069", .ordered = TRUE)
+DpigCOGsbyGC$genome_name <- recode_factor(DpigCOGsbyGC$genome_name, "Dpigrum_ATCC_51524"="ATCC 51524", "Dpigrum_KPL3250"="KPL3250", "Dpigrum_KPL1939_CDC4792_99"="CDC 4792-99","Dpigrum_KPL1934_CDC4709_98"="CDC 4709-98", "Dpigrum_KPL1922_CDC39_95"="CDC 39-95", "Dpigrum_KPL3264"="KPL3264", "Dpigrum_KPL3256"="KPL3256", "Dpigrum_KPL3033"="KPL3033", "Dpigrum_KPL1933_CDC4545_98"="CDC 4545-98", "Dpigrum_KPL1930_CDC2949_98"="CDC 2949-98", "Dpigrum_KPL3069"="KPL3069", "Dpigrum_KPL3052"="KPL3052", "Dpigrum_KPL3090"="KPL3090", "Dpigrum_KPL3086"="KPL3086", "Dpigrum_KPL3065"="KPL3065", "Dpigrum_KPL3043"="KPL3043", "Dpigrum_KPL3911"="KPL3911", "Dpigrum_KPL3084"="KPL3084", "Dpigrum_KPL3070"="KPL3070",
+"Dpigrum_KPL3246"="KPL3246", "Dpigrum_KPL1937_CDC4199_99"="CDC 4199-99","Dpigrum_KPL3274"="KPL3274","Dpigrum_KPL3050"="KPL3050","Dpigrum_KPL1938_CDC4791_99"="CDC 4791-99", "Dpigrum_KPL1932_CDC4420_98"="CDC 4420-98", "Dpigrum_KPL3077"="KPL3077", "Dpigrum_KPL1931_CDC4294_98"="CDC 4294-98", "Dpigrum_KPL1914"="KPL1914", .ordered = TRUE)
 ```
 
 Color Palettes
@@ -372,7 +373,7 @@ clades
 pMain <- ggarrange(ggarrange(get_legend(pB), pA, ncol = 1, heights = c(0.2, 1)),
                    gpF, ncol = 2, labels = c("A", "B"), hjust=-0.5, vjust=2, widths = c(0.7, 2))
 
-ggsave("IFE2020_0729_FigCOGMain.tiff", pMain, width = 9, height = 4, dpi = 150)
+ggsave("Fig4_COG_summary.tiff", pMain, width = 9, height = 4, dpi = 150)
 ```
 
 ``` r
@@ -381,5 +382,5 @@ pSupple <- ggarrange(get_legend(pE),
                       clades, 
                       get_legend(pD), ncol = 1, heights = c(0.2, 2, 0.2, 0.6))
 
-ggsave("IFE2020_0729_FigCOGSupple.tiff", pSupple, width = 8, height = 10, dpi = 150)
+ggsave("FigS4_COG_byGenome.tiff", pSupple, width = 8, height = 10, dpi = 150)
 ```
