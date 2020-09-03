@@ -1,7 +1,7 @@
 *Dolosigranulum pigrum* COG ANALYSIS
 ================
 
-## Data Cleaning
+## Data Import
 
 We import the output of `anvi-summarize` and select the most relevant
 variables for the functional analysis:
@@ -12,40 +12,21 @@ DpigPangenome <- DpigPangenome %>%
   select(unique_id, gene_cluster_id, bin_name, genome_name, num_genomes_gene_cluster_has_hits, num_genes_in_gene_cluster, `Prokka:Prodigal_ACC`, `Prokka:Prodigal`, COG_CATEGORY, COG_FUNCTION, COG_FUNCTION_ACC)
 ```
 
-New variable “accessory\_vs\_core” where we define “core” as
-“MC\_core”+“SC\_core”+“soft\_core” and “accessory” as
-“shell”+“cloud”:
+In the new variable “accessory\_vs\_core” we define “Soft/Core” as
+“MC\_core”+“SC\_core”+“soft\_core” and “accessory” as “shell”+“cloud”:
 
 ``` r
-DpigPangenome<-DpigPangenome %>%
+DpigPangenome <- DpigPangenome %>%
   mutate(accessory_vs_core=ifelse(bin_name=="MC_core"|bin_name=="SC_core"|bin_name=="soft_core","Core","Accessory"))
 ```
 
-The number of genes and proportions of accessory vs. core are:
+\*“Core” is used in the code to avoid problems with the “/” symbol and
+later replaced with “Soft/Core” for plotting.
 
-``` r
-nrow(DpigPangenome %>% group_by(gene_cluster_id) %>% filter(accessory_vs_core =="Accessory") %>% summarise)
-```
+There are 1483 gene clusters (GC) (51.7%) in the Accessory vs. 1386
+(48.3%) in the Soft/Core at the pangenome level
 
-    ## [1] 1483
-
-``` r
-nrow(DpigPangenome %>% group_by(gene_cluster_id) %>% filter(accessory_vs_core =="Core") %>% summarise)
-```
-
-    ## [1] 1386
-
-``` r
-100*nrow(DpigPangenome %>% group_by(gene_cluster_id) %>% filter(accessory_vs_core =="Accessory") %>% summarise)/nrow(DpigPangenome %>% group_by(gene_cluster_id) %>% summarise)
-```
-
-    ## [1] 51.69048
-
-``` r
-100*nrow(DpigPangenome %>% group_by(gene_cluster_id) %>% filter(accessory_vs_core =="Core") %>% summarise)/nrow(DpigPangenome %>% group_by(gene_cluster_id) %>% summarise)
-```
-
-    ## [1] 48.30952
+## COG Analysis at the Gene Level
 
 We define a new variable `COGs` to use in the plots. This variable is
 based on `COG_CATEGORY` but with a cleaner definition of unclassified,
@@ -63,45 +44,177 @@ DpigPangenome$COGs[grepl('|', DpigPangenome$COGs,fixed=TRUE)]<-"Ambiguous"
 DpigPangenome$COGs[is.na(DpigPangenome$COGs)]<-"Unclassified"
 ```
 
-### Summary
-
 Summary of GOC annotated genes:
 
-``` r
-Summary <- data.frame(
-  "Genes" = c("Total in Dpig Pangenome", 
-              "COG Category Uninformative = Function Unknown", 
-              "COG Category Uninformative = General function predictions only",
-              "COG Category Ambiguous (Mixed COG Category)",
-              "COG Category Unclassified (Non-assigned)", 
-              "Informative COGs (Total - Uninformative, Ambiguous & Unclassified)"),
-  "Count" = c(nrow(DpigPangenome), 
-              nrow(DpigPangenome %>% filter(COG_CATEGORY =="S")),
-              nrow(DpigPangenome %>% filter(COG_CATEGORY =="R")),
-              nrow(DpigPangenome %>% filter(COGs =="Ambiguous")),
-              nrow(DpigPangenome %>% filter(COGs =="Unclassified")), 
-              nrow(DpigPangenome %>% filter(COGs !="Uninformative" & COGs !="Ambiguous" & COGs !="Unclassified"))
-              )
-)
-Summary$Percentage <- round(100*(Summary$Count/49418),2)
-```
+<table>
 
-``` r
-kable(Summary)
-```
+<thead>
 
-| Genes                                                              | Count | Percentage |
-| :----------------------------------------------------------------- | ----: | ---------: |
-| Total in Dpig Pangenome                                            | 49418 |     100.00 |
-| COG Category Uninformative = Function Unknown                      |  2496 |       5.05 |
-| COG Category Uninformative = General function predictions only     |  2733 |       5.53 |
-| COG Category Ambiguous (Mixed COG Category)                        |  4883 |       9.88 |
-| COG Category Unclassified (Non-assigned)                           |  9333 |      18.89 |
-| Informative COGs (Total - Uninformative, Ambiguous & Unclassified) | 29973 |      60.65 |
+<tr>
+
+<th style="text-align:left;">
+
+Genes
+
+</th>
+
+<th style="text-align:right;">
+
+Count
+
+</th>
+
+<th style="text-align:right;">
+
+Percentage
+
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td style="text-align:left;">
+
+Total in Dpig Pangenome
+
+</td>
+
+<td style="text-align:right;">
+
+49418
+
+</td>
+
+<td style="text-align:right;">
+
+100.0
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+COG Category Uninformative = Function Unknown
+
+</td>
+
+<td style="text-align:right;">
+
+2496
+
+</td>
+
+<td style="text-align:right;">
+
+5.1
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+COG Category Uninformative = General function predictions only
+
+</td>
+
+<td style="text-align:right;">
+
+2733
+
+</td>
+
+<td style="text-align:right;">
+
+5.5
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+COG Category Ambiguous (Mixed COG Category)
+
+</td>
+
+<td style="text-align:right;">
+
+4883
+
+</td>
+
+<td style="text-align:right;">
+
+9.9
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+COG Category Unclassified (Non-assigned)
+
+</td>
+
+<td style="text-align:right;">
+
+9333
+
+</td>
+
+<td style="text-align:right;">
+
+18.9
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Informative COGs (Total - Uninformative, Ambiguous & Unclassified)
+
+</td>
+
+<td style="text-align:right;">
+
+29973
+
+</td>
+
+<td style="text-align:right;">
+
+60.7
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
 
 60.65% of the gene calls are Informative.
 
-## COG analysis corrected by number of genes in each GC
+## COG Analysis at the Gene Cluster Level
 
 This analysis was done at the pangenomic gene cluster level (GC). Since
 many gene clusters had mixed COG category assignments a solution is to
@@ -109,22 +222,24 @@ assign each individual gene call to their corresponding
 Genome/AccessoryvsCore/COG grouping weighting their contribution by
 dividing their count by the number of genes in their GC.
 
-The table “DpigCOGsbyGC” groups the genes by genome; and inside genomes
-by accessory vs. core status, and nested inside as the unambiguous COG
+### GCs by COG Category and Genome
+
+The table “GCsbyCOG\_Genome” groups the genes by genome; and inside
+genomes by Accessory vs. Soft/Core status, and nested inside as the COG
 category. But, in this case, instead of counting the elements in each
 group we calculated the sum of 1/num\_genes\_in\_gene\_cluster.
 
 ``` r
-DpigCOGsbyGC <-DpigPangenome %>%
+GCsbyCOG_Genome <- DpigPangenome %>%
   group_by(genome_name, accessory_vs_core, COGs) %>%
-    summarise(num_corrected_genes=sum(1/num_genes_in_gene_cluster))
+  summarise(num_corrected_genes=sum(1/num_genes_in_gene_cluster))
 ```
 
 The total sum of all values in the `num_corrected_genes` variable should
 add up to the number of CGs:
 
 ``` r
-sum(DpigCOGsbyGC$num_corrected_genes)
+sum(GCsbyCOG_Genome$num_corrected_genes)
 ```
 
     ## [1] 2869
@@ -138,40 +253,3026 @@ nrow(DpigPangenome %>% group_by(gene_cluster_id) %>% summarise)
 Extra column to label the gray scale portion of the plots:
 
 ``` r
-DpigCOGsbyGC<-DpigCOGsbyGC %>%
-  mutate(Assignment=ifelse(COGs!="Uninformative" & COGs!="Ambiguous" & COGs!="Unclassified", " ", COGs))
+GCsbyCOG_Genome <- GCsbyCOG_Genome %>%
+  mutate(Assignment=ifelse(COGs!="Uninformative" & COGs!="Ambiguous" & COGs!="Unclassified", "Informative", COGs))
 ```
 
-Renaming and ordering factor levels for variables:
+Summary of GOC annotated GCs in the Accessory vs. Soft/Core :
 
 ``` r
-DpigCOGsbyGC$accessory_vs_core <- factor(DpigCOGsbyGC$accessory_vs_core, levels =c("Core", "Accessory"))
+TableGC <- GCsbyCOG_Genome %>% 
+  group_by(accessory_vs_core, Assignment) %>%
+  summarize(corrected_genes=sum(num_corrected_genes))
 
-DpigCOGsbyGC$COGs <- recode_factor(DpigCOGsbyGC$COGs, "Q"="Secondary metabolites biosynthesis, transport, and catabolism","P"="Inorganic ion transport and metabolism","I"="Lipid transport and metabolism","H"="Coenzyme transport and metabolism","G"="Carbohydrate transport and metabolism","F"="Nucleotide transport and metabolism","E"="Amino acid transport and metabolism","C"="Energy production and conversion","X"="Mobilome: prophages, transposons","L"="Replication, recombination and repair","K"="Transcription","J"="Translation, ribosomal structure and biogenesis","V"="Defense mechanisms","U"="Intracellular trafficking, secretion, and vesicular transport","T"="Signal transduction mechanisms","O"="Post-translational modification, protein turnover, and chaperones","N"="Cell Motility","M"="Cell wall/membrane/envelope biogenesis","D"="Cell cycle control, cell division, chromosome partitioning","Uninformative"="Uninformative","Ambiguous"="Ambiguous","Unclassified"="Unclassified", .ordered = TRUE)
+TableGC$Percentages <- round(100*TableGC$corrected_genes/sum(TableGC$corrected_genes), 1)
 
-DpigCOGsbyGC$Assignment <- factor(DpigCOGsbyGC$Assignment, levels =c(" ", "Uninformative", "Ambiguous", "Unclassified"))
+kable(TableGC)
+```
 
-DpigCOGsbyGC$genome_name <- recode_factor(DpigCOGsbyGC$genome_name, "Dpigrum_ATCC_51524"="ATCC 51524", "Dpigrum_KPL3250"="KPL3250", "Dpigrum_KPL1939_CDC4792_99"="CDC 4792-99","Dpigrum_KPL1934_CDC4709_98"="CDC 4709-98", "Dpigrum_KPL1922_CDC39_95"="CDC 39-95", "Dpigrum_KPL3264"="KPL3264", "Dpigrum_KPL3256"="KPL3256", "Dpigrum_KPL3033"="KPL3033", "Dpigrum_KPL1933_CDC4545_98"="CDC 4545-98", "Dpigrum_KPL1930_CDC2949_98"="CDC 2949-98", "Dpigrum_KPL3069"="KPL3069", "Dpigrum_KPL3052"="KPL3052", "Dpigrum_KPL3090"="KPL3090", "Dpigrum_KPL3086"="KPL3086", "Dpigrum_KPL3065"="KPL3065", "Dpigrum_KPL3043"="KPL3043", "Dpigrum_KPL3911"="KPL3911", "Dpigrum_KPL3084"="KPL3084", "Dpigrum_KPL3070"="KPL3070",
+<table>
+
+<thead>
+
+<tr>
+
+<th style="text-align:left;">
+
+accessory\_vs\_core
+
+</th>
+
+<th style="text-align:left;">
+
+Assignment
+
+</th>
+
+<th style="text-align:right;">
+
+corrected\_genes
+
+</th>
+
+<th style="text-align:right;">
+
+Percentages
+
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td style="text-align:left;">
+
+Accessory
+
+</td>
+
+<td style="text-align:left;">
+
+Ambiguous
+
+</td>
+
+<td style="text-align:right;">
+
+99.05363
+
+</td>
+
+<td style="text-align:right;">
+
+3.5
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Accessory
+
+</td>
+
+<td style="text-align:left;">
+
+Informative
+
+</td>
+
+<td style="text-align:right;">
+
+492.95465
+
+</td>
+
+<td style="text-align:right;">
+
+17.2
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Accessory
+
+</td>
+
+<td style="text-align:left;">
+
+Unclassified
+
+</td>
+
+<td style="text-align:right;">
+
+840.24104
+
+</td>
+
+<td style="text-align:right;">
+
+29.3
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Accessory
+
+</td>
+
+<td style="text-align:left;">
+
+Uninformative
+
+</td>
+
+<td style="text-align:right;">
+
+50.75068
+
+</td>
+
+<td style="text-align:right;">
+
+1.8
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Core
+
+</td>
+
+<td style="text-align:left;">
+
+Ambiguous
+
+</td>
+
+<td style="text-align:right;">
+
+141.97459
+
+</td>
+
+<td style="text-align:right;">
+
+4.9
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Core
+
+</td>
+
+<td style="text-align:left;">
+
+Informative
+
+</td>
+
+<td style="text-align:right;">
+
+908.28425
+
+</td>
+
+<td style="text-align:right;">
+
+31.7
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Core
+
+</td>
+
+<td style="text-align:left;">
+
+Unclassified
+
+</td>
+
+<td style="text-align:right;">
+
+164.89554
+
+</td>
+
+<td style="text-align:right;">
+
+5.7
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Core
+
+</td>
+
+<td style="text-align:left;">
+
+Uninformative
+
+</td>
+
+<td style="text-align:right;">
+
+170.84563
+
+</td>
+
+<td style="text-align:right;">
+
+6.0
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+Summary of GOC annotated GCs in the Accessory:
+
+``` r
+TableGCAccessory <- GCsbyCOG_Genome %>% 
+  filter(accessory_vs_core =="Accessory") %>%
+  group_by(accessory_vs_core, Assignment) %>%
+  summarize(corrected_genes=sum(num_corrected_genes))
+
+TableGCAccessory$Percentages <- round(100*TableGCAccessory$corrected_genes/sum(TableGCAccessory$corrected_genes), 1)
+
+kable(TableGCAccessory)
+```
+
+<table>
+
+<thead>
+
+<tr>
+
+<th style="text-align:left;">
+
+accessory\_vs\_core
+
+</th>
+
+<th style="text-align:left;">
+
+Assignment
+
+</th>
+
+<th style="text-align:right;">
+
+corrected\_genes
+
+</th>
+
+<th style="text-align:right;">
+
+Percentages
+
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td style="text-align:left;">
+
+Accessory
+
+</td>
+
+<td style="text-align:left;">
+
+Ambiguous
+
+</td>
+
+<td style="text-align:right;">
+
+99.05363
+
+</td>
+
+<td style="text-align:right;">
+
+6.7
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Accessory
+
+</td>
+
+<td style="text-align:left;">
+
+Informative
+
+</td>
+
+<td style="text-align:right;">
+
+492.95465
+
+</td>
+
+<td style="text-align:right;">
+
+33.2
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Accessory
+
+</td>
+
+<td style="text-align:left;">
+
+Unclassified
+
+</td>
+
+<td style="text-align:right;">
+
+840.24104
+
+</td>
+
+<td style="text-align:right;">
+
+56.7
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Accessory
+
+</td>
+
+<td style="text-align:left;">
+
+Uninformative
+
+</td>
+
+<td style="text-align:right;">
+
+50.75068
+
+</td>
+
+<td style="text-align:right;">
+
+3.4
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+Summary of GOC annotated GCs in the Soft/Core :
+
+``` r
+TableGCCore <- GCsbyCOG_Genome %>% 
+  filter(accessory_vs_core =="Core") %>%
+  group_by(accessory_vs_core, Assignment) %>%
+  summarize(corrected_genes=sum(num_corrected_genes))
+
+TableGCCore$Percentages <- round(100*TableGCCore$corrected_genes/sum(TableGCCore$corrected_genes), 1)
+
+kable(TableGCCore)
+```
+
+<table>
+
+<thead>
+
+<tr>
+
+<th style="text-align:left;">
+
+accessory\_vs\_core
+
+</th>
+
+<th style="text-align:left;">
+
+Assignment
+
+</th>
+
+<th style="text-align:right;">
+
+corrected\_genes
+
+</th>
+
+<th style="text-align:right;">
+
+Percentages
+
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td style="text-align:left;">
+
+Core
+
+</td>
+
+<td style="text-align:left;">
+
+Ambiguous
+
+</td>
+
+<td style="text-align:right;">
+
+141.9746
+
+</td>
+
+<td style="text-align:right;">
+
+10.2
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Core
+
+</td>
+
+<td style="text-align:left;">
+
+Informative
+
+</td>
+
+<td style="text-align:right;">
+
+908.2842
+
+</td>
+
+<td style="text-align:right;">
+
+65.5
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Core
+
+</td>
+
+<td style="text-align:left;">
+
+Unclassified
+
+</td>
+
+<td style="text-align:right;">
+
+164.8955
+
+</td>
+
+<td style="text-align:right;">
+
+11.9
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Core
+
+</td>
+
+<td style="text-align:left;">
+
+Uninformative
+
+</td>
+
+<td style="text-align:right;">
+
+170.8456
+
+</td>
+
+<td style="text-align:right;">
+
+12.3
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+Summary of GOC annotated GCs by Genome in the Accessory vs. Soft/Core :
+
+``` r
+TableGenomes <- GCsbyCOG_Genome %>% 
+  group_by(genome_name, accessory_vs_core) %>% 
+  summarize(corrected_genes=sum(num_corrected_genes))
+
+kable(TableGenomes)
+```
+
+<table>
+
+<thead>
+
+<tr>
+
+<th style="text-align:left;">
+
+genome\_name
+
+</th>
+
+<th style="text-align:left;">
+
+accessory\_vs\_core
+
+</th>
+
+<th style="text-align:right;">
+
+corrected\_genes
+
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_ATCC\_51524
+
+</td>
+
+<td style="text-align:left;">
+
+Accessory
+
+</td>
+
+<td style="text-align:right;">
+
+44.91354
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_ATCC\_51524
+
+</td>
+
+<td style="text-align:left;">
+
+Core
+
+</td>
+
+<td style="text-align:right;">
+
+49.17684
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL1914
+
+</td>
+
+<td style="text-align:left;">
+
+Accessory
+
+</td>
+
+<td style="text-align:right;">
+
+42.97868
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL1914
+
+</td>
+
+<td style="text-align:left;">
+
+Core
+
+</td>
+
+<td style="text-align:right;">
+
+49.53494
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL1922\_CDC39\_95
+
+</td>
+
+<td style="text-align:left;">
+
+Accessory
+
+</td>
+
+<td style="text-align:right;">
+
+58.57321
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL1922\_CDC39\_95
+
+</td>
+
+<td style="text-align:left;">
+
+Core
+
+</td>
+
+<td style="text-align:right;">
+
+49.18990
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL1930\_CDC2949\_98
+
+</td>
+
+<td style="text-align:left;">
+
+Accessory
+
+</td>
+
+<td style="text-align:right;">
+
+49.23713
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL1930\_CDC2949\_98
+
+</td>
+
+<td style="text-align:left;">
+
+Core
+
+</td>
+
+<td style="text-align:right;">
+
+49.00931
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL1931\_CDC4294\_98
+
+</td>
+
+<td style="text-align:left;">
+
+Accessory
+
+</td>
+
+<td style="text-align:right;">
+
+179.17555
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL1931\_CDC4294\_98
+
+</td>
+
+<td style="text-align:left;">
+
+Core
+
+</td>
+
+<td style="text-align:right;">
+
+49.15360
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL1932\_CDC4420\_98
+
+</td>
+
+<td style="text-align:left;">
+
+Accessory
+
+</td>
+
+<td style="text-align:right;">
+
+69.74936
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL1932\_CDC4420\_98
+
+</td>
+
+<td style="text-align:left;">
+
+Core
+
+</td>
+
+<td style="text-align:right;">
+
+49.37732
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL1933\_CDC4545\_98
+
+</td>
+
+<td style="text-align:left;">
+
+Accessory
+
+</td>
+
+<td style="text-align:right;">
+
+53.11477
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL1933\_CDC4545\_98
+
+</td>
+
+<td style="text-align:left;">
+
+Core
+
+</td>
+
+<td style="text-align:right;">
+
+49.12167
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL1934\_CDC4709\_98
+
+</td>
+
+<td style="text-align:left;">
+
+Accessory
+
+</td>
+
+<td style="text-align:right;">
+
+34.69992
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL1934\_CDC4709\_98
+
+</td>
+
+<td style="text-align:left;">
+
+Core
+
+</td>
+
+<td style="text-align:right;">
+
+50.74367
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL1937\_CDC4199\_99
+
+</td>
+
+<td style="text-align:left;">
+
+Accessory
+
+</td>
+
+<td style="text-align:right;">
+
+71.51496
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL1937\_CDC4199\_99
+
+</td>
+
+<td style="text-align:left;">
+
+Core
+
+</td>
+
+<td style="text-align:right;">
+
+48.62920
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL1938\_CDC4791\_99
+
+</td>
+
+<td style="text-align:left;">
+
+Accessory
+
+</td>
+
+<td style="text-align:right;">
+
+48.64091
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL1938\_CDC4791\_99
+
+</td>
+
+<td style="text-align:left;">
+
+Core
+
+</td>
+
+<td style="text-align:right;">
+
+49.08906
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL1939\_CDC4792\_99
+
+</td>
+
+<td style="text-align:left;">
+
+Accessory
+
+</td>
+
+<td style="text-align:right;">
+
+65.01524
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL1939\_CDC4792\_99
+
+</td>
+
+<td style="text-align:left;">
+
+Core
+
+</td>
+
+<td style="text-align:right;">
+
+49.33188
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL3033
+
+</td>
+
+<td style="text-align:left;">
+
+Accessory
+
+</td>
+
+<td style="text-align:right;">
+
+68.22192
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL3033
+
+</td>
+
+<td style="text-align:left;">
+
+Core
+
+</td>
+
+<td style="text-align:right;">
+
+49.33145
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL3043
+
+</td>
+
+<td style="text-align:left;">
+
+Accessory
+
+</td>
+
+<td style="text-align:right;">
+
+27.41673
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL3043
+
+</td>
+
+<td style="text-align:left;">
+
+Core
+
+</td>
+
+<td style="text-align:right;">
+
+49.46774
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL3050
+
+</td>
+
+<td style="text-align:left;">
+
+Accessory
+
+</td>
+
+<td style="text-align:right;">
+
+56.99571
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL3050
+
+</td>
+
+<td style="text-align:left;">
+
+Core
+
+</td>
+
+<td style="text-align:right;">
+
+49.74089
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL3052
+
+</td>
+
+<td style="text-align:left;">
+
+Accessory
+
+</td>
+
+<td style="text-align:right;">
+
+47.29437
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL3052
+
+</td>
+
+<td style="text-align:left;">
+
+Core
+
+</td>
+
+<td style="text-align:right;">
+
+49.75553
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL3065
+
+</td>
+
+<td style="text-align:left;">
+
+Accessory
+
+</td>
+
+<td style="text-align:right;">
+
+21.63954
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL3065
+
+</td>
+
+<td style="text-align:left;">
+
+Core
+
+</td>
+
+<td style="text-align:right;">
+
+49.59014
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL3069
+
+</td>
+
+<td style="text-align:left;">
+
+Accessory
+
+</td>
+
+<td style="text-align:right;">
+
+75.46057
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL3069
+
+</td>
+
+<td style="text-align:left;">
+
+Core
+
+</td>
+
+<td style="text-align:right;">
+
+49.95280
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL3070
+
+</td>
+
+<td style="text-align:left;">
+
+Accessory
+
+</td>
+
+<td style="text-align:right;">
+
+28.29556
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL3070
+
+</td>
+
+<td style="text-align:left;">
+
+Core
+
+</td>
+
+<td style="text-align:right;">
+
+49.87905
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL3077
+
+</td>
+
+<td style="text-align:left;">
+
+Accessory
+
+</td>
+
+<td style="text-align:right;">
+
+54.56741
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL3077
+
+</td>
+
+<td style="text-align:left;">
+
+Core
+
+</td>
+
+<td style="text-align:right;">
+
+49.54626
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL3084
+
+</td>
+
+<td style="text-align:left;">
+
+Accessory
+
+</td>
+
+<td style="text-align:right;">
+
+29.36926
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL3084
+
+</td>
+
+<td style="text-align:left;">
+
+Core
+
+</td>
+
+<td style="text-align:right;">
+
+49.75043
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL3086
+
+</td>
+
+<td style="text-align:left;">
+
+Accessory
+
+</td>
+
+<td style="text-align:right;">
+
+22.95066
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL3086
+
+</td>
+
+<td style="text-align:left;">
+
+Core
+
+</td>
+
+<td style="text-align:right;">
+
+49.83714
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL3090
+
+</td>
+
+<td style="text-align:left;">
+
+Accessory
+
+</td>
+
+<td style="text-align:right;">
+
+84.19408
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL3090
+
+</td>
+
+<td style="text-align:left;">
+
+Core
+
+</td>
+
+<td style="text-align:right;">
+
+49.72145
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL3246
+
+</td>
+
+<td style="text-align:left;">
+
+Accessory
+
+</td>
+
+<td style="text-align:right;">
+
+31.39649
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL3246
+
+</td>
+
+<td style="text-align:left;">
+
+Core
+
+</td>
+
+<td style="text-align:right;">
+
+49.57970
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL3250
+
+</td>
+
+<td style="text-align:left;">
+
+Accessory
+
+</td>
+
+<td style="text-align:right;">
+
+32.88942
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL3250
+
+</td>
+
+<td style="text-align:left;">
+
+Core
+
+</td>
+
+<td style="text-align:right;">
+
+49.53509
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL3256
+
+</td>
+
+<td style="text-align:left;">
+
+Accessory
+
+</td>
+
+<td style="text-align:right;">
+
+66.97503
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL3256
+
+</td>
+
+<td style="text-align:left;">
+
+Core
+
+</td>
+
+<td style="text-align:right;">
+
+49.29100
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL3264
+
+</td>
+
+<td style="text-align:left;">
+
+Accessory
+
+</td>
+
+<td style="text-align:right;">
+
+55.70355
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL3264
+
+</td>
+
+<td style="text-align:left;">
+
+Core
+
+</td>
+
+<td style="text-align:right;">
+
+49.67168
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL3274
+
+</td>
+
+<td style="text-align:left;">
+
+Accessory
+
+</td>
+
+<td style="text-align:right;">
+
+32.49464
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL3274
+
+</td>
+
+<td style="text-align:left;">
+
+Core
+
+</td>
+
+<td style="text-align:right;">
+
+49.09943
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL3911
+
+</td>
+
+<td style="text-align:left;">
+
+Accessory
+
+</td>
+
+<td style="text-align:right;">
+
+29.52181
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Dpigrum\_KPL3911
+
+</td>
+
+<td style="text-align:left;">
+
+Core
+
+</td>
+
+<td style="text-align:right;">
+
+49.89282
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+Renaming and ordering variables factor levels for plotting:
+
+``` r
+GCsbyCOG_Genome$accessory_vs_core <- factor(GCsbyCOG_Genome$accessory_vs_core, levels =c("Core", "Accessory"))
+
+GCsbyCOG_Genome$COGs <- recode_factor(GCsbyCOG_Genome$COGs, "Q"="Secondary metabolites biosynthesis, transport, and catabolism","P"="Inorganic ion transport and metabolism","I"="Lipid transport and metabolism","H"="Coenzyme transport and metabolism","G"="Carbohydrate transport and metabolism","F"="Nucleotide transport and metabolism","E"="Amino acid transport and metabolism","C"="Energy production and conversion","X"="Mobilome: prophages, transposons","L"="Replication, recombination and repair","K"="Transcription","J"="Translation, ribosomal structure and biogenesis","V"="Defense mechanisms","U"="Intracellular trafficking, secretion, and vesicular transport","T"="Signal transduction mechanisms","O"="Post-translational modification, protein turnover, and chaperones","N"="Cell Motility","M"="Cell wall/membrane/envelope biogenesis","D"="Cell cycle control, cell division, chromosome partitioning","Uninformative"="Uninformative","Ambiguous"="Ambiguous","Unclassified"="Unclassified", .ordered = TRUE)
+
+GCsbyCOG_Genome$Assignment <- recode_factor(GCsbyCOG_Genome$Assignment,  "Informative"=" ", "Uninformative"="Uninformative", "Ambiguous"="Ambiguous", "Unclassified"="Unclassified", .ordered = TRUE)
+
+GCsbyCOG_Genome$genome_name <- recode_factor(GCsbyCOG_Genome$genome_name, "Dpigrum_ATCC_51524"="ATCC 51524", "Dpigrum_KPL3250"="KPL3250", "Dpigrum_KPL1939_CDC4792_99"="CDC 4792-99","Dpigrum_KPL1934_CDC4709_98"="CDC 4709-98", "Dpigrum_KPL1922_CDC39_95"="CDC 39-95", "Dpigrum_KPL3264"="KPL3264", "Dpigrum_KPL3256"="KPL3256", "Dpigrum_KPL3033"="KPL3033", "Dpigrum_KPL1933_CDC4545_98"="CDC 4545-98", "Dpigrum_KPL1930_CDC2949_98"="CDC 2949-98", "Dpigrum_KPL3069"="KPL3069", "Dpigrum_KPL3052"="KPL3052", "Dpigrum_KPL3090"="KPL3090", "Dpigrum_KPL3086"="KPL3086", "Dpigrum_KPL3065"="KPL3065", "Dpigrum_KPL3043"="KPL3043", "Dpigrum_KPL3911"="KPL3911", "Dpigrum_KPL3084"="KPL3084", "Dpigrum_KPL3070"="KPL3070",
 "Dpigrum_KPL3246"="KPL3246", "Dpigrum_KPL1937_CDC4199_99"="CDC 4199-99","Dpigrum_KPL3274"="KPL3274","Dpigrum_KPL3050"="KPL3050","Dpigrum_KPL1938_CDC4791_99"="CDC 4791-99", "Dpigrum_KPL1932_CDC4420_98"="CDC 4420-98", "Dpigrum_KPL3077"="KPL3077", "Dpigrum_KPL1931_CDC4294_98"="CDC 4294-98", "Dpigrum_KPL1914"="KPL1914", .ordered = TRUE)
 ```
+
+### GCs by COG Category
+
+The table “GCsbyCOG” groups the genes by Accessory vs. Soft/Core status,
+and nested inside as the COG category.
+
+``` r
+GCsbyCOG <- DpigPangenome %>%
+  group_by(accessory_vs_core, COGs) %>%
+  summarise(num_corrected_genes=sum(1/num_genes_in_gene_cluster))
+```
+
+Renaming and ordering variables factor levels for plotting:
+
+``` r
+GCsbyCOG$COGs <- recode_factor(GCsbyCOG$COGs, "Q"="Secondary metabolites biosynthesis, transport, and catabolism","P"="Inorganic ion transport and metabolism","I"="Lipid transport and metabolism","H"="Coenzyme transport and metabolism","G"="Carbohydrate transport and metabolism","F"="Nucleotide transport and metabolism","E"="Amino acid transport and metabolism","C"="Energy production and conversion","X"="Mobilome: prophages, transposons","L"="Replication, recombination and repair","K"="Transcription","J"="Translation, ribosomal structure and biogenesis","V"="Defense mechanisms","U"="Intracellular trafficking, secretion, and vesicular transport","T"="Signal transduction mechanisms","O"="Post-translational modification, protein turnover, and chaperones","N"="Cell Motility","M"="Cell wall/membrane/envelope biogenesis","D"="Cell cycle control, cell division, chromosome partitioning","Uninformative"="Uninformative","Ambiguous"="Ambiguous","Unclassified"="Unclassified", .ordered = TRUE)
+```
+
+New table “GCsbyCOG\_CorevsAcc” in wide format. Total GCs for each COG
+category calculated, as well as % of GCs in the “Accessory” and
+“Soft/Core” relative to each category. The ratio between the number of
+GC in the “Accessory” vs. the “Soft/Core” is calculated for each COG:
+
+``` r
+GCsbyCOG_CorevsAcc <- spread(GCsbyCOG, accessory_vs_core, num_corrected_genes)
+GCsbyCOG_CorevsAcc$total <- GCsbyCOG_CorevsAcc$Accessory + GCsbyCOG_CorevsAcc$Core
+GCsbyCOG_CorevsAcc$p.accessory <- round(100*(GCsbyCOG_CorevsAcc$Accessory/GCsbyCOG_CorevsAcc$total), 1)
+GCsbyCOG_CorevsAcc$p.core <- round(100*(GCsbyCOG_CorevsAcc$Core/GCsbyCOG_CorevsAcc$total), 1)
+GCsbyCOG_CorevsAcc$ratio <- round(GCsbyCOG_CorevsAcc$Accessory/GCsbyCOG_CorevsAcc$Core, 2)
+
+kable(GCsbyCOG_CorevsAcc)
+```
+
+<table>
+
+<thead>
+
+<tr>
+
+<th style="text-align:left;">
+
+COGs
+
+</th>
+
+<th style="text-align:right;">
+
+Accessory
+
+</th>
+
+<th style="text-align:right;">
+
+Core
+
+</th>
+
+<th style="text-align:right;">
+
+total
+
+</th>
+
+<th style="text-align:right;">
+
+p.accessory
+
+</th>
+
+<th style="text-align:right;">
+
+p.core
+
+</th>
+
+<th style="text-align:right;">
+
+ratio
+
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td style="text-align:left;">
+
+Secondary metabolites biosynthesis, transport, and catabolism
+
+</td>
+
+<td style="text-align:right;">
+
+1.000000
+
+</td>
+
+<td style="text-align:right;">
+
+5.000000
+
+</td>
+
+<td style="text-align:right;">
+
+6.000000
+
+</td>
+
+<td style="text-align:right;">
+
+16.7
+
+</td>
+
+<td style="text-align:right;">
+
+83.3
+
+</td>
+
+<td style="text-align:right;">
+
+0.20
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Inorganic ion transport and metabolism
+
+</td>
+
+<td style="text-align:right;">
+
+10.800000
+
+</td>
+
+<td style="text-align:right;">
+
+66.005681
+
+</td>
+
+<td style="text-align:right;">
+
+76.805681
+
+</td>
+
+<td style="text-align:right;">
+
+14.1
+
+</td>
+
+<td style="text-align:right;">
+
+85.9
+
+</td>
+
+<td style="text-align:right;">
+
+0.16
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Lipid transport and metabolism
+
+</td>
+
+<td style="text-align:right;">
+
+3.000000
+
+</td>
+
+<td style="text-align:right;">
+
+37.866725
+
+</td>
+
+<td style="text-align:right;">
+
+40.866725
+
+</td>
+
+<td style="text-align:right;">
+
+7.3
+
+</td>
+
+<td style="text-align:right;">
+
+92.7
+
+</td>
+
+<td style="text-align:right;">
+
+0.08
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Coenzyme transport and metabolism
+
+</td>
+
+<td style="text-align:right;">
+
+12.947368
+
+</td>
+
+<td style="text-align:right;">
+
+45.620690
+
+</td>
+
+<td style="text-align:right;">
+
+58.568058
+
+</td>
+
+<td style="text-align:right;">
+
+22.1
+
+</td>
+
+<td style="text-align:right;">
+
+77.9
+
+</td>
+
+<td style="text-align:right;">
+
+0.28
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Carbohydrate transport and metabolism
+
+</td>
+
+<td style="text-align:right;">
+
+131.777734
+
+</td>
+
+<td style="text-align:right;">
+
+80.356549
+
+</td>
+
+<td style="text-align:right;">
+
+212.134283
+
+</td>
+
+<td style="text-align:right;">
+
+62.1
+
+</td>
+
+<td style="text-align:right;">
+
+37.9
+
+</td>
+
+<td style="text-align:right;">
+
+1.64
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Nucleotide transport and metabolism
+
+</td>
+
+<td style="text-align:right;">
+
+4.000000
+
+</td>
+
+<td style="text-align:right;">
+
+48.000000
+
+</td>
+
+<td style="text-align:right;">
+
+52.000000
+
+</td>
+
+<td style="text-align:right;">
+
+7.7
+
+</td>
+
+<td style="text-align:right;">
+
+92.3
+
+</td>
+
+<td style="text-align:right;">
+
+0.08
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Amino acid transport and metabolism
+
+</td>
+
+<td style="text-align:right;">
+
+20.726708
+
+</td>
+
+<td style="text-align:right;">
+
+71.911239
+
+</td>
+
+<td style="text-align:right;">
+
+92.637947
+
+</td>
+
+<td style="text-align:right;">
+
+22.4
+
+</td>
+
+<td style="text-align:right;">
+
+77.6
+
+</td>
+
+<td style="text-align:right;">
+
+0.29
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Energy production and conversion
+
+</td>
+
+<td style="text-align:right;">
+
+9.558824
+
+</td>
+
+<td style="text-align:right;">
+
+46.536946
+
+</td>
+
+<td style="text-align:right;">
+
+56.095769
+
+</td>
+
+<td style="text-align:right;">
+
+17.0
+
+</td>
+
+<td style="text-align:right;">
+
+83.0
+
+</td>
+
+<td style="text-align:right;">
+
+0.21
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Mobilome: prophages, transposons
+
+</td>
+
+<td style="text-align:right;">
+
+50.128275
+
+</td>
+
+<td style="text-align:right;">
+
+3.964286
+
+</td>
+
+<td style="text-align:right;">
+
+54.092560
+
+</td>
+
+<td style="text-align:right;">
+
+92.7
+
+</td>
+
+<td style="text-align:right;">
+
+7.3
+
+</td>
+
+<td style="text-align:right;">
+
+12.64
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Replication, recombination and repair
+
+</td>
+
+<td style="text-align:right;">
+
+53.023809
+
+</td>
+
+<td style="text-align:right;">
+
+72.476833
+
+</td>
+
+<td style="text-align:right;">
+
+125.500642
+
+</td>
+
+<td style="text-align:right;">
+
+42.2
+
+</td>
+
+<td style="text-align:right;">
+
+57.8
+
+</td>
+
+<td style="text-align:right;">
+
+0.73
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Transcription
+
+</td>
+
+<td style="text-align:right;">
+
+52.731512
+
+</td>
+
+<td style="text-align:right;">
+
+49.273876
+
+</td>
+
+<td style="text-align:right;">
+
+102.005388
+
+</td>
+
+<td style="text-align:right;">
+
+51.7
+
+</td>
+
+<td style="text-align:right;">
+
+48.3
+
+</td>
+
+<td style="text-align:right;">
+
+1.07
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Translation, ribosomal structure and biogenesis
+
+</td>
+
+<td style="text-align:right;">
+
+13.995556
+
+</td>
+
+<td style="text-align:right;">
+
+169.455833
+
+</td>
+
+<td style="text-align:right;">
+
+183.451388
+
+</td>
+
+<td style="text-align:right;">
+
+7.6
+
+</td>
+
+<td style="text-align:right;">
+
+92.4
+
+</td>
+
+<td style="text-align:right;">
+
+0.08
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Defense mechanisms
+
+</td>
+
+<td style="text-align:right;">
+
+87.119592
+
+</td>
+
+<td style="text-align:right;">
+
+31.741032
+
+</td>
+
+<td style="text-align:right;">
+
+118.860624
+
+</td>
+
+<td style="text-align:right;">
+
+73.3
+
+</td>
+
+<td style="text-align:right;">
+
+26.7
+
+</td>
+
+<td style="text-align:right;">
+
+2.74
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Intracellular trafficking, secretion, and vesicular transport
+
+</td>
+
+<td style="text-align:right;">
+
+5.000000
+
+</td>
+
+<td style="text-align:right;">
+
+9.000000
+
+</td>
+
+<td style="text-align:right;">
+
+14.000000
+
+</td>
+
+<td style="text-align:right;">
+
+35.7
+
+</td>
+
+<td style="text-align:right;">
+
+64.3
+
+</td>
+
+<td style="text-align:right;">
+
+0.56
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Signal transduction mechanisms
+
+</td>
+
+<td style="text-align:right;">
+
+3.489011
+
+</td>
+
+<td style="text-align:right;">
+
+31.764325
+
+</td>
+
+<td style="text-align:right;">
+
+35.253336
+
+</td>
+
+<td style="text-align:right;">
+
+9.9
+
+</td>
+
+<td style="text-align:right;">
+
+90.1
+
+</td>
+
+<td style="text-align:right;">
+
+0.11
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Post-translational modification, protein turnover, and chaperones
+
+</td>
+
+<td style="text-align:right;">
+
+9.000000
+
+</td>
+
+<td style="text-align:right;">
+
+55.933333
+
+</td>
+
+<td style="text-align:right;">
+
+64.933333
+
+</td>
+
+<td style="text-align:right;">
+
+13.9
+
+</td>
+
+<td style="text-align:right;">
+
+86.1
+
+</td>
+
+<td style="text-align:right;">
+
+0.16
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Cell Motility
+
+</td>
+
+<td style="text-align:right;">
+
+5.274510
+
+</td>
+
+<td style="text-align:right;">
+
+2.214286
+
+</td>
+
+<td style="text-align:right;">
+
+7.488796
+
+</td>
+
+<td style="text-align:right;">
+
+70.4
+
+</td>
+
+<td style="text-align:right;">
+
+29.6
+
+</td>
+
+<td style="text-align:right;">
+
+2.38
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Cell wall/membrane/envelope biogenesis
+
+</td>
+
+<td style="text-align:right;">
+
+12.795215
+
+</td>
+
+<td style="text-align:right;">
+
+59.637665
+
+</td>
+
+<td style="text-align:right;">
+
+72.432881
+
+</td>
+
+<td style="text-align:right;">
+
+17.7
+
+</td>
+
+<td style="text-align:right;">
+
+82.3
+
+</td>
+
+<td style="text-align:right;">
+
+0.21
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Cell cycle control, cell division, chromosome partitioning
+
+</td>
+
+<td style="text-align:right;">
+
+6.586538
+
+</td>
+
+<td style="text-align:right;">
+
+21.524950
+
+</td>
+
+<td style="text-align:right;">
+
+28.111488
+
+</td>
+
+<td style="text-align:right;">
+
+23.4
+
+</td>
+
+<td style="text-align:right;">
+
+76.6
+
+</td>
+
+<td style="text-align:right;">
+
+0.31
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Uninformative
+
+</td>
+
+<td style="text-align:right;">
+
+50.750681
+
+</td>
+
+<td style="text-align:right;">
+
+170.845630
+
+</td>
+
+<td style="text-align:right;">
+
+221.596312
+
+</td>
+
+<td style="text-align:right;">
+
+22.9
+
+</td>
+
+<td style="text-align:right;">
+
+77.1
+
+</td>
+
+<td style="text-align:right;">
+
+0.30
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Ambiguous
+
+</td>
+
+<td style="text-align:right;">
+
+99.053627
+
+</td>
+
+<td style="text-align:right;">
+
+141.974587
+
+</td>
+
+<td style="text-align:right;">
+
+241.028214
+
+</td>
+
+<td style="text-align:right;">
+
+41.1
+
+</td>
+
+<td style="text-align:right;">
+
+58.9
+
+</td>
+
+<td style="text-align:right;">
+
+0.70
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Unclassified
+
+</td>
+
+<td style="text-align:right;">
+
+840.241040
+
+</td>
+
+<td style="text-align:right;">
+
+164.895536
+
+</td>
+
+<td style="text-align:right;">
+
+1005.136576
+
+</td>
+
+<td style="text-align:right;">
+
+83.6
+
+</td>
+
+<td style="text-align:right;">
+
+16.4
+
+</td>
+
+<td style="text-align:right;">
+
+5.10
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+## Plots
 
 Color Palettes
 
 ``` r
 getPalette <- colorRampPalette(brewer.pal(8, "Set1"))
-CountTotalCOGs <- length(unique(DpigCOGsbyGC$COGs))
+CountTotalCOGs <- length(unique(GCsbyCOG_Genome$COGs))
 
 palette1 <- c("grey60", "grey40", "grey20", getPalette(CountTotalCOGs-3)) # 22 elements: Colors + Grays
 palette2 <- getPalette(CountTotalCOGs-3) # 19 elements: Colors
 palette3 <- c("grey60", "grey40", "grey20", "white") # 4 elements: White + Grays
 ```
 
-### Plots Accessory vs. Core
+### Plots Accessory vs. Soft/Core
 
 Panel A in main figure:
 
 ``` r
-pA <- ggplot(DpigCOGsbyGC, aes(x = accessory_vs_core, y = num_corrected_genes, fill = fct_rev(COGs))) +
+pA <- ggplot(GCsbyCOG_Genome, aes(x = accessory_vs_core, y = num_corrected_genes, fill = fct_rev(COGs))) +
   stat_summary(fun=sum ,geom="bar", position = "stack") +
   scale_x_discrete(labels = c("Soft/Core", "Accessory")) +
   scale_fill_manual(values = palette1) +
@@ -179,15 +3280,12 @@ pA <- ggplot(DpigCOGsbyGC, aes(x = accessory_vs_core, y = num_corrected_genes, f
   labs(fill="COG Categories", x=" ", y= "Number of Gene Clusters") +
   theme_classic() +
   theme(axis.title = element_text(size = 9), axis.text = element_text(size=7), plot.margin=unit(c(10,0,10,20),"pt"), legend.position = "none") 
-pA
 ```
-
-![](DpigCOGAnalysis_files/figure-gfm/TotalGCs.accessory_vs_core-1.png)<!-- -->
 
 This plot is used for the grayscale legend:
 
 ``` r
-pB <- ggplot(DpigCOGsbyGC, aes(x = accessory_vs_core, y = num_corrected_genes, fill = fct_rev(Assignment))) +
+pB <- ggplot(GCsbyCOG_Genome, aes(x = accessory_vs_core, y = num_corrected_genes, fill = fct_rev(Assignment))) +
   stat_summary(fun=sum ,geom="bar", position = "stack") +
   scale_x_discrete(labels = c("Soft/Core", "Accessory")) +
   scale_fill_manual(values = palette3) +
@@ -196,17 +3294,14 @@ pB <- ggplot(DpigCOGsbyGC, aes(x = accessory_vs_core, y = num_corrected_genes, f
   theme_classic() +
   theme(axis.title = element_text(size = 9), axis.text = element_text(size=7), plot.margin=unit(c(10,0,10,20),"pt"), legend.key.size = unit(0.7, "line"), legend.text = element_text(size = 7), legend.box.margin = margin(10,20,10,10)) +
   guides(fill=guide_legend(ncol=1, title.position = "top", title.hjust = 0.5))
-pB
 ```
-
-![](DpigCOGAnalysis_files/figure-gfm/InformativeGCs.accessory_vs_core-1.png)<!-- -->
 
 ### Plots by Genome
 
 Panel A in supplemental figure:
 
 ``` r
-pC <- ggplot(filter(DpigCOGsbyGC, accessory_vs_core == "Accessory"), aes(x=genome_name, y=num_corrected_genes, fill = fct_rev(COGs))) +
+pC <- ggplot(filter(GCsbyCOG_Genome, accessory_vs_core == "Accessory"), aes(x=genome_name, y=num_corrected_genes, fill = fct_rev(COGs))) +
   stat_summary(fun=sum ,geom="bar", position = "stack") +
   scale_fill_manual(values = palette1) +
   scale_y_continuous(expand = c(0,0)) + 
@@ -214,15 +3309,12 @@ pC <- ggplot(filter(DpigCOGsbyGC, accessory_vs_core == "Accessory"), aes(x=genom
   theme_classic() + 
   theme(axis.text.y = element_text(size=7), axis.text.x = element_text(size=8, angle=75, hjust=1)) +
   theme(legend.position = "none", plot.margin=unit(c(15,15,-10,20),"pt")) 
-
-pC
 ```
 
-![](DpigCOGAnalysis_files/figure-gfm/TotalGCs.accesory.byGenome-1.png)<!-- -->
 Panel B in supplemental figure:
 
 ``` r
-pD <- ggplot(filter(DpigCOGsbyGC %>% filter(COGs != "Uninformative", COGs !="Ambiguous", COGs != "Unclassified"), accessory_vs_core == "Accessory"), aes(x=genome_name, y=num_corrected_genes, fill = fct_rev(COGs))) +
+pD <- ggplot(filter(GCsbyCOG_Genome %>% filter(COGs != "Uninformative", COGs !="Ambiguous", COGs != "Unclassified"), accessory_vs_core == "Accessory"), aes(x=genome_name, y=num_corrected_genes, fill = fct_rev(COGs))) +
   stat_summary(fun=sum ,geom="bar", position = "stack") +
   scale_y_continuous(expand = c(0,0)) + 
   scale_fill_manual(values = palette2) + 
@@ -231,14 +3323,12 @@ pD <- ggplot(filter(DpigCOGsbyGC %>% filter(COGs != "Uninformative", COGs !="Amb
   theme(axis.text.y = element_text(size=7), axis.text.x = element_text(size=8, angle=75, hjust=1)) +
   theme(legend.position="bottom", legend.key.size = unit(0.7, "line"), legend.text = element_text(size = 8), plot.margin=unit(c(0,15,0,20),"pt")) +
   guides(fill=guide_legend(ncol=2, title.position = "top", title.hjust = 0.5)) 
-pD
 ```
 
-![](DpigCOGAnalysis_files/figure-gfm/InformativeGCs.accesory.byGenome-1.png)<!-- -->
 This plot is used for the grayscale legend:
 
 ``` r
-pE <- ggplot(filter(DpigCOGsbyGC, accessory_vs_core == "Accessory"), aes(x=genome_name, y=num_corrected_genes, fill = fct_rev(Assignment))) +
+pE <- ggplot(filter(GCsbyCOG_Genome, accessory_vs_core == "Accessory"), aes(x=genome_name, y=num_corrected_genes, fill = fct_rev(Assignment))) +
   stat_summary(fun=sum ,geom="bar", position = "stack") +
   scale_fill_manual(values = palette3) +
   scale_y_continuous(expand = c(0,0)) + 
@@ -247,84 +3337,41 @@ pE <- ggplot(filter(DpigCOGsbyGC, accessory_vs_core == "Accessory"), aes(x=genom
   theme(axis.text.y = element_text(size=7), axis.text.x = element_text(size=8, angle=75, hjust=1)) +
   theme(legend.position="bottom", legend.key.size = unit(0.7, "line"), legend.text = element_text(size = 8), legend.title = element_text(face="bold", size = 12), plot.margin=unit(c(15,15,0,20),"pt")) +
   guides(fill=guide_legend(nrow=1, title.position = "top", title.hjust = -5))
-pE
 ```
 
-![](DpigCOGAnalysis_files/figure-gfm/TotalGCs.accesory.byGenome.legend-1.png)<!-- -->
+This is used for the clade labels in supplemental figure:
+
+``` r
+pclades <- ggplot() +
+  scale_y_continuous(limits = c(-1.5, 0.5), breaks = c(-1, 0)) +
+  geom_segment(aes(x=0,xend=2.9,y=0,yend=0), color="#2c9b51ff") +
+  geom_segment(aes(x=3,xend=4.9,y=0,yend=0), color="#a851a8ff") +
+  geom_segment(aes(x=5,xend=9.9,y=0,yend=0), color="#e17139ff") +
+  geom_segment(aes(x=10,xend=28,y=0,yend=0), color="#1b1d86ff") +
+  annotate("text", x = 1.5, y = -1, label = "C1", fontface="bold", color="#2c9b51ff")+
+  annotate("text", x = 4, y = -1, label = "C2", fontface="bold", color="#a851a8ff")+
+  annotate("text", x = 7.3, y = -1, label = "C3", fontface="bold", color="#e17139ff")+
+  annotate("text", x = 19, y = -1, label = "C4", fontface="bold", color="#1b1d86ff")+
+  theme_classic() +
+  theme(axis.title = element_blank(), axis.text = element_blank(), axis.ticks = element_blank(), axis.line = element_blank(), plot.margin=unit(c(0,0,5,20),"pt")) 
+```
 
 ### Plots by COG Category
 
-The table “COGTotalGC” groups the genes by accessory vs. core status,
-and nested inside as the unambiguous COG category. Table converted to
-the wide format.
+In order to represent the Soft/Core on the left of the plot with
+absolute values per COG category we create `core.neg`; a negative
+version of the `core` variable in GCsbyCOG\_CorevsAcc. Table converted
+to the long format for plotting.
 
 ``` r
-COGTotalGC<-DpigPangenome %>%
-  group_by(accessory_vs_core, COGs) %>%
-  summarise(num_corrected_genes=sum(1/num_genes_in_gene_cluster))
-
-COGTotalGC$COGs <- recode_factor(COGTotalGC$COGs, "Q"="Secondary metabolites biosynthesis, transport, and catabolism","P"="Inorganic ion transport and metabolism","I"="Lipid transport and metabolism","H"="Coenzyme transport and metabolism","G"="Carbohydrate transport and metabolism","F"="Nucleotide transport and metabolism","E"="Amino acid transport and metabolism","C"="Energy production and conversion","X"="Mobilome: prophages, transposons","L"="Replication, recombination and repair","K"="Transcription","J"="Translation, ribosomal structure and biogenesis","V"="Defense mechanisms","U"="Intracellular trafficking, secretion, and vesicular transport","T"="Signal transduction mechanisms","O"="Post-translational modification, protein turnover, and chaperones","N"="Cell Motility","M"="Cell wall/membrane/envelope biogenesis","D"="Cell cycle control, cell division, chromosome partitioning","Uninformative"="Uninformative","Ambiguous"="Ambiguous","Unclassified"="Unclassified", .ordered = TRUE)
-
-COGTotalGC <- spread(COGTotalGC, accessory_vs_core, num_corrected_genes)
+GCsbyCOG_CorevsAcc$core.neg <- -GCsbyCOG_CorevsAcc$Core
+GCsbyCOG_CorevsAccLong <- gather(GCsbyCOG_CorevsAcc, accessory_vs_core, plotting, core.neg, Accessory)
 ```
 
-``` r
-A <- round(100*sum(COGTotalGC$Accessory)/(sum(COGTotalGC$Accessory)+sum(COGTotalGC$Core)), 2)
-C <- round(100*sum(COGTotalGC$Core)/(sum(COGTotalGC$Accessory)+sum(COGTotalGC$Core)), 2)
-```
-
-The proportions are 51.69% accessory vs. 48.31% core at the pangenome
-level. We calculate the accessory vs. core proportions by COG category,
-to see the COG categories that are enriched in the accessory.
+Panel B in main figure:
 
 ``` r
-COGTotalGC$total <- COGTotalGC$Accessory + COGTotalGC$Core
-COGTotalGC$p.accessory <- round(100*(COGTotalGC$Accessory/COGTotalGC$total), 2)
-COGTotalGC$p.core <- round(100*(COGTotalGC$Core/COGTotalGC$total), 2)
-COGTotalGC$enrichment <- round(COGTotalGC$p.accessory/A, 2)
-```
-
-``` r
-kable(COGTotalGC)
-```
-
-| COGs                                                              |  Accessory |       Core |       total | p.accessory | p.core | enrichment |
-| :---------------------------------------------------------------- | ---------: | ---------: | ----------: | ----------: | -----: | ---------: |
-| Secondary metabolites biosynthesis, transport, and catabolism     |   1.000000 |   5.000000 |    6.000000 |       16.67 |  83.33 |       0.32 |
-| Inorganic ion transport and metabolism                            |  10.800000 |  66.005681 |   76.805681 |       14.06 |  85.94 |       0.27 |
-| Lipid transport and metabolism                                    |   3.000000 |  37.866725 |   40.866725 |        7.34 |  92.66 |       0.14 |
-| Coenzyme transport and metabolism                                 |  12.947368 |  45.620690 |   58.568058 |       22.11 |  77.89 |       0.43 |
-| Carbohydrate transport and metabolism                             | 131.777734 |  80.356549 |  212.134283 |       62.12 |  37.88 |       1.20 |
-| Nucleotide transport and metabolism                               |   4.000000 |  48.000000 |   52.000000 |        7.69 |  92.31 |       0.15 |
-| Amino acid transport and metabolism                               |  20.726708 |  71.911239 |   92.637947 |       22.37 |  77.63 |       0.43 |
-| Energy production and conversion                                  |   9.558824 |  46.536946 |   56.095769 |       17.04 |  82.96 |       0.33 |
-| Mobilome: prophages, transposons                                  |  50.128275 |   3.964286 |   54.092560 |       92.67 |   7.33 |       1.79 |
-| Replication, recombination and repair                             |  53.023809 |  72.476833 |  125.500642 |       42.25 |  57.75 |       0.82 |
-| Transcription                                                     |  52.731512 |  49.273876 |  102.005388 |       51.69 |  48.31 |       1.00 |
-| Translation, ribosomal structure and biogenesis                   |  13.995556 | 169.455833 |  183.451388 |        7.63 |  92.37 |       0.15 |
-| Defense mechanisms                                                |  87.119592 |  31.741032 |  118.860624 |       73.30 |  26.70 |       1.42 |
-| Intracellular trafficking, secretion, and vesicular transport     |   5.000000 |   9.000000 |   14.000000 |       35.71 |  64.29 |       0.69 |
-| Signal transduction mechanisms                                    |   3.489011 |  31.764325 |   35.253336 |        9.90 |  90.10 |       0.19 |
-| Post-translational modification, protein turnover, and chaperones |   9.000000 |  55.933333 |   64.933333 |       13.86 |  86.14 |       0.27 |
-| Cell Motility                                                     |   5.274510 |   2.214286 |    7.488796 |       70.43 |  29.57 |       1.36 |
-| Cell wall/membrane/envelope biogenesis                            |  12.795215 |  59.637665 |   72.432881 |       17.66 |  82.34 |       0.34 |
-| Cell cycle control, cell division, chromosome partitioning        |   6.586538 |  21.524950 |   28.111488 |       23.43 |  76.57 |       0.45 |
-| Uninformative                                                     |  50.750681 | 170.845630 |  221.596312 |       22.90 |  77.10 |       0.44 |
-| Ambiguous                                                         |  99.053627 | 141.974587 |  241.028214 |       41.10 |  58.90 |       0.80 |
-| Unclassified                                                      | 840.241040 | 164.895536 | 1005.136576 |       83.59 |  16.41 |       1.62 |
-
-In order to represent the Core on the left of a plot with absolute
-values per COG category we create `core.neg`; a negative version of the
-`core` variable in COGTotalGC. Table converted to the long format for
-plotting.
-
-``` r
-COGTotalGC$core.neg <- -COGTotalGC$Core
-COGTotalGCLong <- gather(COGTotalGC, accessory_vs_core, plotting, core.neg, Accessory)
-```
-
-``` r
-pF <- ggplot(filter(COGTotalGCLong, COGs != "Uninformative", COGs != "Ambiguous", COGs != "Unclassified"), aes(x = COGs, y = plotting, fill = COGs)) +
+pF <- ggplot(filter(GCsbyCOG_CorevsAccLong, COGs != "Uninformative", COGs != "Ambiguous", COGs != "Unclassified"), aes(x = COGs, y = plotting, fill = COGs)) +
   geom_bar(stat="identity") + 
   scale_fill_manual(values = rev(palette2)) + 
   scale_x_discrete(position = "top") +
@@ -337,37 +3384,13 @@ pF <- ggplot(filter(COGTotalGCLong, COGs != "Uninformative", COGs != "Ambiguous"
   theme_classic() +
   theme(axis.title = element_text(size = 9), axis.text.x = element_text(size=7), axis.ticks.y = element_blank(), axis.line.y = element_blank(), legend.position = "none", plot.margin=unit(c(5,10,10,25),"pt"), plot.title=element_text(face="bold", hjust=3, vjust=-3.9)) 
 
-pF
-```
-
-![](DpigCOGAnalysis_files/figure-gfm/InformativeGCs.byCOG-1.png)<!-- -->
-
-``` r
 gpF <- ggplotGrob(pF)
 gpF$layout$clip[gpF$layout$name=="panel"] <- "off"
 ```
 
-This is used for the clade labels:
-
-``` r
-clades <- ggplot() +
-  scale_y_continuous(limits = c(-1.5, 0.5), breaks = c(-1, 0)) +
-  geom_segment(aes(x=0,xend=2.9,y=0,yend=0), color="#2c9b51ff") +
-  geom_segment(aes(x=3,xend=4.9,y=0,yend=0), color="#a851a8ff") +
-  geom_segment(aes(x=5,xend=9.9,y=0,yend=0), color="#e17139ff") +
-  geom_segment(aes(x=10,xend=28,y=0,yend=0), color="#1b1d86ff") +
-  annotate("text", x = 1.5, y = -1, label = "C1", fontface="bold", color="#2c9b51ff")+
-  annotate("text", x = 4, y = -1, label = "C2", fontface="bold", color="#a851a8ff")+
-  annotate("text", x = 7.3, y = -1, label = "C3", fontface="bold", color="#e17139ff")+
-  annotate("text", x = 19, y = -1, label = "C4", fontface="bold", color="#1b1d86ff")+
-  theme_classic() +
-  theme(axis.title = element_blank(), axis.text = element_blank(), axis.ticks = element_blank(), axis.line = element_blank(), plot.margin=unit(c(0,0,5,20),"pt")) 
-clades
-```
-
-![](DpigCOGAnalysis_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
-
 ## Final Figures
+
+Main figure:
 
 ``` r
 pMain <- ggarrange(ggarrange(get_legend(pB), pA, ncol = 1, heights = c(0.2, 1)),
@@ -376,10 +3399,12 @@ pMain <- ggarrange(ggarrange(get_legend(pB), pA, ncol = 1, heights = c(0.2, 1)),
 ggsave("Fig4_COG_summary.tiff", pMain, width = 9, height = 4, dpi = 150)
 ```
 
+Supplemental Figure:
+
 ``` r
 pSupple <- ggarrange(get_legend(pE),
                       ggarrange(pC+theme(axis.text.x = element_blank(), axis.ticks.x = element_blank()), pD+theme(legend.position="none"), ncol = 1,  align = "v", labels = c("A", "B"), hjust=-0.5, vjust=1, heights = c(1, 1)),
-                      clades, 
+                      pclades, 
                       get_legend(pD), ncol = 1, heights = c(0.2, 2, 0.2, 0.6))
 
 ggsave("FigS4_COG_byGenome.tiff", pSupple, width = 8, height = 10, dpi = 150)
