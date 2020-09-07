@@ -75,7 +75,7 @@ TableGene$Percentage <- round(100*(TableGene$Count/49418),1)
 
 kable(TableGene)
 ```
-60.65% of the gene calls are Informative.
+60.7% of the gene calls are Informative.
 
 ## COG Analysis at the Gene Cluster Level
 
@@ -171,10 +171,13 @@ Renaming and ordering variables factor levels for plotting:
 GCsbyCOG$COGs <- recode_factor(GCsbyCOG$COGs, "Q"="Secondary metabolites biosynthesis, transport, and catabolism","P"="Inorganic ion transport and metabolism","I"="Lipid transport and metabolism","H"="Coenzyme transport and metabolism","G"="Carbohydrate transport and metabolism","F"="Nucleotide transport and metabolism","E"="Amino acid transport and metabolism","C"="Energy production and conversion","X"="Mobilome: prophages, transposons","L"="Replication, recombination and repair","K"="Transcription","J"="Translation, ribosomal structure and biogenesis","V"="Defense mechanisms","U"="Intracellular trafficking, secretion, and vesicular transport","T"="Signal transduction mechanisms","O"="Post-translational modification, protein turnover, and chaperones","N"="Cell Motility","M"="Cell wall/membrane/envelope biogenesis","D"="Cell cycle control, cell division, chromosome partitioning","Uninformative"="Uninformative","Ambiguous"="Ambiguous","Unclassified"="Unclassified", .ordered = TRUE)
 ```
 
-New table "GCsbyCOG_CorevsAcc" in wide format. Total GCs for each COG category calculated, as well as % of GCs in the "Accessory" and "Soft/Core" relative to each category. The ratio between the number of GC in the "Accessory" vs. the "Soft/Core" is calculated for each COG:
+New table "GCsbyCOG_CorevsAcc" in wide format. % of each category relative to the "Accessory" or "Soft/Core" calculated (pTotal. variables). Also, total GCs for each COG category calculated, as well as % of GCs in the "Accessory" and "Soft/Core" relative to each category (p. values). The ratio between the number of GC in the "Accessory" vs. the "Soft/Core" is calculated for each COG:
 ```{r}
 GCsbyCOG_CorevsAcc <- spread(GCsbyCOG, accessory_vs_core, num_corrected_genes)
+GCsbyCOG_CorevsAcc$pTotal.Accessory <- round(100*GCsbyCOG_CorevsAcc$Accessory/sum(GCsbyCOG_CorevsAcc$Accessory), 1)
+GCsbyCOG_CorevsAcc$pTotal.Core <- round(100*GCsbyCOG_CorevsAcc$Core/sum(GCsbyCOG_CorevsAcc$Core), 1)
 GCsbyCOG_CorevsAcc$total <- GCsbyCOG_CorevsAcc$Accessory + GCsbyCOG_CorevsAcc$Core
+GCsbyCOG_CorevsAcc$pTotal.total <- round(100*GCsbyCOG_CorevsAcc$total/sum(GCsbyCOG_CorevsAcc$total), 1)
 GCsbyCOG_CorevsAcc$p.accessory <- round(100*(GCsbyCOG_CorevsAcc$Accessory/GCsbyCOG_CorevsAcc$total), 1)
 GCsbyCOG_CorevsAcc$p.core <- round(100*(GCsbyCOG_CorevsAcc$Core/GCsbyCOG_CorevsAcc$total), 1)
 GCsbyCOG_CorevsAcc$ratio <- round(GCsbyCOG_CorevsAcc$Accessory/GCsbyCOG_CorevsAcc$Core, 2)

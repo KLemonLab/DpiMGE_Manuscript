@@ -212,7 +212,7 @@ Informative COGs (Total - Uninformative, Ambiguous & Unclassified)
 
 </table>
 
-60.65% of the gene calls are Informative.
+60.7% of the gene calls are Informative.
 
 ## COG Analysis at the Gene Cluster Level
 
@@ -2169,14 +2169,19 @@ Renaming and ordering variables factor levels for plotting:
 GCsbyCOG$COGs <- recode_factor(GCsbyCOG$COGs, "Q"="Secondary metabolites biosynthesis, transport, and catabolism","P"="Inorganic ion transport and metabolism","I"="Lipid transport and metabolism","H"="Coenzyme transport and metabolism","G"="Carbohydrate transport and metabolism","F"="Nucleotide transport and metabolism","E"="Amino acid transport and metabolism","C"="Energy production and conversion","X"="Mobilome: prophages, transposons","L"="Replication, recombination and repair","K"="Transcription","J"="Translation, ribosomal structure and biogenesis","V"="Defense mechanisms","U"="Intracellular trafficking, secretion, and vesicular transport","T"="Signal transduction mechanisms","O"="Post-translational modification, protein turnover, and chaperones","N"="Cell Motility","M"="Cell wall/membrane/envelope biogenesis","D"="Cell cycle control, cell division, chromosome partitioning","Uninformative"="Uninformative","Ambiguous"="Ambiguous","Unclassified"="Unclassified", .ordered = TRUE)
 ```
 
-New table “GCsbyCOG\_CorevsAcc” in wide format. Total GCs for each COG
-category calculated, as well as % of GCs in the “Accessory” and
-“Soft/Core” relative to each category. The ratio between the number of
-GC in the “Accessory” vs. the “Soft/Core” is calculated for each COG:
+New table “GCsbyCOG\_CorevsAcc” in wide format. % of each category
+relative to the “Accessory” or “Soft/Core” calculated (pTotal.
+variables). Also, total GCs for each COG category calculated, as well as
+% of GCs in the “Accessory” and “Soft/Core” relative to each category
+(p. values). The ratio between the number of GC in the “Accessory”
+vs. the “Soft/Core” is calculated for each COG:
 
 ``` r
 GCsbyCOG_CorevsAcc <- spread(GCsbyCOG, accessory_vs_core, num_corrected_genes)
+GCsbyCOG_CorevsAcc$pTotal.Accessory <- round(100*GCsbyCOG_CorevsAcc$Accessory/sum(GCsbyCOG_CorevsAcc$Accessory), 1)
+GCsbyCOG_CorevsAcc$pTotal.Core <- round(100*GCsbyCOG_CorevsAcc$Core/sum(GCsbyCOG_CorevsAcc$Core), 1)
 GCsbyCOG_CorevsAcc$total <- GCsbyCOG_CorevsAcc$Accessory + GCsbyCOG_CorevsAcc$Core
+GCsbyCOG_CorevsAcc$pTotal.total <- round(100*GCsbyCOG_CorevsAcc$total/sum(GCsbyCOG_CorevsAcc$total), 1)
 GCsbyCOG_CorevsAcc$p.accessory <- round(100*(GCsbyCOG_CorevsAcc$Accessory/GCsbyCOG_CorevsAcc$total), 1)
 GCsbyCOG_CorevsAcc$p.core <- round(100*(GCsbyCOG_CorevsAcc$Core/GCsbyCOG_CorevsAcc$total), 1)
 GCsbyCOG_CorevsAcc$ratio <- round(GCsbyCOG_CorevsAcc$Accessory/GCsbyCOG_CorevsAcc$Core, 2)
@@ -2210,7 +2215,25 @@ Core
 
 <th style="text-align:right;">
 
+pTotal.Accessory
+
+</th>
+
+<th style="text-align:right;">
+
+pTotal.Core
+
+</th>
+
+<th style="text-align:right;">
+
 total
+
+</th>
+
+<th style="text-align:right;">
+
+pTotal.total
 
 </th>
 
@@ -2260,7 +2283,25 @@ Secondary metabolites biosynthesis, transport, and catabolism
 
 <td style="text-align:right;">
 
+0.1
+
+</td>
+
+<td style="text-align:right;">
+
+0.4
+
+</td>
+
+<td style="text-align:right;">
+
 6.000000
+
+</td>
+
+<td style="text-align:right;">
+
+0.2
 
 </td>
 
@@ -2306,7 +2347,25 @@ Inorganic ion transport and metabolism
 
 <td style="text-align:right;">
 
+0.7
+
+</td>
+
+<td style="text-align:right;">
+
+4.8
+
+</td>
+
+<td style="text-align:right;">
+
 76.805681
+
+</td>
+
+<td style="text-align:right;">
+
+2.7
 
 </td>
 
@@ -2352,7 +2411,25 @@ Lipid transport and metabolism
 
 <td style="text-align:right;">
 
+0.2
+
+</td>
+
+<td style="text-align:right;">
+
+2.7
+
+</td>
+
+<td style="text-align:right;">
+
 40.866725
+
+</td>
+
+<td style="text-align:right;">
+
+1.4
 
 </td>
 
@@ -2398,7 +2475,25 @@ Coenzyme transport and metabolism
 
 <td style="text-align:right;">
 
+0.9
+
+</td>
+
+<td style="text-align:right;">
+
+3.3
+
+</td>
+
+<td style="text-align:right;">
+
 58.568058
+
+</td>
+
+<td style="text-align:right;">
+
+2.0
 
 </td>
 
@@ -2444,7 +2539,25 @@ Carbohydrate transport and metabolism
 
 <td style="text-align:right;">
 
+8.9
+
+</td>
+
+<td style="text-align:right;">
+
+5.8
+
+</td>
+
+<td style="text-align:right;">
+
 212.134283
+
+</td>
+
+<td style="text-align:right;">
+
+7.4
 
 </td>
 
@@ -2490,7 +2603,25 @@ Nucleotide transport and metabolism
 
 <td style="text-align:right;">
 
+0.3
+
+</td>
+
+<td style="text-align:right;">
+
+3.5
+
+</td>
+
+<td style="text-align:right;">
+
 52.000000
+
+</td>
+
+<td style="text-align:right;">
+
+1.8
 
 </td>
 
@@ -2536,7 +2667,25 @@ Amino acid transport and metabolism
 
 <td style="text-align:right;">
 
+1.4
+
+</td>
+
+<td style="text-align:right;">
+
+5.2
+
+</td>
+
+<td style="text-align:right;">
+
 92.637947
+
+</td>
+
+<td style="text-align:right;">
+
+3.2
 
 </td>
 
@@ -2582,7 +2731,25 @@ Energy production and conversion
 
 <td style="text-align:right;">
 
+0.6
+
+</td>
+
+<td style="text-align:right;">
+
+3.4
+
+</td>
+
+<td style="text-align:right;">
+
 56.095769
+
+</td>
+
+<td style="text-align:right;">
+
+2.0
 
 </td>
 
@@ -2628,7 +2795,25 @@ Mobilome: prophages, transposons
 
 <td style="text-align:right;">
 
+3.4
+
+</td>
+
+<td style="text-align:right;">
+
+0.3
+
+</td>
+
+<td style="text-align:right;">
+
 54.092560
+
+</td>
+
+<td style="text-align:right;">
+
+1.9
 
 </td>
 
@@ -2674,7 +2859,25 @@ Replication, recombination and repair
 
 <td style="text-align:right;">
 
+3.6
+
+</td>
+
+<td style="text-align:right;">
+
+5.2
+
+</td>
+
+<td style="text-align:right;">
+
 125.500642
+
+</td>
+
+<td style="text-align:right;">
+
+4.4
 
 </td>
 
@@ -2720,7 +2923,25 @@ Transcription
 
 <td style="text-align:right;">
 
+3.6
+
+</td>
+
+<td style="text-align:right;">
+
+3.6
+
+</td>
+
+<td style="text-align:right;">
+
 102.005388
+
+</td>
+
+<td style="text-align:right;">
+
+3.6
 
 </td>
 
@@ -2766,7 +2987,25 @@ Translation, ribosomal structure and biogenesis
 
 <td style="text-align:right;">
 
+0.9
+
+</td>
+
+<td style="text-align:right;">
+
+12.2
+
+</td>
+
+<td style="text-align:right;">
+
 183.451388
+
+</td>
+
+<td style="text-align:right;">
+
+6.4
 
 </td>
 
@@ -2812,7 +3051,25 @@ Defense mechanisms
 
 <td style="text-align:right;">
 
+5.9
+
+</td>
+
+<td style="text-align:right;">
+
+2.3
+
+</td>
+
+<td style="text-align:right;">
+
 118.860624
+
+</td>
+
+<td style="text-align:right;">
+
+4.1
 
 </td>
 
@@ -2858,7 +3115,25 @@ Intracellular trafficking, secretion, and vesicular transport
 
 <td style="text-align:right;">
 
+0.3
+
+</td>
+
+<td style="text-align:right;">
+
+0.6
+
+</td>
+
+<td style="text-align:right;">
+
 14.000000
+
+</td>
+
+<td style="text-align:right;">
+
+0.5
 
 </td>
 
@@ -2904,7 +3179,25 @@ Signal transduction mechanisms
 
 <td style="text-align:right;">
 
+0.2
+
+</td>
+
+<td style="text-align:right;">
+
+2.3
+
+</td>
+
+<td style="text-align:right;">
+
 35.253336
+
+</td>
+
+<td style="text-align:right;">
+
+1.2
 
 </td>
 
@@ -2950,7 +3243,25 @@ Post-translational modification, protein turnover, and chaperones
 
 <td style="text-align:right;">
 
+0.6
+
+</td>
+
+<td style="text-align:right;">
+
+4.0
+
+</td>
+
+<td style="text-align:right;">
+
 64.933333
+
+</td>
+
+<td style="text-align:right;">
+
+2.3
 
 </td>
 
@@ -2996,7 +3307,25 @@ Cell Motility
 
 <td style="text-align:right;">
 
+0.4
+
+</td>
+
+<td style="text-align:right;">
+
+0.2
+
+</td>
+
+<td style="text-align:right;">
+
 7.488796
+
+</td>
+
+<td style="text-align:right;">
+
+0.3
 
 </td>
 
@@ -3042,7 +3371,25 @@ Cell wall/membrane/envelope biogenesis
 
 <td style="text-align:right;">
 
+0.9
+
+</td>
+
+<td style="text-align:right;">
+
+4.3
+
+</td>
+
+<td style="text-align:right;">
+
 72.432881
+
+</td>
+
+<td style="text-align:right;">
+
+2.5
 
 </td>
 
@@ -3088,7 +3435,25 @@ Cell cycle control, cell division, chromosome partitioning
 
 <td style="text-align:right;">
 
+0.4
+
+</td>
+
+<td style="text-align:right;">
+
+1.6
+
+</td>
+
+<td style="text-align:right;">
+
 28.111488
+
+</td>
+
+<td style="text-align:right;">
+
+1.0
 
 </td>
 
@@ -3134,7 +3499,25 @@ Uninformative
 
 <td style="text-align:right;">
 
+3.4
+
+</td>
+
+<td style="text-align:right;">
+
+12.3
+
+</td>
+
+<td style="text-align:right;">
+
 221.596312
+
+</td>
+
+<td style="text-align:right;">
+
+7.7
 
 </td>
 
@@ -3180,7 +3563,25 @@ Ambiguous
 
 <td style="text-align:right;">
 
+6.7
+
+</td>
+
+<td style="text-align:right;">
+
+10.2
+
+</td>
+
+<td style="text-align:right;">
+
 241.028214
+
+</td>
+
+<td style="text-align:right;">
+
+8.4
 
 </td>
 
@@ -3226,7 +3627,25 @@ Unclassified
 
 <td style="text-align:right;">
 
+56.7
+
+</td>
+
+<td style="text-align:right;">
+
+11.9
+
+</td>
+
+<td style="text-align:right;">
+
 1005.136576
+
+</td>
+
+<td style="text-align:right;">
+
+35.0
 
 </td>
 
