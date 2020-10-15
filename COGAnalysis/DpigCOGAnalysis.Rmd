@@ -320,11 +320,11 @@ ggsave("Fig4_COG_summary.tiff", pMain, width = 9, height = 4, dpi = 150)
 Supplemental Figure:
 ```{r eval=FALSE}
 pSupple <- ggarrange(get_legend(pE),
-                      ggarrange(pC+theme(axis.text.x = element_blank(), axis.ticks.x = element_blank()), pD+theme(legend.position="none"), ncol = 1,  align = "v", labels = c("A", "B"), hjust=-0.5, vjust=1, heights = c(1, 1)),
+                      ggarrange(pC+theme(axis.text.x = element_blank(), axis.ticks.x = element_blank()), pD+theme(legend.position="none"), ncol = 1,  align = "v", labels = c("i", "ii"), hjust=-0.5, vjust=1, heights = c(1, 1)),
                       pclades, 
                       get_legend(pD), ncol = 1, heights = c(0.2, 2, 0.2, 0.6))
 
-ggsave("FigS4_COG_byGenome.tiff", pSupple, width = 8, height = 10, dpi = 150)
+ggsave("FigS1D_COG_byGenome.tiff", pSupple, width = 8, height = 10, dpi = 150)
 ```
 
 
