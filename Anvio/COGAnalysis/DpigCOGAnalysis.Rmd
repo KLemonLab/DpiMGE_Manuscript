@@ -25,9 +25,9 @@ DpigPangenome <- DpigPangenome %>%
 ```
 
 In the new variable "accessory_vs_core" we define "Soft/Core" as "MC_core"+"SC_core"+"soft_core" and "accessory" as "shell"+"cloud":
-```{r}
+```{r warning=TRUE}
 DpigPangenome <- DpigPangenome %>%
-  mutate(accessory_vs_core=ifelse(bin_name=="MC_core"|bin_name=="SC_core"|bin_name=="soft_core","Core","Accessory"))
+  mutate(accessory_vs_core=ifelse(bin_name=="MC_Core"|bin_name=="SC_Core"|bin_name=="SoftCore","Core","Accessory"))
 ```
 *"Core" is used in the code to avoid problems with the "/" symbol and later replaced with "Soft/Core" for plotting.
 
@@ -71,7 +71,7 @@ TableGene <- data.frame(
               nrow(DpigPangenome %>% filter(COGs !="Uninformative" & COGs !="Ambiguous" & COGs !="Unclassified"))
               )
 )
-TableGene$Percentage <- round(100*(TableGene$Count/49418),1)
+TableGene$Percentage <- round(100*(TableGene$Count/49415),1)
 
 kable(TableGene)
 ```

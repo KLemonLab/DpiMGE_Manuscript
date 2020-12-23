@@ -7,7 +7,7 @@ We import the output of `anvi-summarize` and select the most relevant
 variables for the functional analysis:
 
 ``` r
-DpigPangenome <- read_csv("Dpi_Prokka_Pan_t28_gene_clusters_summary.csv")
+DpigPangenome <-  read_delim("PAN_DPIG_prokka_gene_clusters_summary.txt", "\t", escape_double = FALSE, trim_ws = TRUE)
 DpigPangenome <- DpigPangenome %>%
   select(unique_id, gene_cluster_id, bin_name, genome_name, num_genomes_gene_cluster_has_hits, num_genes_in_gene_cluster, `Prokka:Prodigal_ACC`, `Prokka:Prodigal`, COG_CATEGORY, COG_FUNCTION, COG_FUNCTION_ACC)
 ```
@@ -17,14 +17,14 @@ In the new variable “accessory\_vs\_core” we define “Soft/Core” as
 
 ``` r
 DpigPangenome <- DpigPangenome %>%
-  mutate(accessory_vs_core=ifelse(bin_name=="MC_core"|bin_name=="SC_core"|bin_name=="soft_core","Core","Accessory"))
+  mutate(accessory_vs_core=ifelse(bin_name=="MC_Core"|bin_name=="SC_Core"|bin_name=="SoftCore","Core","Accessory"))
 ```
 
 \*“Core” is used in the code to avoid problems with the “/” symbol and
 later replaced with “Soft/Core” for plotting.
 
-There are 1483 gene clusters (GC) (51.7%) in the Accessory vs. 1386
-(48.3%) in the Soft/Core at the pangenome level
+There are 1515 gene clusters (GC) (52.2%) in the Accessory vs. 1388
+(47.8%) in the Soft/Core at the pangenome level
 
 ## COG Analysis at the Gene Level
 
@@ -86,7 +86,7 @@ Total in Dpig Pangenome
 
 <td style="text-align:right;">
 
-49418
+49415
 
 </td>
 
@@ -108,13 +108,13 @@ COG Category Uninformative = Function Unknown
 
 <td style="text-align:right;">
 
-2496
+2745
 
 </td>
 
 <td style="text-align:right;">
 
-5.1
+5.6
 
 </td>
 
@@ -130,13 +130,13 @@ COG Category Uninformative = General function predictions only
 
 <td style="text-align:right;">
 
-2733
+2833
 
 </td>
 
 <td style="text-align:right;">
 
-5.5
+5.7
 
 </td>
 
@@ -152,13 +152,13 @@ COG Category Ambiguous (Mixed COG Category)
 
 <td style="text-align:right;">
 
-4883
+4953
 
 </td>
 
 <td style="text-align:right;">
 
-9.9
+10.0
 
 </td>
 
@@ -174,13 +174,13 @@ COG Category Unclassified (Non-assigned)
 
 <td style="text-align:right;">
 
-9333
+8378
 
 </td>
 
 <td style="text-align:right;">
 
-18.9
+17.0
 
 </td>
 
@@ -196,13 +196,13 @@ Informative COGs (Total - Uninformative, Ambiguous & Unclassified)
 
 <td style="text-align:right;">
 
-29973
+30506
 
 </td>
 
 <td style="text-align:right;">
 
-60.7
+61.7
 
 </td>
 
@@ -242,13 +242,13 @@ add up to the number of CGs:
 sum(GCsbyCOG_Genome$num_corrected_genes)
 ```
 
-    ## [1] 2869
+    ## [1] 2903
 
 ``` r
 nrow(DpigPangenome %>% group_by(gene_cluster_id) %>% summarise)
 ```
 
-    ## [1] 2869
+    ## [1] 2903
 
 Extra column to label the gray scale portion of the plots:
 
@@ -321,13 +321,13 @@ Ambiguous
 
 <td style="text-align:right;">
 
-99.05363
+105.09970
 
 </td>
 
 <td style="text-align:right;">
 
-3.5
+3.6
 
 </td>
 
@@ -349,13 +349,13 @@ Informative
 
 <td style="text-align:right;">
 
-492.95465
+540.43075
 
 </td>
 
 <td style="text-align:right;">
 
-17.2
+18.6
 
 </td>
 
@@ -377,13 +377,13 @@ Unclassified
 
 <td style="text-align:right;">
 
-840.24104
+809.50850
 
 </td>
 
 <td style="text-align:right;">
 
-29.3
+27.9
 
 </td>
 
@@ -405,13 +405,13 @@ Uninformative
 
 <td style="text-align:right;">
 
-50.75068
+59.96105
 
 </td>
 
 <td style="text-align:right;">
 
-1.8
+2.1
 
 </td>
 
@@ -433,7 +433,7 @@ Ambiguous
 
 <td style="text-align:right;">
 
-141.97459
+142.29524
 
 </td>
 
@@ -461,13 +461,13 @@ Informative
 
 <td style="text-align:right;">
 
-908.28425
+922.49256
 
 </td>
 
 <td style="text-align:right;">
 
-31.7
+31.8
 
 </td>
 
@@ -489,13 +489,13 @@ Unclassified
 
 <td style="text-align:right;">
 
-164.89554
+141.07739
 
 </td>
 
 <td style="text-align:right;">
 
-5.7
+4.9
 
 </td>
 
@@ -517,13 +517,13 @@ Uninformative
 
 <td style="text-align:right;">
 
-170.84563
+182.13481
 
 </td>
 
 <td style="text-align:right;">
 
-6.0
+6.3
 
 </td>
 
@@ -598,13 +598,13 @@ Ambiguous
 
 <td style="text-align:right;">
 
-99.05363
+105.09970
 
 </td>
 
 <td style="text-align:right;">
 
-6.7
+6.9
 
 </td>
 
@@ -626,13 +626,13 @@ Informative
 
 <td style="text-align:right;">
 
-492.95465
+540.43075
 
 </td>
 
 <td style="text-align:right;">
 
-33.2
+35.7
 
 </td>
 
@@ -654,13 +654,13 @@ Unclassified
 
 <td style="text-align:right;">
 
-840.24104
+809.50850
 
 </td>
 
 <td style="text-align:right;">
 
-56.7
+53.4
 
 </td>
 
@@ -682,13 +682,13 @@ Uninformative
 
 <td style="text-align:right;">
 
-50.75068
+59.96105
 
 </td>
 
 <td style="text-align:right;">
 
-3.4
+4.0
 
 </td>
 
@@ -763,13 +763,13 @@ Ambiguous
 
 <td style="text-align:right;">
 
-141.9746
+142.2952
 
 </td>
 
 <td style="text-align:right;">
 
-10.2
+10.3
 
 </td>
 
@@ -791,13 +791,13 @@ Informative
 
 <td style="text-align:right;">
 
-908.2842
+922.4926
 
 </td>
 
 <td style="text-align:right;">
 
-65.5
+66.5
 
 </td>
 
@@ -819,13 +819,13 @@ Unclassified
 
 <td style="text-align:right;">
 
-164.8955
+141.0774
 
 </td>
 
 <td style="text-align:right;">
 
-11.9
+10.2
 
 </td>
 
@@ -847,13 +847,13 @@ Uninformative
 
 <td style="text-align:right;">
 
-170.8456
+182.1348
 
 </td>
 
 <td style="text-align:right;">
 
-12.3
+13.1
 
 </td>
 
@@ -907,7 +907,7 @@ corrected\_genes
 
 <td style="text-align:left;">
 
-Dpigrum\_ATCC\_51524
+ATCC\_51524
 
 </td>
 
@@ -919,7 +919,7 @@ Accessory
 
 <td style="text-align:right;">
 
-44.91354
+46.24398
 
 </td>
 
@@ -929,7 +929,7 @@ Accessory
 
 <td style="text-align:left;">
 
-Dpigrum\_ATCC\_51524
+ATCC\_51524
 
 </td>
 
@@ -941,7 +941,7 @@ Core
 
 <td style="text-align:right;">
 
-49.17684
+49.26676
 
 </td>
 
@@ -951,7 +951,7 @@ Core
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL1914
+KPL1914
 
 </td>
 
@@ -963,7 +963,7 @@ Accessory
 
 <td style="text-align:right;">
 
-42.97868
+44.52563
 
 </td>
 
@@ -973,7 +973,7 @@ Accessory
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL1914
+KPL1914
 
 </td>
 
@@ -985,7 +985,7 @@ Core
 
 <td style="text-align:right;">
 
-49.53494
+49.58011
 
 </td>
 
@@ -995,7 +995,7 @@ Core
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL1922\_CDC39\_95
+KPL1922\_CDC39\_95
 
 </td>
 
@@ -1007,7 +1007,7 @@ Accessory
 
 <td style="text-align:right;">
 
-58.57321
+59.17963
 
 </td>
 
@@ -1017,7 +1017,7 @@ Accessory
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL1922\_CDC39\_95
+KPL1922\_CDC39\_95
 
 </td>
 
@@ -1029,7 +1029,7 @@ Core
 
 <td style="text-align:right;">
 
-49.18990
+49.27983
 
 </td>
 
@@ -1039,7 +1039,7 @@ Core
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL1930\_CDC2949\_98
+KPL1930\_CDC2949\_98
 
 </td>
 
@@ -1051,7 +1051,7 @@ Accessory
 
 <td style="text-align:right;">
 
-49.23713
+48.40225
 
 </td>
 
@@ -1061,7 +1061,7 @@ Accessory
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL1930\_CDC2949\_98
+KPL1930\_CDC2949\_98
 
 </td>
 
@@ -1073,7 +1073,7 @@ Core
 
 <td style="text-align:right;">
 
-49.00931
+49.09844
 
 </td>
 
@@ -1083,7 +1083,7 @@ Core
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL1931\_CDC4294\_98
+KPL1931\_CDC4294\_98
 
 </td>
 
@@ -1095,7 +1095,7 @@ Accessory
 
 <td style="text-align:right;">
 
-179.17555
+180.28196
 
 </td>
 
@@ -1105,7 +1105,7 @@ Accessory
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL1931\_CDC4294\_98
+KPL1931\_CDC4294\_98
 
 </td>
 
@@ -1117,7 +1117,7 @@ Core
 
 <td style="text-align:right;">
 
-49.15360
+49.22178
 
 </td>
 
@@ -1127,7 +1127,7 @@ Core
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL1932\_CDC4420\_98
+KPL1932\_CDC4420\_98
 
 </td>
 
@@ -1139,7 +1139,7 @@ Accessory
 
 <td style="text-align:right;">
 
-69.74936
+70.59157
 
 </td>
 
@@ -1149,7 +1149,7 @@ Accessory
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL1932\_CDC4420\_98
+KPL1932\_CDC4420\_98
 
 </td>
 
@@ -1161,7 +1161,7 @@ Core
 
 <td style="text-align:right;">
 
-49.37732
+49.44550
 
 </td>
 
@@ -1171,7 +1171,7 @@ Core
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL1933\_CDC4545\_98
+KPL1933\_CDC4545\_98
 
 </td>
 
@@ -1183,7 +1183,7 @@ Accessory
 
 <td style="text-align:right;">
 
-53.11477
+53.11917
 
 </td>
 
@@ -1193,7 +1193,7 @@ Accessory
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL1933\_CDC4545\_98
+KPL1933\_CDC4545\_98
 
 </td>
 
@@ -1205,7 +1205,7 @@ Core
 
 <td style="text-align:right;">
 
-49.12167
+49.18986
 
 </td>
 
@@ -1215,7 +1215,7 @@ Core
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL1934\_CDC4709\_98
+KPL1934\_CDC4709\_98
 
 </td>
 
@@ -1227,7 +1227,7 @@ Accessory
 
 <td style="text-align:right;">
 
-34.69992
+35.73283
 
 </td>
 
@@ -1237,7 +1237,7 @@ Accessory
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL1934\_CDC4709\_98
+KPL1934\_CDC4709\_98
 
 </td>
 
@@ -1249,7 +1249,7 @@ Core
 
 <td style="text-align:right;">
 
-50.74367
+50.82800
 
 </td>
 
@@ -1259,7 +1259,7 @@ Core
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL1937\_CDC4199\_99
+KPL1937\_CDC4199\_99
 
 </td>
 
@@ -1271,7 +1271,7 @@ Accessory
 
 <td style="text-align:right;">
 
-71.51496
+72.05543
 
 </td>
 
@@ -1281,7 +1281,7 @@ Accessory
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL1937\_CDC4199\_99
+KPL1937\_CDC4199\_99
 
 </td>
 
@@ -1293,7 +1293,7 @@ Core
 
 <td style="text-align:right;">
 
-48.62920
+48.69897
 
 </td>
 
@@ -1303,7 +1303,7 @@ Core
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL1938\_CDC4791\_99
+KPL1938\_CDC4791\_99
 
 </td>
 
@@ -1315,7 +1315,7 @@ Accessory
 
 <td style="text-align:right;">
 
-48.64091
+50.05558
 
 </td>
 
@@ -1325,7 +1325,7 @@ Accessory
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL1938\_CDC4791\_99
+KPL1938\_CDC4791\_99
 
 </td>
 
@@ -1337,7 +1337,7 @@ Core
 
 <td style="text-align:right;">
 
-49.08906
+49.15724
 
 </td>
 
@@ -1347,7 +1347,7 @@ Core
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL1939\_CDC4792\_99
+KPL1939\_CDC4792\_99
 
 </td>
 
@@ -1359,7 +1359,7 @@ Accessory
 
 <td style="text-align:right;">
 
-65.01524
+65.32743
 
 </td>
 
@@ -1369,7 +1369,7 @@ Accessory
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL1939\_CDC4792\_99
+KPL1939\_CDC4792\_99
 
 </td>
 
@@ -1381,7 +1381,7 @@ Core
 
 <td style="text-align:right;">
 
-49.33188
+49.42181
 
 </td>
 
@@ -1391,7 +1391,7 @@ Core
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL3033
+KPL3033
 
 </td>
 
@@ -1403,7 +1403,7 @@ Accessory
 
 <td style="text-align:right;">
 
-68.22192
+69.20019
 
 </td>
 
@@ -1413,7 +1413,7 @@ Accessory
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL3033
+KPL3033
 
 </td>
 
@@ -1425,7 +1425,7 @@ Core
 
 <td style="text-align:right;">
 
-49.33145
+49.42137
 
 </td>
 
@@ -1435,7 +1435,7 @@ Core
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL3043
+KPL3043
 
 </td>
 
@@ -1447,7 +1447,7 @@ Accessory
 
 <td style="text-align:right;">
 
-27.41673
+27.79795
 
 </td>
 
@@ -1457,7 +1457,7 @@ Accessory
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL3043
+KPL3043
 
 </td>
 
@@ -1469,7 +1469,7 @@ Core
 
 <td style="text-align:right;">
 
-49.46774
+49.53672
 
 </td>
 
@@ -1479,7 +1479,7 @@ Core
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL3050
+KPL3050
 
 </td>
 
@@ -1491,7 +1491,7 @@ Accessory
 
 <td style="text-align:right;">
 
-56.99571
+58.42861
 
 </td>
 
@@ -1501,7 +1501,7 @@ Accessory
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL3050
+KPL3050
 
 </td>
 
@@ -1513,7 +1513,7 @@ Core
 
 <td style="text-align:right;">
 
-49.74089
+49.80908
 
 </td>
 
@@ -1523,7 +1523,7 @@ Core
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL3052
+KPL3052
 
 </td>
 
@@ -1535,7 +1535,7 @@ Accessory
 
 <td style="text-align:right;">
 
-47.29437
+49.69199
 
 </td>
 
@@ -1545,7 +1545,7 @@ Accessory
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL3052
+KPL3052
 
 </td>
 
@@ -1557,7 +1557,7 @@ Core
 
 <td style="text-align:right;">
 
-49.75553
+49.84545
 
 </td>
 
@@ -1567,7 +1567,7 @@ Core
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL3065
+KPL3065
 
 </td>
 
@@ -1579,7 +1579,7 @@ Accessory
 
 <td style="text-align:right;">
 
-21.63954
+22.35714
 
 </td>
 
@@ -1589,7 +1589,7 @@ Accessory
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL3065
+KPL3065
 
 </td>
 
@@ -1601,7 +1601,7 @@ Core
 
 <td style="text-align:right;">
 
-49.59014
+49.67527
 
 </td>
 
@@ -1611,7 +1611,7 @@ Core
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL3069
+KPL3069
 
 </td>
 
@@ -1623,7 +1623,7 @@ Accessory
 
 <td style="text-align:right;">
 
-75.46057
+77.61282
 
 </td>
 
@@ -1633,7 +1633,7 @@ Accessory
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL3069
+KPL3069
 
 </td>
 
@@ -1645,7 +1645,7 @@ Core
 
 <td style="text-align:right;">
 
-49.95280
+50.02098
 
 </td>
 
@@ -1655,7 +1655,7 @@ Core
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL3070
+KPL3070
 
 </td>
 
@@ -1667,7 +1667,7 @@ Accessory
 
 <td style="text-align:right;">
 
-28.29556
+28.60126
 
 </td>
 
@@ -1677,7 +1677,7 @@ Accessory
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL3070
+KPL3070
 
 </td>
 
@@ -1689,7 +1689,7 @@ Core
 
 <td style="text-align:right;">
 
-49.87905
+49.94724
 
 </td>
 
@@ -1699,7 +1699,7 @@ Core
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL3077
+KPL3077
 
 </td>
 
@@ -1711,7 +1711,7 @@ Accessory
 
 <td style="text-align:right;">
 
-54.56741
+55.70137
 
 </td>
 
@@ -1721,7 +1721,7 @@ Accessory
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL3077
+KPL3077
 
 </td>
 
@@ -1733,7 +1733,7 @@ Core
 
 <td style="text-align:right;">
 
-49.54626
+49.61444
 
 </td>
 
@@ -1743,7 +1743,7 @@ Core
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL3084
+KPL3084
 
 </td>
 
@@ -1755,7 +1755,7 @@ Accessory
 
 <td style="text-align:right;">
 
-29.36926
+30.26084
 
 </td>
 
@@ -1765,7 +1765,7 @@ Accessory
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL3084
+KPL3084
 
 </td>
 
@@ -1777,7 +1777,7 @@ Core
 
 <td style="text-align:right;">
 
-49.75043
+49.81861
 
 </td>
 
@@ -1787,7 +1787,7 @@ Core
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL3086
+KPL3086
 
 </td>
 
@@ -1799,7 +1799,7 @@ Accessory
 
 <td style="text-align:right;">
 
-22.95066
+24.66277
 
 </td>
 
@@ -1809,7 +1809,7 @@ Accessory
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL3086
+KPL3086
 
 </td>
 
@@ -1821,7 +1821,7 @@ Core
 
 <td style="text-align:right;">
 
-49.83714
+49.87085
 
 </td>
 
@@ -1831,7 +1831,7 @@ Core
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL3090
+KPL3090
 
 </td>
 
@@ -1843,7 +1843,7 @@ Accessory
 
 <td style="text-align:right;">
 
-84.19408
+86.80387
 
 </td>
 
@@ -1853,7 +1853,7 @@ Accessory
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL3090
+KPL3090
 
 </td>
 
@@ -1865,7 +1865,7 @@ Core
 
 <td style="text-align:right;">
 
-49.72145
+49.81137
 
 </td>
 
@@ -1875,7 +1875,7 @@ Core
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL3246
+KPL3246
 
 </td>
 
@@ -1887,7 +1887,7 @@ Accessory
 
 <td style="text-align:right;">
 
-31.39649
+32.51061
 
 </td>
 
@@ -1897,7 +1897,7 @@ Accessory
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL3246
+KPL3246
 
 </td>
 
@@ -1909,7 +1909,7 @@ Core
 
 <td style="text-align:right;">
 
-49.57970
+49.63258
 
 </td>
 
@@ -1919,7 +1919,7 @@ Core
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL3250
+KPL3250
 
 </td>
 
@@ -1931,7 +1931,7 @@ Accessory
 
 <td style="text-align:right;">
 
-32.88942
+33.54099
 
 </td>
 
@@ -1941,7 +1941,7 @@ Accessory
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL3250
+KPL3250
 
 </td>
 
@@ -1953,7 +1953,7 @@ Core
 
 <td style="text-align:right;">
 
-49.53509
+49.59168
 
 </td>
 
@@ -1963,7 +1963,7 @@ Core
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL3256
+KPL3256
 
 </td>
 
@@ -1975,7 +1975,7 @@ Accessory
 
 <td style="text-align:right;">
 
-66.97503
+68.10628
 
 </td>
 
@@ -1985,7 +1985,7 @@ Accessory
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL3256
+KPL3256
 
 </td>
 
@@ -1997,7 +1997,7 @@ Core
 
 <td style="text-align:right;">
 
-49.29100
+49.35919
 
 </td>
 
@@ -2007,7 +2007,7 @@ Core
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL3264
+KPL3264
 
 </td>
 
@@ -2019,7 +2019,7 @@ Accessory
 
 <td style="text-align:right;">
 
-55.70355
+58.50242
 
 </td>
 
@@ -2029,7 +2029,7 @@ Accessory
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL3264
+KPL3264
 
 </td>
 
@@ -2041,7 +2041,7 @@ Core
 
 <td style="text-align:right;">
 
-49.67168
+49.70653
 
 </td>
 
@@ -2051,7 +2051,7 @@ Core
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL3274
+KPL3274
 
 </td>
 
@@ -2063,7 +2063,7 @@ Accessory
 
 <td style="text-align:right;">
 
-32.49464
+35.04517
 
 </td>
 
@@ -2073,7 +2073,7 @@ Accessory
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL3274
+KPL3274
 
 </td>
 
@@ -2085,7 +2085,7 @@ Core
 
 <td style="text-align:right;">
 
-49.09943
+49.18935
 
 </td>
 
@@ -2095,7 +2095,7 @@ Core
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL3911
+KPL3911
 
 </td>
 
@@ -2107,7 +2107,7 @@ Accessory
 
 <td style="text-align:right;">
 
-29.52181
+30.66027
 
 </td>
 
@@ -2117,7 +2117,7 @@ Accessory
 
 <td style="text-align:left;">
 
-Dpigrum\_KPL3911
+KPL3911
 
 </td>
 
@@ -2129,7 +2129,7 @@ Core
 
 <td style="text-align:right;">
 
-49.89282
+49.96100
 
 </td>
 
@@ -2335,31 +2335,31 @@ Inorganic ion transport and metabolism
 
 <td style="text-align:right;">
 
-10.800000
+11.800000
 
 </td>
 
 <td style="text-align:right;">
 
-66.005681
+65.609368
 
 </td>
 
 <td style="text-align:right;">
 
-0.7
+0.8
 
 </td>
 
 <td style="text-align:right;">
 
-4.8
+4.7
 
 </td>
 
 <td style="text-align:right;">
 
-76.805681
+77.409368
 
 </td>
 
@@ -2371,19 +2371,19 @@ Inorganic ion transport and metabolism
 
 <td style="text-align:right;">
 
-14.1
+15.2
 
 </td>
 
 <td style="text-align:right;">
 
-85.9
+84.8
 
 </td>
 
 <td style="text-align:right;">
 
-0.16
+0.18
 
 </td>
 
@@ -2405,7 +2405,7 @@ Lipid transport and metabolism
 
 <td style="text-align:right;">
 
-37.866725
+36.866725
 
 </td>
 
@@ -2423,7 +2423,7 @@ Lipid transport and metabolism
 
 <td style="text-align:right;">
 
-40.866725
+39.866725
 
 </td>
 
@@ -2435,13 +2435,13 @@ Lipid transport and metabolism
 
 <td style="text-align:right;">
 
-7.3
+7.5
 
 </td>
 
 <td style="text-align:right;">
 
-92.7
+92.5
 
 </td>
 
@@ -2463,31 +2463,31 @@ Coenzyme transport and metabolism
 
 <td style="text-align:right;">
 
-12.947368
+11.947368
 
 </td>
 
 <td style="text-align:right;">
 
-45.620690
+45.034483
 
 </td>
 
 <td style="text-align:right;">
 
-0.9
+0.8
 
 </td>
 
 <td style="text-align:right;">
 
-3.3
+3.2
 
 </td>
 
 <td style="text-align:right;">
 
-58.568058
+56.981851
 
 </td>
 
@@ -2499,19 +2499,19 @@ Coenzyme transport and metabolism
 
 <td style="text-align:right;">
 
-22.1
+21.0
 
 </td>
 
 <td style="text-align:right;">
 
-77.9
+79.0
 
 </td>
 
 <td style="text-align:right;">
 
-0.28
+0.27
 
 </td>
 
@@ -2527,13 +2527,13 @@ Carbohydrate transport and metabolism
 
 <td style="text-align:right;">
 
-131.777734
+135.146781
 
 </td>
 
 <td style="text-align:right;">
 
-80.356549
+80.606549
 
 </td>
 
@@ -2551,7 +2551,7 @@ Carbohydrate transport and metabolism
 
 <td style="text-align:right;">
 
-212.134283
+215.753331
 
 </td>
 
@@ -2563,19 +2563,19 @@ Carbohydrate transport and metabolism
 
 <td style="text-align:right;">
 
-62.1
+62.6
 
 </td>
 
 <td style="text-align:right;">
 
-37.9
+37.4
 
 </td>
 
 <td style="text-align:right;">
 
-1.64
+1.68
 
 </td>
 
@@ -2591,7 +2591,7 @@ Nucleotide transport and metabolism
 
 <td style="text-align:right;">
 
-4.000000
+6.000000
 
 </td>
 
@@ -2603,7 +2603,7 @@ Nucleotide transport and metabolism
 
 <td style="text-align:right;">
 
-0.3
+0.4
 
 </td>
 
@@ -2615,31 +2615,31 @@ Nucleotide transport and metabolism
 
 <td style="text-align:right;">
 
-52.000000
+54.000000
 
 </td>
 
 <td style="text-align:right;">
 
-1.8
+1.9
 
 </td>
 
 <td style="text-align:right;">
 
-7.7
+11.1
 
 </td>
 
 <td style="text-align:right;">
 
-92.3
+88.9
 
 </td>
 
 <td style="text-align:right;">
 
-0.08
+0.12
 
 </td>
 
@@ -2655,13 +2655,13 @@ Amino acid transport and metabolism
 
 <td style="text-align:right;">
 
-20.726708
+21.601708
 
 </td>
 
 <td style="text-align:right;">
 
-71.911239
+72.948276
 
 </td>
 
@@ -2673,37 +2673,37 @@ Amino acid transport and metabolism
 
 <td style="text-align:right;">
 
-5.2
+5.3
 
 </td>
 
 <td style="text-align:right;">
 
-92.637947
+94.549984
 
 </td>
 
 <td style="text-align:right;">
 
-3.2
+3.3
 
 </td>
 
 <td style="text-align:right;">
 
-22.4
+22.8
 
 </td>
 
 <td style="text-align:right;">
 
-77.6
+77.2
 
 </td>
 
 <td style="text-align:right;">
 
-0.29
+0.30
 
 </td>
 
@@ -2719,7 +2719,7 @@ Energy production and conversion
 
 <td style="text-align:right;">
 
-9.558824
+10.558824
 
 </td>
 
@@ -2731,7 +2731,7 @@ Energy production and conversion
 
 <td style="text-align:right;">
 
-0.6
+0.7
 
 </td>
 
@@ -2743,7 +2743,7 @@ Energy production and conversion
 
 <td style="text-align:right;">
 
-56.095769
+57.095769
 
 </td>
 
@@ -2755,19 +2755,19 @@ Energy production and conversion
 
 <td style="text-align:right;">
 
-17.0
+18.5
 
 </td>
 
 <td style="text-align:right;">
 
-83.0
+81.5
 
 </td>
 
 <td style="text-align:right;">
 
-0.21
+0.23
 
 </td>
 
@@ -2783,19 +2783,19 @@ Mobilome: prophages, transposons
 
 <td style="text-align:right;">
 
-50.128275
+54.236979
 
 </td>
 
 <td style="text-align:right;">
 
-3.964286
+4.000000
 
 </td>
 
 <td style="text-align:right;">
 
-3.4
+3.6
 
 </td>
 
@@ -2807,31 +2807,31 @@ Mobilome: prophages, transposons
 
 <td style="text-align:right;">
 
-54.092560
+58.236979
 
 </td>
 
 <td style="text-align:right;">
 
-1.9
+2.0
 
 </td>
 
 <td style="text-align:right;">
 
-92.7
+93.1
 
 </td>
 
 <td style="text-align:right;">
 
-7.3
+6.9
 
 </td>
 
 <td style="text-align:right;">
 
-12.64
+13.56
 
 </td>
 
@@ -2847,7 +2847,7 @@ Replication, recombination and repair
 
 <td style="text-align:right;">
 
-53.023809
+58.810201
 
 </td>
 
@@ -2859,7 +2859,7 @@ Replication, recombination and repair
 
 <td style="text-align:right;">
 
-3.6
+3.9
 
 </td>
 
@@ -2871,31 +2871,31 @@ Replication, recombination and repair
 
 <td style="text-align:right;">
 
-125.500642
+131.287034
 
 </td>
 
 <td style="text-align:right;">
 
-4.4
+4.5
 
 </td>
 
 <td style="text-align:right;">
 
-42.2
+44.8
 
 </td>
 
 <td style="text-align:right;">
 
-57.8
+55.2
 
 </td>
 
 <td style="text-align:right;">
 
-0.73
+0.81
 
 </td>
 
@@ -2911,55 +2911,55 @@ Transcription
 
 <td style="text-align:right;">
 
-52.731512
+59.731944
 
 </td>
 
 <td style="text-align:right;">
 
-49.273876
+52.312338
 
 </td>
 
 <td style="text-align:right;">
 
-3.6
+3.9
 
 </td>
 
 <td style="text-align:right;">
 
-3.6
+3.8
 
 </td>
 
 <td style="text-align:right;">
 
-102.005388
+112.044282
 
 </td>
 
 <td style="text-align:right;">
 
-3.6
+3.9
 
 </td>
 
 <td style="text-align:right;">
 
-51.7
+53.3
 
 </td>
 
 <td style="text-align:right;">
 
-48.3
+46.7
 
 </td>
 
 <td style="text-align:right;">
 
-1.07
+1.14
 
 </td>
 
@@ -2975,55 +2975,55 @@ Translation, ribosomal structure and biogenesis
 
 <td style="text-align:right;">
 
-13.995556
+18.327500
 
 </td>
 
 <td style="text-align:right;">
 
-169.455833
+171.438894
 
 </td>
 
 <td style="text-align:right;">
 
-0.9
+1.2
 
 </td>
 
 <td style="text-align:right;">
 
-12.2
+12.4
 
 </td>
 
 <td style="text-align:right;">
 
-183.451388
+189.766394
 
 </td>
 
 <td style="text-align:right;">
 
-6.4
+6.5
 
 </td>
 
 <td style="text-align:right;">
 
-7.6
+9.7
 
 </td>
 
 <td style="text-align:right;">
 
-92.4
+90.3
 
 </td>
 
 <td style="text-align:right;">
 
-0.08
+0.11
 
 </td>
 
@@ -3039,55 +3039,55 @@ Defense mechanisms
 
 <td style="text-align:right;">
 
-87.119592
+96.981384
 
 </td>
 
 <td style="text-align:right;">
 
-31.741032
+32.686978
 
 </td>
 
 <td style="text-align:right;">
 
-5.9
+6.4
 
 </td>
 
 <td style="text-align:right;">
 
-2.3
+2.4
 
 </td>
 
 <td style="text-align:right;">
 
-118.860624
+129.668361
 
 </td>
 
 <td style="text-align:right;">
 
-4.1
+4.5
 
 </td>
 
 <td style="text-align:right;">
 
-73.3
+74.8
 
 </td>
 
 <td style="text-align:right;">
 
-26.7
+25.2
 
 </td>
 
 <td style="text-align:right;">
 
-2.74
+2.97
 
 </td>
 
@@ -3109,7 +3109,7 @@ Intracellular trafficking, secretion, and vesicular transport
 
 <td style="text-align:right;">
 
-9.000000
+10.000000
 
 </td>
 
@@ -3121,13 +3121,13 @@ Intracellular trafficking, secretion, and vesicular transport
 
 <td style="text-align:right;">
 
-0.6
+0.7
 
 </td>
 
 <td style="text-align:right;">
 
-14.000000
+15.000000
 
 </td>
 
@@ -3139,19 +3139,19 @@ Intracellular trafficking, secretion, and vesicular transport
 
 <td style="text-align:right;">
 
-35.7
+33.3
 
 </td>
 
 <td style="text-align:right;">
 
-64.3
+66.7
 
 </td>
 
 <td style="text-align:right;">
 
-0.56
+0.50
 
 </td>
 
@@ -3167,55 +3167,55 @@ Signal transduction mechanisms
 
 <td style="text-align:right;">
 
-3.489011
+5.351191
 
 </td>
 
 <td style="text-align:right;">
 
-31.764325
+35.696591
 
 </td>
 
 <td style="text-align:right;">
 
-0.2
+0.4
 
 </td>
 
 <td style="text-align:right;">
 
-2.3
+2.6
 
 </td>
 
 <td style="text-align:right;">
 
-35.253336
+41.047781
 
 </td>
 
 <td style="text-align:right;">
 
-1.2
+1.4
 
 </td>
 
 <td style="text-align:right;">
 
-9.9
+13.0
 
 </td>
 
 <td style="text-align:right;">
 
-90.1
+87.0
 
 </td>
 
 <td style="text-align:right;">
 
-0.11
+0.15
 
 </td>
 
@@ -3231,55 +3231,55 @@ Post-translational modification, protein turnover, and chaperones
 
 <td style="text-align:right;">
 
-9.000000
+11.807692
 
 </td>
 
 <td style="text-align:right;">
 
-55.933333
+56.966667
 
 </td>
 
 <td style="text-align:right;">
 
-0.6
+0.8
 
 </td>
 
 <td style="text-align:right;">
 
-4.0
+4.1
 
 </td>
 
 <td style="text-align:right;">
 
-64.933333
+68.774359
 
 </td>
 
 <td style="text-align:right;">
 
-2.3
+2.4
 
 </td>
 
 <td style="text-align:right;">
 
-13.9
+17.2
 
 </td>
 
 <td style="text-align:right;">
 
-86.1
+82.8
 
 </td>
 
 <td style="text-align:right;">
 
-0.16
+0.21
 
 </td>
 
@@ -3295,7 +3295,7 @@ Cell Motility
 
 <td style="text-align:right;">
 
-5.274510
+5.941177
 
 </td>
 
@@ -3319,7 +3319,7 @@ Cell Motility
 
 <td style="text-align:right;">
 
-7.488796
+8.155462
 
 </td>
 
@@ -3331,19 +3331,19 @@ Cell Motility
 
 <td style="text-align:right;">
 
-70.4
+72.8
 
 </td>
 
 <td style="text-align:right;">
 
-29.6
+27.2
 
 </td>
 
 <td style="text-align:right;">
 
-2.38
+2.68
 
 </td>
 
@@ -3359,55 +3359,55 @@ Cell wall/membrane/envelope biogenesis
 
 <td style="text-align:right;">
 
-12.795215
+15.584827
 
 </td>
 
 <td style="text-align:right;">
 
-59.637665
+60.917824
 
 </td>
 
 <td style="text-align:right;">
 
-0.9
+1.0
 
 </td>
 
 <td style="text-align:right;">
 
-4.3
+4.4
 
 </td>
 
 <td style="text-align:right;">
 
-72.432881
+76.502651
 
 </td>
 
 <td style="text-align:right;">
 
-2.5
+2.6
 
 </td>
 
 <td style="text-align:right;">
 
-17.7
+20.4
 
 </td>
 
 <td style="text-align:right;">
 
-82.3
+79.6
 
 </td>
 
 <td style="text-align:right;">
 
-0.21
+0.26
 
 </td>
 
@@ -3423,55 +3423,55 @@ Cell cycle control, cell division, chromosome partitioning
 
 <td style="text-align:right;">
 
-6.586538
+7.603175
 
 </td>
 
 <td style="text-align:right;">
 
-21.524950
+23.179803
 
 </td>
 
 <td style="text-align:right;">
 
-0.4
+0.5
 
 </td>
 
 <td style="text-align:right;">
 
-1.6
+1.7
 
 </td>
 
 <td style="text-align:right;">
 
-28.111488
+30.782978
 
 </td>
 
 <td style="text-align:right;">
 
-1.0
+1.1
 
 </td>
 
 <td style="text-align:right;">
 
-23.4
+24.7
 
 </td>
 
 <td style="text-align:right;">
 
-76.6
+75.3
 
 </td>
 
 <td style="text-align:right;">
 
-0.31
+0.33
 
 </td>
 
@@ -3487,55 +3487,55 @@ Uninformative
 
 <td style="text-align:right;">
 
-50.750681
+59.961053
 
 </td>
 
 <td style="text-align:right;">
 
-170.845630
+182.134812
 
 </td>
 
 <td style="text-align:right;">
 
-3.4
+4.0
 
 </td>
 
 <td style="text-align:right;">
 
-12.3
+13.1
 
 </td>
 
 <td style="text-align:right;">
 
-221.596312
+242.095865
 
 </td>
 
 <td style="text-align:right;">
 
-7.7
+8.3
 
 </td>
 
 <td style="text-align:right;">
 
-22.9
+24.8
 
 </td>
 
 <td style="text-align:right;">
 
-77.1
+75.2
 
 </td>
 
 <td style="text-align:right;">
 
-0.30
+0.33
 
 </td>
 
@@ -3551,55 +3551,55 @@ Ambiguous
 
 <td style="text-align:right;">
 
-99.053627
+105.099695
 
 </td>
 
 <td style="text-align:right;">
 
-141.974587
+142.295243
 
 </td>
 
 <td style="text-align:right;">
 
-6.7
+6.9
 
 </td>
 
 <td style="text-align:right;">
 
-10.2
+10.3
 
 </td>
 
 <td style="text-align:right;">
 
-241.028214
+247.394938
 
 </td>
 
 <td style="text-align:right;">
 
-8.4
+8.5
 
 </td>
 
 <td style="text-align:right;">
 
-41.1
+42.5
 
 </td>
 
 <td style="text-align:right;">
 
-58.9
+57.5
 
 </td>
 
 <td style="text-align:right;">
 
-0.70
+0.74
 
 </td>
 
@@ -3615,55 +3615,55 @@ Unclassified
 
 <td style="text-align:right;">
 
-840.241040
+809.508501
 
 </td>
 
 <td style="text-align:right;">
 
-164.895536
+141.077387
 
 </td>
 
 <td style="text-align:right;">
 
-56.7
+53.4
 
 </td>
 
 <td style="text-align:right;">
 
-11.9
+10.2
 
 </td>
 
 <td style="text-align:right;">
 
-1005.136576
+950.585889
 
 </td>
 
 <td style="text-align:right;">
 
-35.0
+32.7
 
 </td>
 
 <td style="text-align:right;">
 
-83.6
+85.2
 
 </td>
 
 <td style="text-align:right;">
 
-16.4
+14.8
 
 </td>
 
 <td style="text-align:right;">
 
-5.10
+5.74
 
 </td>
 
@@ -3804,6 +3804,11 @@ pF <- ggplot(filter(GCsbyCOG_CorevsAccLong, COGs != "Uninformative", COGs != "Am
   theme(axis.title = element_text(size = 9), axis.text.x = element_text(size=7), axis.ticks.y = element_blank(), axis.line.y = element_blank(), legend.position = "none", plot.margin=unit(c(5,10,10,25),"pt"), plot.title=element_text(face="bold", hjust=3, vjust=-3.9)) 
 
 gpF <- ggplotGrob(pF)
+```
+
+    ## Warning: Removed 1 rows containing missing values (position_stack).
+
+``` r
 gpF$layout$clip[gpF$layout$name=="panel"] <- "off"
 ```
 
