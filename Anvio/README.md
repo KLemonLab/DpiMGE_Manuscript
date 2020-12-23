@@ -7,6 +7,6 @@
 
 ## Use this code to display the D. pigrum pangenome on Anvi'o ##
 
-anvi-display-pan -g Anvio-GENOMES.db -p PAN_DPIG_prokka-PAN.db
+anvi-display-pan -g Dpig-GENOMES.db -p PAN_DPIG_prokka-PAN.db
                  
 #The individual contig databases are located in the ContigsGenomeDatabases folder.
