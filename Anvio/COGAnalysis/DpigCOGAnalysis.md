@@ -212,7 +212,7 @@ Informative COGs (Total - Uninformative, Ambiguous & Unclassified)
 
 </table>
 
-60.7% of the gene calls are Informative.
+61.7% of the gene calls are Informative.
 
 ## COG Analysis at the Gene Cluster Level
 
@@ -236,7 +236,7 @@ GCsbyCOG_Genome <- DpigPangenome %>%
 ```
 
 The total sum of all values in the `num_corrected_genes` variable should
-add up to the number of CGs:
+add up to the number of GCs:
 
 ``` r
 sum(GCsbyCOG_Genome$num_corrected_genes)
@@ -2148,8 +2148,8 @@ GCsbyCOG_Genome$COGs <- recode_factor(GCsbyCOG_Genome$COGs, "Q"="Secondary metab
 
 GCsbyCOG_Genome$Assignment <- recode_factor(GCsbyCOG_Genome$Assignment,  "Informative"=" ", "Uninformative"="Uninformative", "Ambiguous"="Ambiguous", "Unclassified"="Unclassified", .ordered = TRUE)
 
-GCsbyCOG_Genome$genome_name <- recode_factor(GCsbyCOG_Genome$genome_name, "Dpigrum_ATCC_51524"="ATCC 51524", "Dpigrum_KPL3250"="KPL3250", "Dpigrum_KPL1939_CDC4792_99"="CDC 4792-99","Dpigrum_KPL1934_CDC4709_98"="CDC 4709-98", "Dpigrum_KPL1922_CDC39_95"="CDC 39-95", "Dpigrum_KPL3264"="KPL3264", "Dpigrum_KPL3256"="KPL3256", "Dpigrum_KPL3033"="KPL3033", "Dpigrum_KPL1933_CDC4545_98"="CDC 4545-98", "Dpigrum_KPL1930_CDC2949_98"="CDC 2949-98", "Dpigrum_KPL3069"="KPL3069", "Dpigrum_KPL3052"="KPL3052", "Dpigrum_KPL3090"="KPL3090", "Dpigrum_KPL3086"="KPL3086", "Dpigrum_KPL3065"="KPL3065", "Dpigrum_KPL3043"="KPL3043", "Dpigrum_KPL3911"="KPL3911", "Dpigrum_KPL3084"="KPL3084", "Dpigrum_KPL3070"="KPL3070",
-"Dpigrum_KPL3246"="KPL3246", "Dpigrum_KPL1937_CDC4199_99"="CDC 4199-99","Dpigrum_KPL3274"="KPL3274","Dpigrum_KPL3050"="KPL3050","Dpigrum_KPL1938_CDC4791_99"="CDC 4791-99", "Dpigrum_KPL1932_CDC4420_98"="CDC 4420-98", "Dpigrum_KPL3077"="KPL3077", "Dpigrum_KPL1931_CDC4294_98"="CDC 4294-98", "Dpigrum_KPL1914"="KPL1914", .ordered = TRUE)
+GCsbyCOG_Genome$genome_name <- recode_factor(GCsbyCOG_Genome$genome_name, "ATCC_51524"="ATCC 51524", "KPL3250"="KPL3250", "KPL1939_CDC4792_99"="CDC 4792-99","KPL1934_CDC4709_98"="CDC 4709-98", "KPL1922_CDC39_95"="CDC 39-95", "KPL3264"="KPL3264", "KPL3256"="KPL3256", "KPL3033"="KPL3033", "KPL1933_CDC4545_98"="CDC 4545-98", "KPL1930_CDC2949_98"="CDC 2949-98", "KPL3069"="KPL3069", "KPL3052"="KPL3052", "KPL3090"="KPL3090", "KPL3086"="KPL3086", "KPL3065"="KPL3065", "KPL3043"="KPL3043", "KPL3911"="KPL3911", "KPL3084"="KPL3084", "KPL3070"="KPL3070",
+"KPL3246"="KPL3246", "KPL1937_CDC4199_99"="CDC 4199-99","KPL3274"="KPL3274","KPL3050"="KPL3050","KPL1938_CDC4791_99"="CDC 4791-99", "KPL1932_CDC4420_98"="CDC 4420-98", "KPL3077"="KPL3077", "KPL1931_CDC4294_98"="CDC 4294-98", "KPL1914"="KPL1914", .ordered = TRUE)
 ```
 
 ### GCs by COG Category
@@ -3796,7 +3796,7 @@ pF <- ggplot(filter(GCsbyCOG_CorevsAccLong, COGs != "Uninformative", COGs != "Am
   scale_x_discrete(position = "top") +
   labs(title= "COG Categories", x="", y= "Number of Gene Clusters") +
   coord_flip() +
-  scale_y_continuous(limits = c(-170, 170), breaks = c(-150, -100, -50, 0, 50, 100, 150), label = c(150, 100, 50, 0, 50, 100, 150)) +
+  scale_y_continuous(limits = c(-175, 175), breaks = c(-150, -100, -50, 0, 50, 100, 150), label = c(150, 100, 50, 0, 50, 100, 150)) +
   geom_segment(aes(x=0,xend=19.5,y=0,yend=0)) +
   geom_label(aes(x = 20.5, y = -95, label = "      Soft/Core       "), fontface="bold", size=3, fill = "grey90", label.size=NA, label.padding = unit(0.3, "lines")) +
   geom_label(aes(x = 20.5, y = 95, label = "     Accessory      "), fontface="bold", size=3, fill = "grey90", label.size=NA, label.padding = unit(0.3, "lines")) +
@@ -3804,11 +3804,6 @@ pF <- ggplot(filter(GCsbyCOG_CorevsAccLong, COGs != "Uninformative", COGs != "Am
   theme(axis.title = element_text(size = 9), axis.text.x = element_text(size=7), axis.ticks.y = element_blank(), axis.line.y = element_blank(), legend.position = "none", plot.margin=unit(c(5,10,10,25),"pt"), plot.title=element_text(face="bold", hjust=3, vjust=-3.9)) 
 
 gpF <- ggplotGrob(pF)
-```
-
-    ## Warning: Removed 1 rows containing missing values (position_stack).
-
-``` r
 gpF$layout$clip[gpF$layout$name=="panel"] <- "off"
 ```
 
@@ -3831,5 +3826,5 @@ pSupple <- ggarrange(get_legend(pE),
                       pclades, 
                       get_legend(pD), ncol = 1, heights = c(0.2, 2, 0.2, 0.6))
 
-ggsave("FigS1D_COG_byGenome.tiff", pSupple, width = 8, height = 10, dpi = 150)
+ggsave("FigD_COG_byGenome.tiff", pSupple, width = 8, height = 10, dpi = 150)
 ```
