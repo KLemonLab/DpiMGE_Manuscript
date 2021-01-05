@@ -13,6 +13,7 @@ library(ggpubr)
 library(cowplot)
 library(grid)
 library(RColorBrewer)
+library(matrixStats)
 ```
 
 ## Data Import 
@@ -327,13 +328,96 @@ ggsave("FigD_COG_byGenome.tiff", pSupple, width = 8, height = 10, dpi = 150)
 ```
 
 
+## Transposase/Retron search
 
+We search for individual genes annotated as Transposases/Retrons in either the COG or Prokka annotations:
+```{r}
+Transposase_Genes <- DpigPangenome %>%
+  filter(str_detect(COG_FUNCTION, "Transposase") | str_detect(`Prokka:Prodigal`, "transposase"))
+Retron_Genes <- DpigPangenome %>%
+  filter(str_detect(COG_FUNCTION, "Retron") | str_detect(`Prokka:Prodigal`, "retron"))
+```
+There are `r nrow(Transposase_Genes)` individual genes annotated in either the COG or Prokka annotations as Transposases and `r nrow(Retron_Genes)` as Retrons. However, they belong to GCs that contain some extra individual genes that lack annotation, but should be considered also, since they belong to the same cluster.
 
+The following datasets include all the members of the GCs identified in the previous step:
+```{r}
+Transposase_Genes_FullGCs <- DpigPangenome[DpigPangenome$gene_cluster_id %in% Transposase_Genes$gene_cluster_id,]
+Retron_Genes_FullGCs <- DpigPangenome[DpigPangenome$gene_cluster_id %in% Retron_Genes$gene_cluster_id,]
+```
+Therefore, taking into account all the members of the selected GCs there are `r nrow(Transposase_Genes_FullGCs)` individual genes identified as Transposases and `r nrow(Retron_Genes_FullGCs)` as Retrons.
 
+### Transposase Tables
 
+Summary matrix table with a Genome in each row and each transposase GC listed in each column.
+```{r message=FALSE}
+Transposases_Matrix <- Transposase_Genes_FullGCs %>%
+  group_by(genome_name, gene_cluster_id) %>%
+  summarize(n = n())
+Transposases_Matrix <- spread(Transposases_Matrix, gene_cluster_id, n)
+Transposases_Matrix <- Transposases_Matrix %>% remove_rownames %>% column_to_rownames(var="genome_name")
+```
 
+Totals/Stats by column/row:
+```{r}
+GCTotal <- colSums(Transposases_Matrix, na.rm=TRUE)
+GCMean <- round(colMeans(Transposases_Matrix, na.rm=TRUE), 2)
+GCMedian <- round(colMedians(as.matrix(Transposases_Matrix), na.rm=TRUE), 2)
+GCVar <- round(colVars(as.matrix(Transposases_Matrix), na.rm=TRUE), 2) #Sample variance
+GCSD <- round(colSds(as.matrix(Transposases_Matrix), na.rm=TRUE), 2) #Sample standard deviation
+GCMAD <- round(colMads(as.matrix(Transposases_Matrix), na.rm=TRUE), 2) #Median absolute deviation
+GCMin <- round(colMins(as.matrix(Transposases_Matrix), na.rm=TRUE), 2) 
+GCMax <- round(colMaxs(as.matrix(Transposases_Matrix), na.rm=TRUE), 2) 
 
+Transposases_Matrix["GCTotal" ,] <- GCTotal
+Transposases_Matrix["GCMean" ,] <- GCMean
+Transposases_Matrix["GCMedian" ,] <- GCMedian
+Transposases_Matrix["GCVar" ,] <- GCVar
+Transposases_Matrix["GCSD" ,] <- GCSD
+Transposases_Matrix["GCMAD" ,] <- GCMAD
+Transposases_Matrix["GCMin" ,] <- GCMin
+Transposases_Matrix["GCMax" ,] <- GCMax
 
+Transposases_Matrix$Total <- rowSums(Transposases_Matrix, na.rm=TRUE)
+```
 
+```{r, eval=FALSE}
+write.csv(Transposases_Matrix, "Stats_Transposases.csv", row.names = TRUE)
+```
 
+### Retron Tables
 
+We focus on the main retron, GC number GC_00000001:
+```{r message=FALSE}
+Retron_GC_00000001 <- DpigPangenome[DpigPangenome$gene_cluster_id =="GC_00000001",]
+
+Retron_GC_00000001_byGenome <- Retron_GC_00000001 %>%
+  group_by(genome_name) %>%
+  summarize(GC_00000001 = n())
+
+Retron_GC_00000001_byGenome <- Retron_GC_00000001_byGenome %>% remove_rownames %>% column_to_rownames(var="genome_name")
+```
+
+Totals/Stats:
+```{r}
+GCTotal <- colSums(Retron_GC_00000001_byGenome, na.rm=TRUE)
+GCMean <- round(colMeans(Retron_GC_00000001_byGenome, na.rm=TRUE), 2)
+GCMedian <- round(colMedians(as.matrix(Retron_GC_00000001_byGenome), na.rm=TRUE), 2)
+GCVar <- round(colVars(as.matrix(Retron_GC_00000001_byGenome), na.rm=TRUE), 2) #Sample variance
+GCSD <- round(colSds(as.matrix(Retron_GC_00000001_byGenome), na.rm=TRUE), 2) #Sample standard deviation
+GCMAD <- round(colMads(as.matrix(Retron_GC_00000001_byGenome), na.rm=TRUE), 2) #Median absolute deviation
+GCMin <- round(colMins(as.matrix(Retron_GC_00000001_byGenome), na.rm=TRUE), 2) 
+GCMax <- round(colMaxs(as.matrix(Retron_GC_00000001_byGenome), na.rm=TRUE), 2) 
+
+Retron_GC_00000001_byGenome["GCTotal" ,] <- GCTotal
+Retron_GC_00000001_byGenome["GCMean" ,] <- GCMean
+Retron_GC_00000001_byGenome["GCMedian" ,] <- GCMedian
+Retron_GC_00000001_byGenome["GCVar" ,] <- GCVar
+Retron_GC_00000001_byGenome["GCSD" ,] <- GCSD
+Retron_GC_00000001_byGenome["GCMAD" ,] <- GCMAD
+Retron_GC_00000001_byGenome["GCMin" ,] <- GCMin
+Retron_GC_00000001_byGenome["GCMax" ,] <- GCMax
+```
+
+```{r, eval=FALSE}
+write.csv(Retron_GC_00000001_byGenome, "Stats_Retron.csv", row.names = TRUE)
+```
