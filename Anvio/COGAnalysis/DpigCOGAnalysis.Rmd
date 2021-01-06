@@ -421,3 +421,4 @@ Retron_GC_00000001_byGenome["GCMax" ,] <- GCMax
 ```{r, eval=FALSE}
 write.csv(Retron_GC_00000001_byGenome, "Stats_Retron.csv", row.names = TRUE)
 ```
+
