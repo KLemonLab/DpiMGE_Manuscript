@@ -16,11 +16,13 @@ knitr::opts_chunk$set(eval = FALSE, message = FALSE)
 
 -   [PPanGGOLiN v1.1.141](https://github.com/labgem/PPanGGOLiN/releases) was [installed](https://github.com/labgem/PPanGGOLiN/wiki/Installation) in a Python environment called `PPanGGOLiN.`
 
-# ANVI'O GENOME CONTIGS DATABASES
+# ANVI'O PANGENOME ANALYSIS
 
-## Reformating genome fasta files for Anvi'o
+## Reformating genome fasta files
 
-The fasta files need to be reformatted again for Anvi'o v7, since we want to avoid a Config Error indicating the sequence "contains characters that are not any of A, C, T, G, N, a, c, t, g, n." Flag --seq-type NT added to fix this error.
+The NCBI submitted .gb genome files were converted to .fa using SnapGene and renamed as indicated on `GENOMES/GenomeNames.txt`. The renamed genome files are available in the `GENOMES/renamed` folder.
+
+These .fa genomes files were reformatted to be compatible with Anvi'o v7. Flag `--seq-type NT` was added to avoid a Config Error indicating the sequence "contains characters that are not any of A, C, T, G, N, a, c, t, g, n."
 
 ```{bash}
 #conda activate anvio-7
@@ -34,11 +36,13 @@ for file in $path_f/*.f*; do
 done
 ```
 
-## Parsing .gff files
+## Importing Prokka annotations into Anvi'o
 
-The next step is to parse Prokka annotated genomes to add external gene calls and functions into Anvi'o. The input is the annotation in GFF3 format and outputs are tab-delimited text files, one for gene calls and one for annotations. This is done with the script `gff_parser.py`.
+The Prokka annotation was performed with [Prokka v1.14.6](https://github.com/tseemann/prokka/releases/tag/v1.14.6) with default parameters. Prokka annotations were imported into Anvi'o following the recommended [Anvi'o pipeline for Prokka annotated genomes](https://merenlab.org/2017/05/18/working-with-prokka/) described in the next steps.
 
-The parsing of the Prokka genomes needs to be done again using the new version of the `gff_parser.py` script in order to generate the right columns expected in the genome calls files.
+### Parsing .gff files
+
+The Prokka annotated .gff files are parsed into two tab-delimited text files; one containing the gene calls data and another with the functional annotations. This is done with the script `gff_parser.py`.
 
 ```{bash}
 #conda activate anvio-7
@@ -52,9 +56,9 @@ for file in $path_f/*.gff; do
 done
 ```
 
-## Generating contigs databases
+### Generating contigs databases
 
-In this step the gene calls from Prokka and the reformatted fasta files get imported to generate Anvi'o contigs databases. In the past (Coryne genomes) we got a lot of early stop codon errors. Therefore, we add the --ignore-internal-stop-codons flag. Based on the terminal output (`anvi-gen-contigs-database_log.txt`), all genomes have 1-2 genes with internal stop codons:
+In this step the gene calls from Prokka and the reformatted fasta files get imported to generate Anvi'o contigs databases. We add the `--ignore-internal-stop-codons` flag to avoid errors downstream the pipeline. Only 1-2 genes with internal stop codons were identified in each genome.
 
 ```{bash}
 #conda activate anvio-7
@@ -73,9 +77,9 @@ for file in $path_f/*.fa; do
 done
 ```
 
-## Importing functional annotation
-
 ### Prokka annotation
+
+The functional annotation part of the parsed Prokka files gets added to the Anvi'o contigs databases (.db files)
 
 ```{bash}
 #conda activate anvio-7
@@ -90,11 +94,11 @@ for file in $path_f/*.db; do
 done
 ```
 
+## Importing other functional annotations
+
 ### COG annotation
 
-First you need to download and set up the NCBI's Clusters of Orthologous Groups database using `anvi-setup-ncbi-cogs`: this is something you will do only once.
-
-Now the `anvi-run-ncbi-cogs` command can be used to annotate the .db genome files against the NCBI's COGs database: It uses DIAMOND "fast" as default, but it is recommended to use the "sensitive" option. This will take considerably much longer. Blastp can also be used instead of DIAMOND.
+The [`anvi-run-ncbi-cogs`](https://merenlab.org/software/anvio/help/main/programs/anvi-run-ncbi-cogs/) command was used to annotate the .db genome files against the NCBI's COGs database 2020 release. We used the DIAMOND "sensitive" option instead of the default "fast" one.
 
 ```{bash}
 #conda activate anvio-7
@@ -107,9 +111,7 @@ done
 
 ### KEGG annotation
 
-First you need to download and set up the KEGG KOfam database using `anvi-setup-kegg-kofams`: this is something you will do only once.
-
-The program `anvi-run-kegg-kofams` annotates genes in a given anvi'o contigs database with KEGG Orthology (KO) numbers (via hits to the KEGG KOfam database).
+The program [`anvi-run-kegg-kofams`](https://merenlab.org/software/anvio/help/main/programs/anvi-run-kegg-kofams/) annotates the .db genomes with KEGG Orthology (KO) numbers (via hits to the KEGG KOfam database).
 
 ```{bash}
 #conda activate anvio-7
@@ -122,9 +124,7 @@ done
 
 ### PFAM annotation
 
-First you need to download and set up the PFAM database using `anvi-setup-pfams`: this is something you will do only once.
-
-The program `anvi-run-kegg-pfam` annotates genes in a given anvi'o contigs database with the PFAM database.
+The program [`anvi-run-pfams`](https://merenlab.org/software/anvio/help/main/programs/anvi-run-pfams/) annotates the .db genomes with the PFAM database.
 
 ```{bash}
 #conda activate anvio-7
@@ -137,7 +137,7 @@ done
 
 ### Running HMMs
 
-When you run the following command the occurrence of bacterial single-copy genes across your contigs is all added to your contigs database.
+The program [`anvi-run-hmms`](https://merenlab.org/software/anvio/help/main/programs/anvi-run-hmms/) stores hmm-hits into the .db genomes files.
 
 ```{bash}
 #conda activate anvio-7
@@ -148,28 +148,21 @@ for file in $path_f/*.db; do
 done
 ```
 
-### Annotation Stats
+### Displaying functions
 
+The program [`anvi-db-info`](https://merenlab.org/software/anvio/help/main/programs/anvi-db-info/) displays information about an Anvi’o database. The output of this command in `analysis_Anvio7/AnvioGenomesSummaryFuntions.txt` includes details on all the functional annotations included in the .db files.
 ```{bash}
 #conda activate anvio-7
-mkdir -p "analysis_Anvio7/Contigs_stats"
-
 path_f="analysis_Anvio7/Contigs_db_prokka_Dpig"
-path_o="analysis_Anvio7/Contigs_stats"
 
 for file in $path_f/*.db; do
-    FILENAME=`basename ${file%.*}`
-    anvi-display-contigs-stats $file --report-as-text -o $path_o/stats_$FILENAME.txt;
+    anvi-db-info $file;
 done
 ```
 
-# ANVI'O PANGENOME ANALYSIS
-
 ## Generating an Anvi'o genomes storage
 
-The program `anvi-gen-genomes-storage` requires you to provide names and locations of the genomes to be included in this storage in a .txt file. We create the AnvioGenomesSummary003.txt file with the renamed file names and paths.
-
-**IMPORTANT:** The next command generates big files as output that are too big to be sync using GitHub; please don't commit to GitHub.
+The program `anvi-gen-genomes-storage` requires you to provide names and locations of the genomes to be included in a genome storage in a .txt file. The  `analysis_Anvio7/AnvioGenomesSummary003.txt` file includes the file names and file paths.
 
 ```{bash}
 #conda activate anvio-7
@@ -178,23 +171,7 @@ anvi-gen-genomes-storage -e analysis_Anvio7/Contigs_db_prokka_Dpig/AnvioGenomesS
 
 ## Running the pangenomic analysis
 
-Once the genomes storage is ready, you can use the program `anvi-pan-genome` to run the actual pangenomic analysis. There are many parameters that can be adjusted for this step. The most relevant are:
-
--   Basic flags, file management:
-
-    -   `-g` your genome storage location
-    -   `-o` your output files location
-    -   `-n` is the name for your project
-    -   `--num-threads` use double the number of cores on your computer (for a dual-cored laptop use 4)
-
--   Advanced flags, algorithm parameters:
-
-    -   `--use-ncbi-blast` Meren strongly suggest to use blastp instead of DIAMOND (the default is DIAMONDfast)
-    -   `--mcl-inflation` 0 to 10, the default is 2. Meren recommends using 2 for distantly related genomes (i.e., genomes classify into different families or farther), and 10 for very closely related genomes (i.e., 'strains' of the same 'species')
-    -   `--minbit` 0 to 1, the default is 0.5. The minbit heuristic provides a mean to eliminate weak matches between two amino acid sequences. It seems to take into account both similarity and coverage
-    -   `--min-occurrence` the default is 1. Increase if you want to ignore singletons, doubletons... or define a "Core" pangenome
-
-**IMPORTANT:** The next command generates several intermediate files that are too big to be sync using GitHub; please don't commit those files to GitHub.
+We use the program `anvi-pan-genome` to run the actual pangenomic analysis. We used the more sensitive blastp search (`--use-ncbi-blast`) instead of the default DIAMOND fast option. `--mcl-inflation` was set to 10, as recommended for very closely related genomes (i.e., 'strains' of the same 'species').
 
 ```{bash}
 #conda activate anvio-7
@@ -203,20 +180,16 @@ anvi-pan-genome -g analysis_Anvio7/Pangenomic_Results_Dpig/Anvio005-GENOMES.db -
 
 ## Displaying the pangenome
 
-Start an anvi'o server to display a pan-genome. This will display the pangenome in your default internet browser.
-
-`-p` input for PAN.db file `-g` genomes storage file relating to that PAN.db
+This will display the pangenome in your default internet browser. Once it opens in the browser, you can adjust image settings and click the "DRAW" icon to view it. For help using the interactive interface see <http://merenlab.org/2016/02/27/the-anvio-interactive-interface/>
 
 ```{bash}
 #conda activate anvio-7
 sudo anvi-display-pan -p analysis_Anvio7/Pangenomic_Results_Dpig/PAN_DPIG_prokka-PAN.db -g analysis_Anvio7/Pangenomic_Results_Dpig/Anvio005-GENOMES.db
 ```
 
-Once it opens in the browser, you can adjust image settings and click the "DRAW" icon to view it. For help using the interactive interface see <http://merenlab.org/2016/02/27/the-anvio-interactive-interface/>
-
 ## Creating bin collections (Core vs Accessory)
 
-In order to define Core vs Accessory pangenome we use the interactive interface. In the "Bins" tab we can create and name as many bins as we want and store then in a bin collection. In the "Search" tab I used "Search gene clusters using filters" and "Append splits to selected bin" to create the following bins:
+In order to define Core vs Accessory pangenome we use Anvi'o interactive interface. In the "Bins" tab we can create and name as many bins as we want and store then in a bin collection. In the "Search" tab we used "Search gene clusters using filters" and "Append splits to selected bin" to create the following bins:
 
 -   Core: 1298/2905 (`r round(100*(1298/2905),1)`%) gene clusters in all 28 genomes
 
@@ -254,7 +227,7 @@ anvi-show-collections-and-bins --debug -p analysis_Anvio7/Pangenomic_Results_Dpi
 
 ## Summarizing the pangenome
 
-We can summarized the pangenome using the program `anvi-summarize`:
+We summarized the pangenome using the program `anvi-summarize`:
 
 ```{bash}
 #conda activate anvio-7
@@ -264,35 +237,18 @@ anvi-summarize -p analysis_Anvio7/Pangenomic_Results_Dpig/PAN_DPIG_prokka-PAN.db
                -o analysis_Anvio7/Pangenomic_Results_Dpig/Dpig-PAN-SUMMARY
 ```
 
-The resulting summary folder contains the file PAN_DPIG_prokka_gene_clusters_summary.txt.gz that links each gene to gene clusters, genomes, functions, and bins selected from the interface.
+The resulting summary folder contains the file `analysis_Anvio7/Pangenomic_Results_Dpig/Dpig-PAN-SUMMARY/PAN_DPIG_prokka_gene_clusters_summary.txt.gz` that links each gene to gene clusters, genomes, functions, and bins selected from the interface.
 
-## Displaying functions
-
-```{bash}
-anvi-db-info analysis_Anvio7/Pangenomic_Results_Dpig/Anvio005-GENOMES.db
-```
-
-gene_function_sources ........................: KOfam,Pfam,KEGG_Module,KEGG_Class,COG20_PATHWAY,COG20_FUNCTION,COG20_CATEGORY,Prokka:Prodigal
-
-```{bash}
-#conda activate anvio-7
-path_f="analysis_Anvio7/Contigs_db_prokka_Dpig"
-
-for file in $path_f/*.db; do
-    anvi-db-info $file;
-done
-```
-
-# PPanGGOLiN-Anvi'o 7 PIPELINE
+# PPanGGOLiN-Anvi'o 7 ANALYSIS
 
 ## Importing Prokka annotations and Anvi'o 7 clusters
 
-In order to import the Anvi'o clustering into PPanGGOLiN we need:
+In order to import the Anvi'o clustering into PPanGGOLiN we needed:
 
 1.  A .tsv file listing in the first column the gene family names, and in the second column the gene ID that is used in the annotation files.
 2.  The annotated genomes with gene IDs that match the ones listed in the previous .tsv file.
 
-Using `anvi-summarize` we can generate files that link each gene to gene clusters, genomes, functions, and bins selected from the interface. And we can subset the info needed to generate the .tsv file from it:
+Using the `anvi-summarize` output `analysis_Anvio7/Pangenomic_Results_Dpig/Dpig-PAN-SUMMARY/PAN_DPIG_prokka_gene_clusters_summary.txt.gz` described before we can create the .tsv file:
 
 ```{r}
 Dpig_Anvio7 <- read_delim("analysis_Anvio7/Pangenomic_Results_Dpig/Dpig-PAN-SUMMARY/PAN_DPIG_prokka_gene_clusters_summary.txt.gz", "\t")
@@ -305,9 +261,7 @@ Clusters_Dpig_Anvio7 <- select(Dpig_Anvio7, c(gene_cluster_id, new_id))
 write_delim(Clusters_Dpig_Anvio7, "analysis_PPanGGOLiN_Anvio7/Clusters_Dpig_Anvio7.tsv", col_names=FALSE)
 ```
 
-**IMPORTANT:** The gene_callers_id provided by Anvi'o don't match the original ones in the Prokka annotation.
-
-The Prokka annotated genomes were parsed into two text files, one for gene calls and one for annotations, with the script `gff_parser.py`. By default Prokka annotates also tRNAs, rRNAs and CRISPR regions. However, `gff_parser.py` will only utilize open reading frames reported by Prodigal in the Prokka output in order to be compatible with the pangenomic Anvi'o pipeline. While parsing new gene_callers_id are generated only for the ORFs that will be imported into Anvi'o. Fortunately `anvi-get-sequences-for-gene-calls` can be used to export new .gff files with only the ORFs and these can be used for PPanGGOLiN, instead of the original Prokka ones:
+**IMPORTANT:** The gene_callers_id provided by Anvi'o don't match the original ones in the Prokka annotation. The Prokka annotated genomes were parsed into two text files, one for gene calls and one for annotations, with the script `gff_parser.py`. By default Prokka annotates also tRNAs, rRNAs and CRISPR regions. However, `gff_parser.py` will only utilize open reading frames reported by Prodigal in the Prokka output in order to be compatible with the pangenomic Anvi'o pipeline. While parsing new gene_callers_id are generated only for the ORFs that will be imported into Anvi'o. Fortunately `anvi-get-sequences-for-gene-calls` can be used to export new .gff files with only the ORFs and these can be used for PPanGGOLiN, instead of the original Prokka .gff files:
 
 ```{bash}
 #conda activate anvio-7
@@ -324,7 +278,7 @@ for file in $path_f/*.db; do
 done
 ```
 
-I create lists with the files names for both the Anvi'o exported .gff and the renamed .fasta files and use them to run the `annotate` subcommand. For the `cluster` subcommand I use the .tsv file created before from the `anvi-summarize` output.
+We created lists with the file names for both the Anvi'o exported .gff (`analysis_PPanGGOLiN_Anvio7/Anvio7GenomesExported.gff.txt`) and the renamed .fasta files (`analysis_PPanGGOLiN_Anvio7/Anvio7GenomesReformatted.fa.txt`) and use them to run the `annotate` PPanGGOLiN subcommand. Then, the `cluster` PPanGGOLiN subcommand was run using the .tsv file created before from the `anvi-summarize` output.
 
 ```{bash}
 #conda activate PPanGGOLiN
@@ -335,9 +289,9 @@ ppanggolin cluster -p analysis_PPanGGOLiN_Anvio7/OutputFromAnvio7/FromAnvio7.h5 
 
 ## Graphing and Partitioning
 
-The `graph` subcommand has only a single other option, which is '-r' or '--remove_high_copy_number'. If used, it will remove the gene families that are too duplicated in your genomes. This is useful if you want to visualize your pangenome afterward and want to remove the biggest hubs to have a clearer view. It can also be used to limit the influence of very duplicated genes such as transposase or ABC transporters in the partition step.
+The PPanGGOLiN`graph` subcommand has only a single other option, which is '-r' or '--remove_high_copy_number'. If used, it will remove the gene families that are too duplicated in your genomes. This is useful if you want to visualize your pangenome afterward and want to remove the biggest hubs to have a clearer view. It can also be used to limit the influence of very duplicated genes such as transposase or ABC transporters in the partition step.
 
-We let the `partition` subcommand statistical criterion find the optimal number of partitions.
+We ran the PPanGGOLiN `graph` and `partition` subcommands with default parameters.
 
 ```{bash}
 #conda activate PPanGGOLiN
@@ -369,7 +323,7 @@ ppanggolin write -p analysis_PPanGGOLiN_Anvio7/OutputFromAnvio7/FromAnvio7.h5 -o
 
 ## Summary of used parameters
 
-The `info` subcommand indicates, for each steps of the analysis, the PPanGGOLiN parameters that were used and the source of the data if appropriate.
+The PPanGGOLiN `info` subcommand indicates, for each steps of the analysis, the PPanGGOLiN parameters that were used and the source of the data if appropriate.
 
 ```{bash}
 #conda activate PPanGGOLiN
