@@ -14,9 +14,9 @@ library(readr)
 knitr::opts_chunk$set(eval = FALSE, message = FALSE)
 ```
 
--   [Anvi'o v7, "hope"](https://github.com/merenlab/anvio/releases/tag/v7) [@eren2015, @eren2020] was [installed](https://merenlab.org/2016/06/26/installation-v2/) in a Python environment called `anvio-7`.
+-   [Anvi'o v7, "hope"](https://github.com/merenlab/anvio/releases/tag/v7) [@eren2015; @eren2020] was [installed](https://merenlab.org/2016/06/26/installation-v2/) in a Python environment called `anvio-7`.
 
--   [PPanGGOLiN v1.1.141](https://github.com/labgem/PPanGGOLiN/releases) [@gautreau2020, @bazin2020] was [installed](https://github.com/labgem/PPanGGOLiN/wiki/Installation) in a Python environment called `PPanGGOLiN.`
+-   [PPanGGOLiN v1.1.141](https://github.com/labgem/PPanGGOLiN/releases) [@gautreau2020; @bazin2020] was [installed](https://github.com/labgem/PPanGGOLiN/wiki/Installation) in a Python environment called `PPanGGOLiN.`
 
 # ANVI'O PANGENOME ANALYSIS
 
@@ -46,7 +46,7 @@ The Prokka annotation was performed with [Prokka v1.14.6](https://github.com/tse
 
 ### Parsing .gff files
 
-The Prokka annotated .gff files are parsed into two tab-delimited text files; one containing the Prodigal [] gene calls data and another with the functional annotations. This is done with the script `gff_parser.py`.
+The Prokka annotated .gff files are parsed into two tab-delimited text files; one containing the Prodigal gene calls data and another with the functional annotations. This is done with the script `gff_parser.py`.
 
 ```{bash}
 #conda activate anvio-7
@@ -102,7 +102,7 @@ done
 
 ### COG annotation
 
-The [`anvi-run-ncbi-cogs`](https://merenlab.org/software/anvio/help/main/programs/anvi-run-ncbi-cogs/) command was used to annotate the .db genome files against the NCBI's COGs database 2020 release [@tatusov1997, @galperin2020]. We used the DIAMOND [@buchfink2014] "sensitive" option instead of the default "fast" one.
+The [`anvi-run-ncbi-cogs`](https://merenlab.org/software/anvio/help/main/programs/anvi-run-ncbi-cogs/) command was used to annotate the .db genome files against the NCBI's COGs database 2020 release [@tatusov1997; @galperin2020]. We used the DIAMOND [@buchfink2014] "sensitive" option instead of the default "fast" one.
 
 ```{bash}
 #conda activate anvio-7
@@ -115,7 +115,7 @@ done
 
 ### KEGG annotation
 
-The program [`anvi-run-kegg-kofams`](https://merenlab.org/software/anvio/help/main/programs/anvi-run-kegg-kofams/) annotates the .db genomes with KEGG Orthology (KO) numbers via hits to the KEGG KOfam database [@Kanehisa2000, @Kanehisa2016].
+The program [`anvi-run-kegg-kofams`](https://merenlab.org/software/anvio/help/main/programs/anvi-run-kegg-kofams/) annotates the .db genomes with KEGG Orthology (KO) numbers via hits to the KEGG KOfam database [@Kanehisa2000; @Kanehisa2016].
 
 ```{bash}
 #conda activate anvio-7

@@ -4,13 +4,14 @@
 # SETUP
 
 -   [Anvi’o v7,
-    “hope”](https://github.com/merenlab/anvio/releases/tag/v7) [Eren et
-    al.](#ref-eren2020) ([2020](#ref-eren2020)) was
+    “hope”](https://github.com/merenlab/anvio/releases/tag/v7) ([Eren et
+    al. 2015](#ref-eren2015), [2020](#ref-eren2020)) was
     [installed](https://merenlab.org/2016/06/26/installation-v2/) in a
     Python environment called `anvio-7`.
 
 -   [PPanGGOLiN v1.1.141](https://github.com/labgem/PPanGGOLiN/releases)
-    [Bazin et al.](#ref-bazin2020) ([2020](#ref-bazin2020)) was
+    ([Gautreau et al. 2020](#ref-gautreau2020); [Bazin et al.
+    2020](#ref-bazin2020)) was
     [installed](https://github.com/labgem/PPanGGOLiN/wiki/Installation)
     in a Python environment called `PPanGGOLiN.`
 
@@ -58,9 +59,8 @@ in the next steps.
 ### Parsing .gff files
 
 The Prokka annotated .gff files are parsed into two tab-delimited text
-files; one containing the Prodigal \[\] gene calls data and another with
-the functional annotations. This is done with the script
-`gff_parser.py`.
+files; one containing the Prodigal gene calls data and another with the
+functional annotations. This is done with the script `gff_parser.py`.
 
 ``` bash
 #conda activate anvio-7
@@ -124,9 +124,9 @@ done
 The
 [`anvi-run-ncbi-cogs`](https://merenlab.org/software/anvio/help/main/programs/anvi-run-ncbi-cogs/)
 command was used to annotate the .db genome files against the NCBI’s
-COGs database 2020 release [Galperin et al.](#ref-galperin2020)
-([2020](#ref-galperin2020)). We used the DIAMOND ([Buchfink, Xie, and
-Huson 2014](#ref-buchfink2014)) “sensitive” option instead of the
+COGs database 2020 release ([Tatusov 1997](#ref-tatusov1997); [Galperin
+et al. 2020](#ref-galperin2020)). We used the DIAMOND ([Buchfink, Xie,
+and Huson 2014](#ref-buchfink2014)) “sensitive” option instead of the
 default “fast” one.
 
 ``` bash
@@ -143,8 +143,8 @@ done
 The program
 [`anvi-run-kegg-kofams`](https://merenlab.org/software/anvio/help/main/programs/anvi-run-kegg-kofams/)
 annotates the .db genomes with KEGG Orthology (KO) numbers via hits to
-the KEGG KOfam database [Minoru Kanehisa et al.](#ref-Kanehisa2016)
-([2015](#ref-Kanehisa2016)).
+the KEGG KOfam database ([M. Kanehisa 2000](#ref-Kanehisa2000); [Minoru
+Kanehisa et al. 2015](#ref-Kanehisa2016)).
 
 ``` bash
 #conda activate anvio-7
