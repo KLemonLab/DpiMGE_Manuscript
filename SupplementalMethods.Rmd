@@ -1,6 +1,8 @@
 ---
 title: "*Dolosigranulum pigrum* Supplemental Methods"
 output: rmarkdown::github_document
+bibliography: references.bib
+link-citations: true
 ---
 
 # SETUP
@@ -12,11 +14,13 @@ library(readr)
 knitr::opts_chunk$set(eval = FALSE, message = FALSE)
 ```
 
--   [Anvi'o v7, "hope"](https://github.com/merenlab/anvio/releases/tag/v7) was [installed](https://merenlab.org/2016/06/26/installation-v2/) in a Python environment called `anvio-7`.
+-   [Anvi'o v7, "hope"](https://github.com/merenlab/anvio/releases/tag/v7) [@eren2015, @eren2020] was [installed](https://merenlab.org/2016/06/26/installation-v2/) in a Python environment called `anvio-7`.
 
--   [PPanGGOLiN v1.1.141](https://github.com/labgem/PPanGGOLiN/releases) was [installed](https://github.com/labgem/PPanGGOLiN/wiki/Installation) in a Python environment called `PPanGGOLiN.`
+-   [PPanGGOLiN v1.1.141](https://github.com/labgem/PPanGGOLiN/releases) [@gautreau2020, @bazin2020] was [installed](https://github.com/labgem/PPanGGOLiN/wiki/Installation) in a Python environment called `PPanGGOLiN.`
 
 # ANVI'O PANGENOME ANALYSIS
+
+We followed a pipeline modified from the tutorial: [Anvi'o workflow for microbial pangenomics](https://merenlab.org/2016/11/08/pangenomics-v2/ "An anvi'o workflow for microbial pangenomics").
 
 ## Reformating genome fasta files
 
@@ -38,11 +42,11 @@ done
 
 ## Importing Prokka annotations into Anvi'o
 
-The Prokka annotation was performed with [Prokka v1.14.6](https://github.com/tseemann/prokka/releases/tag/v1.14.6) with default parameters. Prokka annotations were imported into Anvi'o following the recommended [Anvi'o pipeline for Prokka annotated genomes](https://merenlab.org/2017/05/18/working-with-prokka/) described in the next steps.
+The Prokka annotation was performed with [Prokka v1.14.6](https://github.com/tseemann/prokka/releases/tag/v1.14.6) [@seemann2014] with default parameters, including gene recognition and translation initiation site identification with Prodigal [@hyatt2010]. Prokka annotations were imported into Anvi'o following the recommended [Anvi'o pipeline for Prokka annotated genomes](https://merenlab.org/2017/05/18/working-with-prokka/) described in the next steps.
 
 ### Parsing .gff files
 
-The Prokka annotated .gff files are parsed into two tab-delimited text files; one containing the gene calls data and another with the functional annotations. This is done with the script `gff_parser.py`.
+The Prokka annotated .gff files are parsed into two tab-delimited text files; one containing the Prodigal [] gene calls data and another with the functional annotations. This is done with the script `gff_parser.py`.
 
 ```{bash}
 #conda activate anvio-7
@@ -77,7 +81,7 @@ for file in $path_f/*.fa; do
 done
 ```
 
-### Prokka annotation
+### Importing Prokka annotation
 
 The functional annotation part of the parsed Prokka files gets added to the Anvi'o contigs databases (.db files)
 
@@ -98,7 +102,7 @@ done
 
 ### COG annotation
 
-The [`anvi-run-ncbi-cogs`](https://merenlab.org/software/anvio/help/main/programs/anvi-run-ncbi-cogs/) command was used to annotate the .db genome files against the NCBI's COGs database 2020 release. We used the DIAMOND "sensitive" option instead of the default "fast" one.
+The [`anvi-run-ncbi-cogs`](https://merenlab.org/software/anvio/help/main/programs/anvi-run-ncbi-cogs/) command was used to annotate the .db genome files against the NCBI's COGs database 2020 release [@tatusov1997, @galperin2020]. We used the DIAMOND [@buchfink2014] "sensitive" option instead of the default "fast" one.
 
 ```{bash}
 #conda activate anvio-7
@@ -111,7 +115,7 @@ done
 
 ### KEGG annotation
 
-The program [`anvi-run-kegg-kofams`](https://merenlab.org/software/anvio/help/main/programs/anvi-run-kegg-kofams/) annotates the .db genomes with KEGG Orthology (KO) numbers (via hits to the KEGG KOfam database).
+The program [`anvi-run-kegg-kofams`](https://merenlab.org/software/anvio/help/main/programs/anvi-run-kegg-kofams/) annotates the .db genomes with KEGG Orthology (KO) numbers via hits to the KEGG KOfam database [@Kanehisa2000, @Kanehisa2016].
 
 ```{bash}
 #conda activate anvio-7
@@ -124,7 +128,7 @@ done
 
 ### PFAM annotation
 
-The program [`anvi-run-pfams`](https://merenlab.org/software/anvio/help/main/programs/anvi-run-pfams/) annotates the .db genomes with the PFAM database.
+The program [`anvi-run-pfams`](https://merenlab.org/software/anvio/help/main/programs/anvi-run-pfams/) annotates the .db genomes with the PFAM database [@mistry2020].
 
 ```{bash}
 #conda activate anvio-7
@@ -137,7 +141,7 @@ done
 
 ### Running HMMs
 
-The program [`anvi-run-hmms`](https://merenlab.org/software/anvio/help/main/programs/anvi-run-hmms/) stores hmm-hits into the .db genomes files.
+The program [`anvi-run-hmms`](https://merenlab.org/software/anvio/help/main/programs/anvi-run-hmms/) stores hmm-hits into the .db genomes files [@eddy2011].
 
 ```{bash}
 #conda activate anvio-7
@@ -150,7 +154,8 @@ done
 
 ### Displaying functions
 
-The program [`anvi-db-info`](https://merenlab.org/software/anvio/help/main/programs/anvi-db-info/) displays information about an Anvi’o database. The output of this command in `analysis_Anvio7/AnvioGenomesSummaryFuntions.txt` includes details on all the functional annotations included in the .db files.
+The program [`anvi-db-info`](https://merenlab.org/software/anvio/help/main/programs/anvi-db-info/) displays information about an Anvi'o database. The output of this command in `analysis_Anvio7/AnvioGenomesSummaryFuntions.txt` includes details on all the functional annotations included in the .db files.
+
 ```{bash}
 #conda activate anvio-7
 path_f="analysis_Anvio7/Contigs_db_prokka_Dpig"
@@ -162,7 +167,7 @@ done
 
 ## Generating an Anvi'o genomes storage
 
-The program `anvi-gen-genomes-storage` requires you to provide names and locations of the genomes to be included in a genome storage in a .txt file. The  `analysis_Anvio7/AnvioGenomesSummary003.txt` file includes the file names and file paths.
+The program `anvi-gen-genomes-storage` requires you to provide names and locations of the genomes to be included in a genome storage in a .txt file. The `analysis_Anvio7/AnvioGenomesSummary003.txt` file includes the file names and file paths.
 
 ```{bash}
 #conda activate anvio-7
@@ -171,7 +176,13 @@ anvi-gen-genomes-storage -e analysis_Anvio7/Contigs_db_prokka_Dpig/AnvioGenomesS
 
 ## Running the pangenomic analysis
 
-We use the program `anvi-pan-genome` to run the actual pangenomic analysis. We used the more sensitive blastp search (`--use-ncbi-blast`) instead of the default DIAMOND fast option. `--mcl-inflation` was set to 10, as recommended for very closely related genomes (i.e., 'strains' of the same 'species').
+The program `anvi-pan-genome`:
+
+1.  Calculates similarities of each amino acid sequence in every genome against every other amino acid sequence. We used the more sensitive blastp search (`--use-ncbi-blast`) [@altschul1990] instead of the default DIAMOND fast option.
+
+2.  Uses 'minbit heuristic' [@benedict2014] to filter weak hits based on the aligned fraction between the two reads.
+
+3.  Uses the MCL algorithm [@vandongen2011] to identify gene clusters in the remaining blastp search results. `--mcl-inflation` was set to 10, as recommended for very closely related genomes (i.e., 'strains' of the same 'species').
 
 ```{bash}
 #conda activate anvio-7
@@ -366,3 +377,5 @@ The output for this command was:
     -   set_size : 3
     -   overlapping_match : 2
     -   exact_match : 1
+
+# [REFERENCES]{.ul}
