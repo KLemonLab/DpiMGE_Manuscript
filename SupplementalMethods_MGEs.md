@@ -17,7 +17,11 @@ DpigPangenome <- DpigPangenome %>%
 ```
 
 We search for individual genes annotated as **Transposases**/**Retrons**
-in either the Prokka, COG20, Pfam or KOfam annotations:
+in either the Prokka ([Seemann 2014](#ref-Seemann2014)), COG20 ([Tatusov
+1997](#ref-Tatusov1997); [Galperin et al. 2020](#ref-Galperin2021)),
+Pfam ([Mistry et al. 2020](#ref-mistry2020)) or KOfam ([Minoru Kanehisa
+et al. 2015](#ref-kanehisa2015); [M. Kanehisa 2000](#ref-kanehisa2000))
+annotations:
 
 ``` r
 Retron_Genes <- DpigPangenome %>%
@@ -94,15 +98,21 @@ classified the initial 23 putative **Tranposase** GSs as:
 -   **Real Transposases:** GC\_00000003, GC\_00000040, GC\_00000055,
     GC\_00001693, GC\_00002092, GC\_00002210, GC\_00002310 and
     GC\_00002501.
+
 -   **Integrases (rve domain):** GC\_00000028, GC\_00000085,
     GC\_00001701, GC\_00001775 and GC\_00002348.
+
 -   **Other/Partial:** GC\_00000008, GC\_00001669, GC\_00001787,
     GC\_00002105, GC\_00002382, GC\_00002430, GC\_00002460,
     GC\_00002491, GC\_00002679 and GC\_00002805.
 
-## BOFFO/Clinker: UPDATE & ADD REFERENCES HERE
+## BOFFO/Clinker
 
-The following files were created with the selected sequences:
+The following files were created with the selected sequences and
+analyzed with the Bacterial Operon Finder for Functional Organization,
+aka [BOFFO](https://github.com/FredHutch/boffo) to identify the gene
+neighborhoods in which the selected genes were located across all 28 D.
+pigrum genomes
 
 -   SelectedAnvio7\_Intron.faa: Representative sequence for the
     GC\_00000001 cluster.
@@ -113,16 +123,10 @@ The following files were created with the selected sequences:
     the word Transposase on the annotation search but with complete (80%
     coverage or more) PFam **rve** domains.
 
-These files were analyzed with BOFFO with minimum percent identity 85%
-and minimum coverage 80%.
-
-Output is in AllMGE\_BOFFO\_80cov85id: You will see a folder for each of
-the multi-fasta’s sent to him (“Selected\_Real\_Transposases\_v2” for
-example). Within those folders there are subfolders for each protein
-(“GC\_00000084,” etc.) with all of the BOFFO outputs. The clinker
-results are located in a folder called “html” and if you do not see this
-folder it means that only one genome hit was found. Since clinker
-requires a minimum of two, there is no output.
+The groups of genes identified with BOFFO at minimum percent identity
+85% and minimum coverage 80% were visualized using
+[clinker](https://github.com/gamcil/clinker) ([Gilchrist et al.
+2021](#ref-Gilchrist2021)).
 
 Outputs concatenated by group:
 
@@ -181,7 +185,46 @@ MatrixBOFFO_ALL$Total <- rowSums(MatrixBOFFO_ALL, na.rm=TRUE)
 write.csv(MatrixBOFFO_ALL, "Stats_MatrixBOFFO.csv", row.names = TRUE)
 ```
 
+# <u>REFERENCES</u>
+
 <div id="refs" class="references csl-bib-body hanging-indent">
+
+<div id="ref-Galperin2021" class="csl-entry">
+
+Galperin, Michael Y, Yuri I Wolf, Kira S Makarova, Roberto Vera Alvarez,
+David Landsman, and Eugene V Koonin. 2020. “COG Database Update: Focus
+on Microbial Diversity, Model Organisms, and Widespread Pathogens.”
+*Nucleic Acids Research* 49 (D1): D274–81.
+<https://doi.org/10.1093/nar/gkaa1018>.
+
+</div>
+
+<div id="ref-Gilchrist2021" class="csl-entry">
+
+Gilchrist, Rachel J., Lisa M. Gunter, Samantha F. Anderson, and Clive
+D.L. Wynne. 2021. “The Click Is Not the Trick: The Efficacy of Clickers
+and Other Reinforcement Methods in Training Naïve Dogs to Perform New
+Tasks.” *PeerJ* 9 (February): e10881.
+<https://doi.org/10.7717/peerj.10881>.
+
+</div>
+
+<div id="ref-kanehisa2000" class="csl-entry">
+
+Kanehisa, M. 2000. “KEGG: Kyoto Encyclopedia of Genes and Genomes.”
+*Nucleic Acids Research* 28 (1): 27–30.
+<https://doi.org/10.1093/nar/28.1.27>.
+
+</div>
+
+<div id="ref-kanehisa2015" class="csl-entry">
+
+Kanehisa, Minoru, Yoko Sato, Masayuki Kawashima, Miho Furumichi, and Mao
+Tanabe. 2015. “KEGG as a Reference Resource for Gene and Protein
+Annotation.” *Nucleic Acids Research* 44 (D1): D457–62.
+<https://doi.org/10.1093/nar/gkv1070>.
+
+</div>
 
 <div id="ref-mistry2020" class="csl-entry">
 
@@ -198,6 +241,22 @@ Potter, Simon C, Aurélien Luciani, Sean R Eddy, Youngmi Park, Rodrigo
 Lopez, and Robert D Finn. 2018. “HMMER Web Server: 2018 Update.”
 *Nucleic Acids Research* 46 (W1): W200–204.
 <https://doi.org/10.1093/nar/gky448>.
+
+</div>
+
+<div id="ref-Seemann2014" class="csl-entry">
+
+Seemann, T. 2014. “Prokka: Rapid Prokaryotic Genome Annotation.”
+*Bioinformatics* 30 (14): 2068–69.
+<https://doi.org/10.1093/bioinformatics/btu153>.
+
+</div>
+
+<div id="ref-Tatusov1997" class="csl-entry">
+
+Tatusov, R. L. 1997. “A Genomic Perspective on Protein Families.”
+*Science* 278 (5338): 631–37.
+<https://doi.org/10.1126/science.278.5338.631>.
 
 </div>
 

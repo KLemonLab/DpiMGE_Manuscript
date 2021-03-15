@@ -27,7 +27,7 @@ DpigPangenome <- DpigPangenome %>%
   select(-unique_id, -aa_sequence, -SCG, -functional_homogeneity_index, -geometric_homogeneity_index, -combined_homogeneity_index)
 ```
 
-We search for individual genes annotated as **Transposases**/**Retrons** in either the Prokka, COG20, Pfam or KOfam annotations:
+We search for individual genes annotated as **Transposases**/**Retrons** in either the Prokka [@Seemann2014], COG20 [@Tatusov1997;@Galperin2021], Pfam [@mistry2020] or KOfam [@kanehisa2015;@kanehisa2000] annotations:
 
 ```{r}
 Retron_Genes <- DpigPangenome %>%
@@ -86,25 +86,25 @@ anvi-get-sequences-for-gene-clusters -g analysis_Anvio7/Pangenomic_Results_Dpig/
                                      --gene-cluster-ids-file "analysis_MGEs/SequencesAnvio7/IDs_Transposases.txt"
 ```
 
-### Selecting representative sequences   
+### Selecting representative sequences
 
 For each GC alignments were visually inspected in AliView and full-length representative sequences selected for PFam search. Using the [PFam batch sequence search](http://pfam.xfam.org/search#tabview=tab1)/[HMMER website](https://www.ebi.ac.uk/Tools/hmmer/search/hmmscan) [@mistry2020; @Potter2018] we classified the initial `r nrow(Transposases_GCs)` putative **Tranposase** GSs as:
 
 -   **Real Transposases:** GC_00000003, GC_00000040, GC_00000055, GC_00001693, GC_00002092, GC_00002210, GC_00002310 and GC_00002501.
+
 -   **Integrases (rve domain):** GC_00000028, GC_00000085, GC_00001701, GC_00001775 and GC_00002348.
+
 -   **Other/Partial:** GC_00000008, GC_00001669, GC_00001787, GC_00002105, GC_00002382, GC_00002430, GC_00002460, GC_00002491, GC_00002679 and GC_00002805.
 
-## BOFFO/Clinker: UPDATE & ADD REFERENCES HERE
+## BOFFO/Clinker
 
-The following files were created with the selected sequences:
+The following files were created with the selected sequences and analyzed with the Bacterial Operon Finder for Functional Organization, aka [BOFFO](https://github.com/FredHutch/boffo) to identify the gene neighborhoods in which the selected genes were located across all 28 D. pigrum genomes
 
 -   SelectedAnvio7_Intron.faa: Representative sequence for the GC_00000001 cluster.
 -   SelectedAnvio7_Real_Transposases.faa: GCs initially identified with the word Transposase on the annotation search and with complete (80% coverage or more) PFam **Transposase** domains.
 -   SelectedAnvio7_Integrases_rve.faa: GCs initially identified with the word Transposase on the annotation search but with complete (80% coverage or more) PFam **rve** domains.
 
-These files were analyzed with BOFFO with minimum percent identity 85% and minimum coverage 80%.
-
-Output is in AllMGE_BOFFO_80cov85id: You will see a folder for each of the multi-fasta's sent to him ("Selected_Real_Transposases_v2" for example). Within those folders there are subfolders for each protein ("GC_00000084", etc.) with all of the BOFFO outputs. The clinker results are located in a folder called "html" and if you do not see this folder it means that only one genome hit was found. Since clinker requires a minimum of two, there is no output.
+The groups of genes identified with BOFFO at minimum percent identity 85% and minimum coverage 80% were visualized using [clinker](https://github.com/gamcil/clinker) [@Gilchrist2021].
 
 Outputs concatenated by group:
 
@@ -161,3 +161,5 @@ MatrixBOFFO_ALL$Total <- rowSums(MatrixBOFFO_ALL, na.rm=TRUE)
 ```{r, eval=FALSE}
 write.csv(MatrixBOFFO_ALL, "Stats_MatrixBOFFO.csv", row.names = TRUE)
 ```
+
+# [REFERENCES]{.ul}

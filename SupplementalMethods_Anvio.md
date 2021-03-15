@@ -133,9 +133,9 @@ done
 ### KEGG annotation
 
 The program `anvi-run-kegg-kofams` annotates the .db genomes with KEGG
-Orthology (KO) numbers via hits to the KEGG KOfam database ([M. Kanehisa
-2000](#ref-Kanehisa2000); [Minoru Kanehisa et al.
-2015](#ref-Kanehisa2016)).
+Orthology (KO) numbers via hits to the KEGG KOfam database ([Minoru
+Kanehisa et al. 2015](#ref-Kanehisa2016); [M. Kanehisa
+2000](#ref-Kanehisa2000)).
 
 ``` bash
 #conda activate anvio-7
