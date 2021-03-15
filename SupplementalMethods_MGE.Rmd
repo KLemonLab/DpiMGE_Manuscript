@@ -1,0 +1,163 @@
+---
+title: \"Genomic Stability and Genetic Defense Systems in *Dolosigranulum pigrum* a Candidate Beneficial Bacterium from the Human Microbiome\" Supplemental Methods
+output: rmarkdown::github_document
+bibliography: references/references_MGEs.bib
+link-citations: true
+---
+
+```{r, message = FALSE, include = FALSE}
+library(tidyverse)
+library(knitr)
+library(readr)
+library(matrixStats)
+library(seqinr)
+library(readxl)
+knitr::opts_chunk$set(message = FALSE)
+```
+
+# SELECTED MGEs FROM THE ANVI'O & PPanGGOLiN ANALYSIS
+
+## Anvi'o 7 Annotation search
+
+We import the output of `anvi-summarize` and select the most relevant variables for this analysis:
+
+```{r message=FALSE}
+DpigPangenome <-  read_delim("analysis_Anvio7/Pangenomic_Results_Dpig/Dpig-PAN-SUMMARY/PAN_DPIG_prokka_gene_clusters_summary.txt.gz", "\t", escape_double = FALSE, trim_ws = TRUE)
+DpigPangenome <- DpigPangenome %>%
+  select(-unique_id, -aa_sequence, -SCG, -functional_homogeneity_index, -geometric_homogeneity_index, -combined_homogeneity_index)
+```
+
+We search for individual genes annotated as **Transposases**/**Retrons** in either the Prokka, COG20, Pfam or KOfam annotations:
+
+```{r}
+Retron_Genes <- DpigPangenome %>%
+  filter(str_detect(COG20_FUNCTION, "Retron") | str_detect(`Prokka:Prodigal`, "retron") | str_detect(Pfam, "Retron") | str_detect(KOfam, "retron"))
+Intron_Genes <- DpigPangenome %>%
+  filter(str_detect(COG20_FUNCTION, "Intron") | str_detect(`Prokka:Prodigal`, "intron") | str_detect(Pfam, "Intron") | str_detect(KOfam, "intron"))
+Transposase_Genes <- DpigPangenome %>%
+  filter(str_detect(COG20_FUNCTION, "Transposase") | str_detect(`Prokka:Prodigal`, "transposase") | str_detect(Pfam, "Transposase")| str_detect(KOfam, "transposase"))
+```
+
+There are `r nrow(Retron_Genes)` individual genes annotated as **Retrons**, `r nrow(Intron_Genes)` as **Introns** and `r nrow(Transposase_Genes)` as **Transposases**.
+
+We identified the GCs that contain those individual gene annotations:
+
+```{r}
+Retron_GCs <- Retron_Genes %>%
+  group_by(gene_cluster_id) %>%
+  summarize(n = n())
+Intron_GCs <- Intron_Genes %>%
+  group_by(gene_cluster_id) %>%
+  summarize(n = n())
+Transposases_GCs <- Transposase_Genes %>%
+  group_by(gene_cluster_id) %>%
+  summarize(n = n())
+```
+
+There are `r nrow(Retron_GCs)` GCs annotated as **Retrons**, `r nrow(Intron_GCs)` as **Introns** and `r nrow(Transposases_GCs)` as **Transposases**.
+
+### Generating Anvi'o fasta files
+
+From Anvi'o we export the protein Sequences for the GCs with individual genes identified as **Introns**/**Retrons** and as **Transposases**:
+
+For the **Introns**/**Retrons** we focused only on the main GC: GC_00000001:
+
+```{bash, eval=FALSE}
+#conda activate anvio-7
+anvi-get-sequences-for-gene-clusters -g analysis_Anvio7/Pangenomic_Results_Dpig/Anvio005-GENOMES.db \
+                                     -p analysis_Anvio7/Pangenomic_Results_Dpig/PAN_DPIG_prokka-PAN.db \
+                                     -o "analysis_MGEs/SequencesAnvio7/GC_00000001_Retron.faa" \
+                                     --gene-cluster-id GC_00000001
+```
+
+For the **Transposases** we first write a file with the GC numbers for the `r nrow(Transposases_GCs)` identified GCs:
+
+```{r, eval=FALSE}
+write.csv(Transposases_GCs$gene_cluster_id, "analysis_MGEs/SequencesAnvio7/IDs_Transposases.txt", row.names = FALSE)
+```
+
+(File cleaned up on text editor to removed header and "")
+
+```{bash, eval=FALSE}
+#conda activate anvio-7
+anvi-get-sequences-for-gene-clusters -g analysis_Anvio7/Pangenomic_Results_Dpig/Anvio005-GENOMES.db \
+                                     -p analysis_Anvio7/Pangenomic_Results_Dpig/PAN_DPIG_prokka-PAN.db \
+                                     -o "analysis_MGEs/SequencesAnvio7/GCsTransposases.faa" \
+                                     --gene-cluster-ids-file "analysis_MGEs/SequencesAnvio7/IDs_Transposases.txt"
+```
+
+### Selecting representative sequences   
+
+For each GC alignments were visually inspected in AliView and full-length representative sequences selected for PFam search. Using the [PFam batch sequence search](http://pfam.xfam.org/search#tabview=tab1)/[HMMER website](https://www.ebi.ac.uk/Tools/hmmer/search/hmmscan) [@mistry2020; @Potter2018] we classified the initial `r nrow(Transposases_GCs)` putative **Tranposase** GSs as:
+
+-   **Real Transposases:** GC_00000003, GC_00000040, GC_00000055, GC_00001693, GC_00002092, GC_00002210, GC_00002310 and GC_00002501.
+-   **Integrases (rve domain):** GC_00000028, GC_00000085, GC_00001701, GC_00001775 and GC_00002348.
+-   **Other/Partial:** GC_00000008, GC_00001669, GC_00001787, GC_00002105, GC_00002382, GC_00002430, GC_00002460, GC_00002491, GC_00002679 and GC_00002805.
+
+## BOFFO/Clinker: UPDATE & ADD REFERENCES HERE
+
+The following files were created with the selected sequences:
+
+-   SelectedAnvio7_Intron.faa: Representative sequence for the GC_00000001 cluster.
+-   SelectedAnvio7_Real_Transposases.faa: GCs initially identified with the word Transposase on the annotation search and with complete (80% coverage or more) PFam **Transposase** domains.
+-   SelectedAnvio7_Integrases_rve.faa: GCs initially identified with the word Transposase on the annotation search but with complete (80% coverage or more) PFam **rve** domains.
+
+These files were analyzed with BOFFO with minimum percent identity 85% and minimum coverage 80%.
+
+Output is in AllMGE_BOFFO_80cov85id: You will see a folder for each of the multi-fasta's sent to him ("Selected_Real_Transposases_v2" for example). Within those folders there are subfolders for each protein ("GC_00000084", etc.) with all of the BOFFO outputs. The clinker results are located in a folder called "html" and if you do not see this folder it means that only one genome hit was found. Since clinker requires a minimum of two, there is no output.
+
+Outputs concatenated by group:
+
+```{bash, eval=FALSE}
+cd ..
+cat AllMGE_BOFFO_80cov85id/Selected_Intron.faa-output/*/*.csv.gz  > SelectedGCs_Anvio/BOFFO/Intron.txt.gz
+cat AllMGE_BOFFO_80cov85id/Selected_Real_Transposases_v2-output/*/*.csv.gz  > SelectedGCs_Anvio/BOFFO/Real_Transposases.txt.gz
+```
+
+Files unzipped and format cleaned in excel and imported into R:
+
+```{r, eval=FALSE}
+Intron <- read_excel("BOFFO/Intron.xlsx")
+Real_Transposases <- read_excel("BOFFO/Real_Transposases.xlsx")
+ALL <- read_excel("BOFFO/ALL.xlsx")
+```
+
+### Final Tables
+
+Summary matrix table with a Genome in each row and each GC listed in each column.
+
+```{r, eval=FALSE, message=FALSE}
+MatrixBOFFO_ALL <- ALL %>%
+  group_by(genome_name, gene_name) %>%
+  summarize(n = n())
+MatrixBOFFO_ALL <- spread(MatrixBOFFO_ALL, gene_name, n)
+MatrixBOFFO_ALL <- MatrixBOFFO_ALL %>% remove_rownames %>% column_to_rownames(var="genome_name")
+```
+
+Totals/Stats by column/row:
+
+```{r, eval=FALSE}
+GCTotal <- colSums(MatrixBOFFO_ALL, na.rm=TRUE)
+GCMean <- round(colMeans(MatrixBOFFO_ALL, na.rm=TRUE), 2)
+GCMedian <- round(colMedians(as.matrix(MatrixBOFFO_ALL), na.rm=TRUE), 2)
+GCVar <- round(colVars(as.matrix(MatrixBOFFO_ALL), na.rm=TRUE), 2) #Sample variance
+GCSD <- round(colSds(as.matrix(MatrixBOFFO_ALL), na.rm=TRUE), 2) #Sample standard deviation
+GCMAD <- round(colMads(as.matrix(MatrixBOFFO_ALL), na.rm=TRUE), 2) #Median absolute deviation
+GCMin <- round(colMins(as.matrix(MatrixBOFFO_ALL), na.rm=TRUE), 2) 
+GCMax <- round(colMaxs(as.matrix(MatrixBOFFO_ALL), na.rm=TRUE), 2) 
+
+MatrixBOFFO_ALL["GCTotal" ,] <- GCTotal
+MatrixBOFFO_ALL["GCMean" ,] <- GCMean
+MatrixBOFFO_ALL["GCMedian" ,] <- GCMedian
+MatrixBOFFO_ALL["GCVar" ,] <- GCVar
+MatrixBOFFO_ALL["GCSD" ,] <- GCSD
+MatrixBOFFO_ALL["GCMAD" ,] <- GCMAD
+MatrixBOFFO_ALL["GCMin" ,] <- GCMin
+MatrixBOFFO_ALL["GCMax" ,] <- GCMax
+
+MatrixBOFFO_ALL$Total <- rowSums(MatrixBOFFO_ALL, na.rm=TRUE)
+```
+
+```{r, eval=FALSE}
+write.csv(MatrixBOFFO_ALL, "Stats_MatrixBOFFO.csv", row.names = TRUE)
+```

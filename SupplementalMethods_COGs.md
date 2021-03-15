@@ -2065,7 +2065,7 @@ pF <- ggplot(filter(GCsbyCOG_CorevsAccLong, COGs != "Uninformative", COGs != "Am
   scale_x_discrete(position = "top") +
   labs(title= "COG Categories", x="", y= "Number of Gene Clusters") +
   coord_flip() +
-  scale_y_continuous(limits = c(-180, 180), breaks = c(-175, -150, -100, -50, 0, 50, 100, 150, 175), label = c(-175, 150, 100, 50, 0, 50, 100, 150, 175)) +
+  scale_y_continuous(limits = c(-180, 180), breaks = c(-150, -100, -50, 0, 50, 100, 150), label = c(150, 100, 50, 0, 50, 100, 150)) +
   geom_segment(aes(x=0,xend=19.5,y=0,yend=0), linetype=3, size=0.1) +
   geom_label(aes(x = 20.5, y = -95, label = "      Soft/Core       "), fontface="bold", size=3, fill = "grey90", label.size=NA, label.padding = unit(0.3, "lines")) +
   geom_label(aes(x = 20.5, y = 95, label = "     Accessory      "), fontface="bold", size=3, fill = "grey90", label.size=NA, label.padding = unit(0.3, "lines")) +

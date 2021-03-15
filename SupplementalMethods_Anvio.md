@@ -6,7 +6,8 @@ Supplemental Methods
 # ANVI’O PANGENOME ANALYSIS
 
 [Anvi’o v7, “hope”](https://github.com/merenlab/anvio/releases/tag/v7)
-([Eren et al. 2015](#ref-eren2015), [2020](#ref-eren2020)) was
+([Eren et al. 2015](#ref-eren2015), [2020](#ref-eren2020); [Delmont and
+Eren 2018](#ref-Delmont2018b)) was
 [installed](https://merenlab.org/2016/06/26/installation-v2/) in a
 Python environment called `anvio-7`.
 
@@ -331,6 +332,14 @@ Exploration of Microbial Pan-Genomes.” *BMC Genomics* 15 (1): 8.
 Buchfink, Benjamin, Chao Xie, and Daniel H Huson. 2014. “Fast and
 Sensitive Protein Alignment Using DIAMOND.” *Nature Methods* 12 (1):
 59–60. <https://doi.org/10.1038/nmeth.3176>.
+
+</div>
+
+<div id="ref-Delmont2018b" class="csl-entry">
+
+Delmont, Tom O., and A. Murat Eren. 2018. “Linking Pangenomes and
+Metagenomes: The Prochlorococcus Metapangenome.” *PeerJ* 6 (January):
+e4320. <https://doi.org/10.7717/peerj.4320>.
 
 </div>
 
