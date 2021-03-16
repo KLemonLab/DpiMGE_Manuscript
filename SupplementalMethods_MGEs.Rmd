@@ -27,7 +27,7 @@ DpigPangenome <- DpigPangenome %>%
   select(-unique_id, -aa_sequence, -SCG, -functional_homogeneity_index, -geometric_homogeneity_index, -combined_homogeneity_index)
 ```
 
-We search for individual genes annotated as **Transposases**/**Retrons** in either the Prokka [@Seemann2014], COG20 [@Tatusov1997;@Galperin2021], Pfam [@mistry2020] or KOfam [@kanehisa2015;@kanehisa2000] annotations:
+We search for individual genes annotated as **Transposases**/**Retrons** in either the Prokka [@Seemann2014], COG20 [@Tatusov1997; @Galperin2021], Pfam [@mistry2020] or KOfam [@kanehisa2015; @kanehisa2000] annotations:
 
 ```{r}
 Retron_Genes <- DpigPangenome %>%
