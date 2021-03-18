@@ -6,8 +6,8 @@ Supplemental Methods
 # PPanGGOLiN ANALYSIS
 
 [PPanGGOLiN v1.1.141](https://github.com/labgem/PPanGGOLiN/releases)
-([Gautreau et al. 2020](#ref-gautreau2020); [Bazin et al.
-2020](#ref-bazin2020)) was
+(Gautreau et al. [2020](#ref-gautreau2020); Bazin et al.
+[2020](#ref-bazin2020)) was
 [installed](https://github.com/labgem/PPanGGOLiN/wiki/Installation) in a
 Python environment called `PPanGGOLiN.`
 
@@ -22,11 +22,12 @@ In order to import the Anvi’o clustering into PPanGGOLiN we needed:
     the previous .tsv file.
 
 Using the `anvi-summarize` output
-`analysis_Anvio7/Pangenomic_Results_Dpig/Dpig-PAN-SUMMARY/PAN_DPIG_prokka_gene_clusters_summary.txt.gz`
-described before we can create the .tsv file:
+`analysis_Anvio7/Pangenomic_Results_Dpig/PAN_DPIG_prokka_gene_clusters_summary.txt.gz`
+described before we can create the .tsv
+file:
 
 ``` r
-Dpig_Anvio7 <- read_delim("analysis_Anvio7/Pangenomic_Results_Dpig/Dpig-PAN-SUMMARY/PAN_DPIG_prokka_gene_clusters_summary.txt.gz", "\t")
+Dpig_Anvio7 <- read_delim("analysis_Anvio7/Pangenomic_Results_Dpig/PAN_DPIG_prokka_gene_clusters_summary.txt.gz", "\t")
 Dpig_Anvio7 <- Dpig_Anvio7 %>% 
   unite(new_id, genome_name:gene_callers_id, sep = "___", remove = FALSE)
 Clusters_Dpig_Anvio7 <- select(Dpig_Anvio7, c(gene_cluster_id, new_id))
@@ -82,7 +83,7 @@ ppanggolin cluster -p analysis_PPanGGOLiN_Anvio7/OutputFromAnvio7/FromAnvio7.h5 
 ## Graphing and Partitioning
 
 The PPanGGOLiN`graph` subcommand has only a single other option, which
-is ‘-r’ or ‘–remove\_high\_copy\_number.’ If used, it will remove the
+is ‘-r’ or ‘–remove\_high\_copy\_number’. If used, it will remove the
 gene families that are too duplicated in your genomes. This is useful if
 you want to visualize your pangenome afterward and want to remove the
 biggest hubs to have a clearer view. It can also be used to limit the
@@ -135,58 +136,58 @@ ppanggolin info -p analysis_PPanGGOLiN_Anvio7/OutputFromAnvio7/FromAnvio7.h5 --p
 
 The output for this command was:
 
--   annotation
+  - <u>**annotation**</u>
+    
+      - `read_annotations_from_file`: True
 
-    -   read\_annotations\_from\_file : True
+  - <u>**cluster**</u>
+    
+      - `read_clustering_from_file`: True
+      - `infer_singletons`: True
 
--   cluster
+  - <u>**graph**</u>
+    
+      - `removed_high_copy_number_families`: False
 
-    -   read\_clustering\_from\_file : True
-    -   infer\_singletons : True
+  - <u>**partition**</u>
+    
+      - `beta`: 2.5
+      - `free_dispersion`: False
+      - `max_node_degree_for_smoothing`: 10
+      - `computed_K`: True
+      - `K`: 3
 
--   graph
+  - <u>**RGP**</u>
+    
+      - `persistent_penalty`: 3
+      - `variable_gain`: 1
+      - `min_length`: 3000
+      - `min_score`: 4
+      - `dup_margin`: 0.05
 
-    -   removed\_high\_copy\_number\_families : False
-
--   partition
-
-    -   beta : 2.5
-    -   free\_dispersion : False
-    -   max\_node\_degree\_for\_smoothing : 10
-    -   computed\_K : True
-    -   K : 3
-
--   RGP
-
-    -   persistent\_penalty : 3
-    -   variable\_gain : 1
-    -   min\_length : 3000
-    -   min\_score : 4
-    -   dup\_margin : 0.05
-
--   spots
-
-    -   set\_size : 3
-    -   overlapping\_match : 2
-    -   exact\_match : 1
+  - <u>**spots**</u>
+    
+      - `set_size`: 3
+      - `overlapping_match`: 2
+      - `exact_match`: 1
 
 ## Spot Analysis
 
-# <u>REFERENCES</u>
+# <span class="ul">REFERENCES</span>
 
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references">
 
-<div id="ref-bazin2020" class="csl-entry">
+<div id="ref-bazin2020">
 
 Bazin, Adelme, Guillaume Gautreau, Claudine Médigue, David Vallenet, and
-Alexandra Calteau. 2020. “panRGP: A Pangenome-Based Method to Predict
+Alexandra Calteau. 2020. “PanRGP: A Pangenome-Based Method to Predict
 Genomic Islands and Explore Their Diversity.” *Bioinformatics* 36
-(Supplement\_2): i651–58.
+(Supplement\_2): i651–i658.
 <https://doi.org/10.1093/bioinformatics/btaa792>.
 
 </div>
 
-<div id="ref-gautreau2020" class="csl-entry">
+<div id="ref-gautreau2020">
 
 Gautreau, Guillaume, Adelme Bazin, Mathieu Gachet, Rémi Planel, Laura
 Burlot, Mathieu Dubois, Amandine Perrin, et al. 2020. “PPanGGOLiN:

@@ -23,10 +23,10 @@ In order to import the Anvi'o clustering into PPanGGOLiN we needed:
 1.  A .tsv file listing in the first column the gene family names, and in the second column the gene ID that is used in the annotation files.
 2.  The annotated genomes with gene IDs that match the ones listed in the previous .tsv file.
 
-Using the `anvi-summarize` output `analysis_Anvio7/Pangenomic_Results_Dpig/Dpig-PAN-SUMMARY/PAN_DPIG_prokka_gene_clusters_summary.txt.gz` described before we can create the .tsv file:
+Using the `anvi-summarize` output `analysis_Anvio7/Pangenomic_Results_Dpig/PAN_DPIG_prokka_gene_clusters_summary.txt.gz` described before we can create the .tsv file:
 
 ```{r}
-Dpig_Anvio7 <- read_delim("analysis_Anvio7/Pangenomic_Results_Dpig/Dpig-PAN-SUMMARY/PAN_DPIG_prokka_gene_clusters_summary.txt.gz", "\t")
+Dpig_Anvio7 <- read_delim("analysis_Anvio7/Pangenomic_Results_Dpig/PAN_DPIG_prokka_gene_clusters_summary.txt.gz", "\t")
 Dpig_Anvio7 <- Dpig_Anvio7 %>% 
   unite(new_id, genome_name:gene_callers_id, sep = "___", remove = FALSE)
 Clusters_Dpig_Anvio7 <- select(Dpig_Anvio7, c(gene_cluster_id, new_id))
@@ -107,40 +107,40 @@ ppanggolin info -p analysis_PPanGGOLiN_Anvio7/OutputFromAnvio7/FromAnvio7.h5 --p
 
 The output for this command was:
 
--   annotation
+-   <u>**annotation**</u>
 
-    -   read_annotations_from_file : True
+    -   `read_annotations_from_file`: True
 
--   cluster
+-   <u>**cluster**</u>
 
-    -   read_clustering_from_file : True
-    -   infer_singletons : True
+    -   `read_clustering_from_file`: True
+    -   `infer_singletons`: True
 
--   graph
+-   <u>**graph**</u>
 
-    -   removed_high_copy_number_families : False
+    -   `removed_high_copy_number_families`: False
 
--   partition
+-   <u>**partition**</u>
 
-    -   beta : 2.5
-    -   free_dispersion : False
-    -   max_node_degree_for_smoothing : 10
-    -   computed_K : True
-    -   K : 3
+    -   `beta`: 2.5
+    -   `free_dispersion`: False
+    -   `max_node_degree_for_smoothing`: 10
+    -   `computed_K`: True
+    -   `K`: 3
 
--   RGP
+-   <u>**RGP**</u>
 
-    -   persistent_penalty : 3
-    -   variable_gain : 1
-    -   min_length : 3000
-    -   min_score : 4
-    -   dup_margin : 0.05
+    -   `persistent_penalty`: 3
+    -   `variable_gain`: 1
+    -   `min_length`: 3000
+    -   `min_score`: 4
+    -   `dup_margin`: 0.05
 
--   spots
+-   <u>**spots**</u>
 
-    -   set_size : 3
-    -   overlapping_match : 2
-    -   exact_match : 1
+    -   `set_size`: 3
+    -   `overlapping_match`: 2
+    -   `exact_match`: 1
 
 ## Spot Analysis
 
