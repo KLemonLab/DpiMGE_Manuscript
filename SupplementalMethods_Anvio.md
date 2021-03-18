@@ -72,7 +72,7 @@ done
 
 In this step the gene calls from Prokka and the reformatted fasta files
 get imported to generate Anvi’o contigs databases. We add the
-`--ignore-internal-stop-codons` flag to avoid errors downstream the
+`--ignore-internal-stop-codons` flag to avoid errors downstream in the
 pipeline. Only 1-2 genes with internal stop codons were identified in
 each genome.
 
@@ -217,7 +217,7 @@ The program `anvi-pan-genome`:
 
 2.  Uses ‘minbit heuristic’ ([Benedict et al. 2014](#ref-benedict2014))
     to filter weak hits based on the aligned fraction between the two
-    reads.
+    reads. We used the default X value.
 
 3.  Uses the MCL algorithm ([van Dongen and Abreu-Goodger
     2011](#ref-vandongen2011)) to identify gene clusters in the
