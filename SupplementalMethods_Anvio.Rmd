@@ -58,7 +58,7 @@ done
 
 ### Generating contigs databases
 
-In this step the gene calls from Prokka and the reformatted fasta files get imported to generate Anvi'o contigs databases. We add the `--ignore-internal-stop-codons` flag to avoid errors downstream the pipeline. Only 1-2 genes with internal stop codons were identified in each genome.
+In this step the gene calls from Prokka and the reformatted fasta files get imported to generate Anvi'o contigs databases. We add the `--ignore-internal-stop-codons` flag to avoid errors downstream in the pipeline. Only 1-2 genes with internal stop codons were identified in each genome.
 
 ```{bash}
 #conda activate anvio-7
@@ -176,7 +176,7 @@ The program `anvi-pan-genome`:
 
 1.  Calculates similarities of each amino acid sequence in every genome against every other amino acid sequence. We used the more sensitive blastp search (`--use-ncbi-blast`) [@altschul1990] instead of the default DIAMOND fast option.
 
-2.  Uses 'minbit heuristic' [@benedict2014] to filter weak hits based on the aligned fraction between the two reads.
+2.  Uses 'minbit heuristic' [@benedict2014] to filter weak hits based on the aligned fraction between the two reads. We used the default 0.5
 
 3.  Uses the MCL algorithm [@vandongen2011] to identify gene clusters in the remaining blastp search results. `--mcl-inflation` was set to 10, as recommended for very closely related genomes (i.e., 'strains' of the same 'species').
 
