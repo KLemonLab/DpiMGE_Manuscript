@@ -6,8 +6,8 @@ Supplemental Methods
 # ANVI’O PANGENOME ANALYSIS
 
 [Anvi’o v7, “hope”](https://github.com/merenlab/anvio/releases/tag/v7)
-([Eren et al. 2015](#ref-eren2015), [2020](#ref-eren2020); [Delmont and
-Eren 2018](#ref-Delmont2018b)) was
+(Eren et al. [2015](#ref-eren2015), [2020](#ref-eren2020); Delmont and
+Eren [2018](#ref-Delmont2018b)) was
 [installed](https://merenlab.org/2016/06/26/installation-v2/) in a
 Python environment called `anvio-7`.
 
@@ -42,9 +42,9 @@ done
 
 The Prokka annotation was performed with [Prokka
 v1.14.6](https://github.com/tseemann/prokka/releases/tag/v1.14.6)
-([Seemann 2014](#ref-seemann2014)) with default parameters, including
+(Seemann [2014](#ref-seemann2014)) with default parameters, including
 gene recognition and translation initiation site identification with
-Prodigal ([Hyatt et al. 2010](#ref-hyatt2010)). Prokka annotations were
+Prodigal (Hyatt et al. [2010](#ref-hyatt2010)). Prokka annotations were
 imported into Anvi’o following the recommended [Anvi’o pipeline for
 Prokka annotated
 genomes](https://merenlab.org/2017/05/18/working-with-prokka/) described
@@ -116,9 +116,9 @@ done
 ### COG annotation
 
 The `anvi-run-ncbi-cogs` command was used to annotate the .db genome
-files against the NCBI’s COGs database 2020 release ([Tatusov
-1997](#ref-tatusov1997); [Galperin et al. 2020](#ref-galperin2020)). We
-used the DIAMOND ([Buchfink, Xie, and Huson 2014](#ref-buchfink2014))
+files against the NCBI’s COGs database 2020 release (Tatusov
+[1997](#ref-tatusov1997); Galperin et al. [2020](#ref-galperin2020)). We
+used the DIAMOND (Buchfink, Xie, and Huson [2014](#ref-buchfink2014))
 “sensitive” option instead of the default “fast” one.
 
 ``` bash
@@ -133,9 +133,8 @@ done
 ### KEGG annotation
 
 The program `anvi-run-kegg-kofams` annotates the .db genomes with KEGG
-Orthology (KO) numbers via hits to the KEGG KOfam database ([Minoru
-Kanehisa et al. 2015](#ref-Kanehisa2016); [M. Kanehisa
-2000](#ref-Kanehisa2000)).
+Orthology (KO) numbers via hits to the KEGG KOfam database (Kanehisa et
+al. [2015](#ref-Kanehisa2016); Kanehisa [2000](#ref-Kanehisa2000)).
 
 ``` bash
 #conda activate anvio-7
@@ -149,7 +148,7 @@ done
 ### PFAM annotation
 
 The program `anvi-run-pfams` annotates the .db genomes with the PFAM
-database ([Mistry et al. 2020](#ref-mistry2020)).
+database (Mistry et al. [2020](#ref-mistry2020)).
 
 ``` bash
 #conda activate anvio-7
@@ -164,7 +163,7 @@ done
 
 The program
 [`anvi-run-hmms`](https://merenlab.org/software/anvio/help/main/programs/anvi-run-hmms/)
-stores hmm-hits into the .db genomes files ([Eddy 2011](#ref-eddy2011)).
+stores hmm-hits into the .db genomes files (Eddy [2011](#ref-eddy2011)).
 
 ``` bash
 #conda activate anvio-7
@@ -211,19 +210,21 @@ The program `anvi-pan-genome`:
 
 1.  Calculates similarities of each amino acid sequence in every genome
     against every other amino acid sequence. We used the more sensitive
-    blastp search (`--use-ncbi-blast`) ([Altschul et al.
-    1990](#ref-altschul1990)) instead of the default DIAMOND fast
+    blastp search (`--use-ncbi-blast`) (Altschul et al.
+    [1990](#ref-altschul1990)) instead of the default DIAMOND fast
     option.
 
-2.  Uses ‘minbit heuristic’ ([Benedict et al. 2014](#ref-benedict2014))
+2.  Uses ‘minbit heuristic’ (Benedict et al. [2014](#ref-benedict2014))
     to filter weak hits based on the aligned fraction between the two
-    reads. We used the default X value.
+    reads. We used the default 0.5
 
-3.  Uses the MCL algorithm ([van Dongen and Abreu-Goodger
-    2011](#ref-vandongen2011)) to identify gene clusters in the
+3.  Uses the MCL algorithm (van Dongen and Abreu-Goodger
+    [2011](#ref-vandongen2011)) to identify gene clusters in the
     remaining blastp search results. `--mcl-inflation` was set to 10, as
     recommended for very closely related genomes (i.e., ‘strains’ of the
     same ‘species’).
+
+<!-- end list -->
 
 ``` bash
 #conda activate anvio-7
@@ -247,36 +248,37 @@ sudo anvi-display-pan -p analysis_Anvio7/Pangenomic_Results_Dpig/PAN_DPIG_prokka
 In order to define Core vs Accessory pangenome we use Anvi’o interactive
 interface. In the “Bins” tab we can create and name as many bins as we
 want and store then in a bin collection. In the “Search” tab we used
-“Search gene clusters using filters” and “Append splits to selected bin”
-to create the following bins:
+“Search gene clusters using filters” and “Append splits to selected
+bin” to create the following bins:
 
--   Core: 1298/2905 (44.7%) gene clusters in all 28 genomes
+  - **Core**: 1298/2905 (44.7%) gene clusters in all 28 genomes
+    
+      - Min number of genomes gene cluster occurs = 28
 
-    -   Min number of genomes gene cluster occurs = 28
+  - **SC Core**: 1111/2905 (38.2%) gene clusters detected in single copy
+    in all 28 genomes
+    
+      - Min number of genomes gene cluster occurs = 28
+      - Max number of genes from each genome = 1
 
--   SC Core: 1111/2905 (38.2%) gene clusters detected in single copy in
-    all 28 genomes
+  - **MC Core**: 1298-1111=187 (6.4%) detected in multiple copy in all
+    28 genomes
 
-    -   Min number of genomes gene cluster occurs = 28
-    -   Max number of genes from each genome = 1
-
--   MC Core: 1298-1111=187 (6.4%) detected in multiple copy in all 28
+  - **Soft Core**: 90/2905 (3.1%) gene clusters detected in 26-27
     genomes
+    
+      - Min number of genomes gene cluster occurs = 26
+      - Max number of genomes gene cluster occurs = 27
 
--   SoftCore: 90/2905 (3.1%) gene clusters detected in 26-27 genomes
+  - **Shell**: 805/2905 (27.7%) gene clusters detected in 3-25 genomes
+    
+      - Min number of genomes gene cluster occurs = 3
+      - Max number of genomes gene cluster occurs = 25
 
-    -   Min number of genomes gene cluster occurs = 26
-    -   Max number of genomes gene cluster occurs = 27
-
--   Shell: 805/2905 (27.7%) gene clusters detected in 3-25 genomes
-
-    -   Min number of genomes gene cluster occurs = 3
-    -   Max number of genomes gene cluster occurs = 25
-
--   Cloud: 712/2905 (24.5%) gene clusters detected in only 2 genomes or
-    less
-
-    -   Max number of genomes gene cluster occurs = 2
+  - **Cloud**: 712/2905 (24.5%) gene clusters detected in only 2 genomes
+    or less
+    
+      - Max number of genomes gene cluster occurs = 2
 
 We stored the 5 bins in a new collection named **CorevsAccessory**
 
@@ -305,11 +307,11 @@ The resulting summary folder contains the file
 that links each gene to gene clusters, genomes, functions, and bins
 selected from the interface.
 
-# <u>REFERENCES</u>
+# <span class="ul">REFERENCES</span>
 
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references">
 
-<div id="ref-altschul1990" class="csl-entry">
+<div id="ref-altschul1990">
 
 Altschul, Stephen F., Warren Gish, Webb Miller, Eugene W. Myers, and
 David J. Lipman. 1990. “Basic Local Alignment Search Tool.” *Journal of
@@ -318,7 +320,7 @@ Molecular Biology* 215 (3): 403–10.
 
 </div>
 
-<div id="ref-benedict2014" class="csl-entry">
+<div id="ref-benedict2014">
 
 Benedict, Matthew N, James R Henriksen, William W Metcalf, Rachel J
 Whitaker, and Nathan D Price. 2014. “ITEP: An Integrated Toolkit for
@@ -327,15 +329,15 @@ Exploration of Microbial Pan-Genomes.” *BMC Genomics* 15 (1): 8.
 
 </div>
 
-<div id="ref-buchfink2014" class="csl-entry">
+<div id="ref-buchfink2014">
 
 Buchfink, Benjamin, Chao Xie, and Daniel H Huson. 2014. “Fast and
-Sensitive Protein Alignment Using DIAMOND.” *Nature Methods* 12 (1):
+Sensitive Protein Alignment Using Diamond.” *Nature Methods* 12 (1):
 59–60. <https://doi.org/10.1038/nmeth.3176>.
 
 </div>
 
-<div id="ref-Delmont2018b" class="csl-entry">
+<div id="ref-Delmont2018b">
 
 Delmont, Tom O., and A. Murat Eren. 2018. “Linking Pangenomes and
 Metagenomes: The Prochlorococcus Metapangenome.” *PeerJ* 6 (January):
@@ -343,15 +345,15 @@ e4320. <https://doi.org/10.7717/peerj.4320>.
 
 </div>
 
-<div id="ref-eddy2011" class="csl-entry">
+<div id="ref-eddy2011">
 
-Eddy, Sean R. 2011. “Accelerated Profile HMM Searches.” Edited by
+Eddy, Sean R. 2011. “Accelerated Profile Hmm Searches.” Edited by
 William R. Pearson. *PLoS Computational Biology* 7 (10): e1002195.
 <https://doi.org/10.1371/journal.pcbi.1002195>.
 
 </div>
 
-<div id="ref-eren2015" class="csl-entry">
+<div id="ref-eren2015">
 
 Eren, A. Murat, Özcan C. Esen, Christopher Quince, Joseph H. Vineis,
 Hilary G. Morrison, Mitchell L. Sogin, and Tom O. Delmont. 2015.
@@ -360,7 +362,7 @@ Data.” *PeerJ* 3 (October): e1319. <https://doi.org/10.7717/peerj.1319>.
 
 </div>
 
-<div id="ref-eren2020" class="csl-entry">
+<div id="ref-eren2020">
 
 Eren, A. Murat, Evan Kiefl, Alon Shaiber, Iva Veseli, Samuel E. Miller,
 Matthew S. Schechter, Isaac Fink, et al. 2020. “Community-Led,
@@ -369,17 +371,17 @@ Integrated, Reproducible Multi-Omics with Anvi’o.” *Nature Microbiology*
 
 </div>
 
-<div id="ref-galperin2020" class="csl-entry">
+<div id="ref-galperin2020">
 
 Galperin, Michael Y, Yuri I Wolf, Kira S Makarova, Roberto Vera Alvarez,
 David Landsman, and Eugene V Koonin. 2020. “COG Database Update: Focus
 on Microbial Diversity, Model Organisms, and Widespread Pathogens.”
-*Nucleic Acids Research* 49 (D1): D274–81.
+*Nucleic Acids Research* 49 (D1): D274–D281.
 <https://doi.org/10.1093/nar/gkaa1018>.
 
 </div>
 
-<div id="ref-hyatt2010" class="csl-entry">
+<div id="ref-hyatt2010">
 
 Hyatt, Doug, Gwo-Liang Chen, Philip F LoCascio, Miriam L Land, Frank W
 Larimer, and Loren J Hauser. 2010. “Prodigal: Prokaryotic Gene
@@ -388,7 +390,7 @@ Bioinformatics* 11 (1). <https://doi.org/10.1186/1471-2105-11-119>.
 
 </div>
 
-<div id="ref-Kanehisa2000" class="csl-entry">
+<div id="ref-Kanehisa2000">
 
 Kanehisa, M. 2000. “KEGG: Kyoto Encyclopedia of Genes and Genomes.”
 *Nucleic Acids Research* 28 (1): 27–30.
@@ -396,33 +398,33 @@ Kanehisa, M. 2000. “KEGG: Kyoto Encyclopedia of Genes and Genomes.”
 
 </div>
 
-<div id="ref-Kanehisa2016" class="csl-entry">
+<div id="ref-Kanehisa2016">
 
 Kanehisa, Minoru, Yoko Sato, Masayuki Kawashima, Miho Furumichi, and Mao
 Tanabe. 2015. “KEGG as a Reference Resource for Gene and Protein
-Annotation.” *Nucleic Acids Research* 44 (D1): D457–62.
+Annotation.” *Nucleic Acids Research* 44 (D1): D457–D462.
 <https://doi.org/10.1093/nar/gkv1070>.
 
 </div>
 
-<div id="ref-mistry2020" class="csl-entry">
+<div id="ref-mistry2020">
 
 Mistry, Jaina, Sara Chuguransky, Lowri Williams, Matloob Qureshi,
 Gustavo A Salazar, Erik L L Sonnhammer, Silvio C E Tosatto, et al. 2020.
 “Pfam: The Protein Families Database in 2021.” *Nucleic Acids Research*
-49 (D1): D412–19. <https://doi.org/10.1093/nar/gkaa913>.
+49 (D1): D412–D419. <https://doi.org/10.1093/nar/gkaa913>.
 
 </div>
 
-<div id="ref-seemann2014" class="csl-entry">
+<div id="ref-seemann2014">
 
 Seemann, T. 2014. “Prokka: Rapid Prokaryotic Genome Annotation.”
-*Bioinformatics* 30 (14): 2068–69.
+*Bioinformatics* 30 (14): 2068–9.
 <https://doi.org/10.1093/bioinformatics/btu153>.
 
 </div>
 
-<div id="ref-tatusov1997" class="csl-entry">
+<div id="ref-tatusov1997">
 
 Tatusov, R. L. 1997. “A Genomic Perspective on Protein Families.”
 *Science* 278 (5338): 631–37.
@@ -430,9 +432,9 @@ Tatusov, R. L. 1997. “A Genomic Perspective on Protein Families.”
 
 </div>
 
-<div id="ref-vandongen2011" class="csl-entry">
+<div id="ref-vandongen2011">
 
-van Dongen, Stijn, and Cei Abreu-Goodger. 2011. “Using MCL to Extract
+van Dongen, Stijn, and Cei Abreu-Goodger. 2011. “Using Mcl to Extract
 Clusters from Networks.” In, 281–95. Springer New York.
 <https://doi.org/10.1007/978-1-61779-361-5_15>.
 
