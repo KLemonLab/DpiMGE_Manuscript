@@ -8,19 +8,20 @@ Supplemental Methods
 ## Anvi’o 7 Annotation search
 
 We import the output of `anvi-summarize` and select the most relevant
-variables for this analysis:
+variables for this
+analysis:
 
 ``` r
-DpigPangenome <-  read_delim("analysis_Anvio7/Pangenomic_Results_Dpig/Dpig-PAN-SUMMARY/PAN_DPIG_prokka_gene_clusters_summary.txt.gz", "\t", escape_double = FALSE, trim_ws = TRUE)
+DpigPangenome <-  read_delim("analysis_Anvio7/Pangenomic_Results_Dpig/PAN_DPIG_prokka_gene_clusters_summary.txt.gz", "\t", escape_double = FALSE, trim_ws = TRUE)
 DpigPangenome <- DpigPangenome %>%
   select(-unique_id, -aa_sequence, -SCG, -functional_homogeneity_index, -geometric_homogeneity_index, -combined_homogeneity_index)
 ```
 
 We search for individual genes annotated as **Transposases**/**Retrons**
-in either the Prokka ([Seemann 2014](#ref-Seemann2014)), COG20 ([Tatusov
-1997](#ref-Tatusov1997); [Galperin et al. 2020](#ref-Galperin2021)),
-Pfam ([Mistry et al. 2020](#ref-mistry2020)) or KOfam ([Minoru Kanehisa
-et al. 2015](#ref-kanehisa2015); [M. Kanehisa 2000](#ref-kanehisa2000))
+in either the Prokka (Seemann [2014](#ref-Seemann2014)), COG20 (Tatusov
+[1997](#ref-Tatusov1997); Galperin et al. [2020](#ref-Galperin2021)),
+Pfam (Mistry et al. [2020](#ref-mistry2020)) or KOfam (Kanehisa et al.
+[2015](#ref-kanehisa2015); Kanehisa [2000](#ref-kanehisa2000))
 annotations:
 
 ``` r
@@ -69,7 +70,8 @@ anvi-get-sequences-for-gene-clusters -g analysis_Anvio7/Pangenomic_Results_Dpig/
 ```
 
 For the **Transposases** we first write a file with the GC numbers for
-the 23 identified GCs:
+the 23 identified
+GCs:
 
 ``` r
 write.csv(Transposases_GCs$gene_cluster_id, "analysis_MGEs/SequencesAnvio7/IDs_Transposases.txt", row.names = FALSE)
@@ -91,18 +93,18 @@ For each GC alignments were visually inspected in AliView and
 full-length representative sequences selected for PFam search. Using the
 [PFam batch sequence
 search](http://pfam.xfam.org/search#tabview=tab1)/[HMMER
-website](https://www.ebi.ac.uk/Tools/hmmer/search/hmmscan) ([Mistry et
-al. 2020](#ref-mistry2020); [Potter et al. 2018](#ref-Potter2018)) we
+website](https://www.ebi.ac.uk/Tools/hmmer/search/hmmscan) (Mistry et
+al. [2020](#ref-mistry2020); Potter et al. [2018](#ref-Potter2018)) we
 classified the initial 23 putative **Tranposase** GSs as:
 
--   **Real Transposases:** GC\_00000003, GC\_00000040, GC\_00000055,
+  - **Real Transposases:** GC\_00000003, GC\_00000040, GC\_00000055,
     GC\_00001693, GC\_00002092, GC\_00002210, GC\_00002310 and
     GC\_00002501.
 
--   **Integrases (rve domain):** GC\_00000028, GC\_00000085,
+  - **Integrases (rve domain):** GC\_00000028, GC\_00000085,
     GC\_00001701, GC\_00001775 and GC\_00002348.
 
--   **Other/Partial:** GC\_00000008, GC\_00001669, GC\_00001787,
+  - **Other/Partial:** GC\_00000008, GC\_00001669, GC\_00001787,
     GC\_00002105, GC\_00002382, GC\_00002430, GC\_00002460,
     GC\_00002491, GC\_00002679 and GC\_00002805.
 
@@ -114,19 +116,19 @@ aka [BOFFO](https://github.com/FredHutch/boffo) to identify the gene
 neighborhoods in which the selected genes were located across all 28 D.
 pigrum genomes
 
--   SelectedAnvio7\_Intron.faa: Representative sequence for the
+  - **SelectedAnvio7\_Intron.faa**: Representative sequence for the
     GC\_00000001 cluster.
--   SelectedAnvio7\_Real\_Transposases.faa: GCs initially identified
+  - **SelectedAnvio7\_Real\_Transposases.faa**: GCs initially identified
     with the word Transposase on the annotation search and with complete
     (80% coverage or more) PFam **Transposase** domains.
--   SelectedAnvio7\_Integrases\_rve.faa: GCs initially identified with
-    the word Transposase on the annotation search but with complete (80%
-    coverage or more) PFam **rve** domains.
+  - **SelectedAnvio7\_Integrases\_rve.faa**: GCs initially identified
+    with the word Transposase on the annotation search but with complete
+    (80% coverage or more) PFam **rve** domains.
 
 The groups of genes identified with BOFFO at minimum percent identity
 85% and minimum coverage 80% were visualized using
-[clinker](https://github.com/gamcil/clinker) ([Gilchrist et al.
-2021](#ref-Gilchrist2021)).
+[clinker](https://github.com/gamcil/clinker) (Gilchrist et al.
+[2021](#ref-Gilchrist2021)).
 
 Outputs concatenated by group:
 
@@ -185,21 +187,21 @@ MatrixBOFFO_ALL$Total <- rowSums(MatrixBOFFO_ALL, na.rm=TRUE)
 write.csv(MatrixBOFFO_ALL, "Stats_MatrixBOFFO.csv", row.names = TRUE)
 ```
 
-# <u>REFERENCES</u>
+# <span class="ul">REFERENCES</span>
 
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references">
 
-<div id="ref-Galperin2021" class="csl-entry">
+<div id="ref-Galperin2021">
 
 Galperin, Michael Y, Yuri I Wolf, Kira S Makarova, Roberto Vera Alvarez,
 David Landsman, and Eugene V Koonin. 2020. “COG Database Update: Focus
 on Microbial Diversity, Model Organisms, and Widespread Pathogens.”
-*Nucleic Acids Research* 49 (D1): D274–81.
+*Nucleic Acids Research* 49 (D1): D274–D281.
 <https://doi.org/10.1093/nar/gkaa1018>.
 
 </div>
 
-<div id="ref-Gilchrist2021" class="csl-entry">
+<div id="ref-Gilchrist2021">
 
 Gilchrist, Rachel J., Lisa M. Gunter, Samantha F. Anderson, and Clive
 D.L. Wynne. 2021. “The Click Is Not the Trick: The Efficacy of Clickers
@@ -209,7 +211,7 @@ Tasks.” *PeerJ* 9 (February): e10881.
 
 </div>
 
-<div id="ref-kanehisa2000" class="csl-entry">
+<div id="ref-kanehisa2000">
 
 Kanehisa, M. 2000. “KEGG: Kyoto Encyclopedia of Genes and Genomes.”
 *Nucleic Acids Research* 28 (1): 27–30.
@@ -217,42 +219,42 @@ Kanehisa, M. 2000. “KEGG: Kyoto Encyclopedia of Genes and Genomes.”
 
 </div>
 
-<div id="ref-kanehisa2015" class="csl-entry">
+<div id="ref-kanehisa2015">
 
 Kanehisa, Minoru, Yoko Sato, Masayuki Kawashima, Miho Furumichi, and Mao
 Tanabe. 2015. “KEGG as a Reference Resource for Gene and Protein
-Annotation.” *Nucleic Acids Research* 44 (D1): D457–62.
+Annotation.” *Nucleic Acids Research* 44 (D1): D457–D462.
 <https://doi.org/10.1093/nar/gkv1070>.
 
 </div>
 
-<div id="ref-mistry2020" class="csl-entry">
+<div id="ref-mistry2020">
 
 Mistry, Jaina, Sara Chuguransky, Lowri Williams, Matloob Qureshi,
 Gustavo A Salazar, Erik L L Sonnhammer, Silvio C E Tosatto, et al. 2020.
 “Pfam: The Protein Families Database in 2021.” *Nucleic Acids Research*
-49 (D1): D412–19. <https://doi.org/10.1093/nar/gkaa913>.
+49 (D1): D412–D419. <https://doi.org/10.1093/nar/gkaa913>.
 
 </div>
 
-<div id="ref-Potter2018" class="csl-entry">
+<div id="ref-Potter2018">
 
 Potter, Simon C, Aurélien Luciani, Sean R Eddy, Youngmi Park, Rodrigo
 Lopez, and Robert D Finn. 2018. “HMMER Web Server: 2018 Update.”
-*Nucleic Acids Research* 46 (W1): W200–204.
+*Nucleic Acids Research* 46 (W1): W200–W204.
 <https://doi.org/10.1093/nar/gky448>.
 
 </div>
 
-<div id="ref-Seemann2014" class="csl-entry">
+<div id="ref-Seemann2014">
 
 Seemann, T. 2014. “Prokka: Rapid Prokaryotic Genome Annotation.”
-*Bioinformatics* 30 (14): 2068–69.
+*Bioinformatics* 30 (14): 2068–9.
 <https://doi.org/10.1093/bioinformatics/btu153>.
 
 </div>
 
-<div id="ref-Tatusov1997" class="csl-entry">
+<div id="ref-Tatusov1997">
 
 Tatusov, R. L. 1997. “A Genomic Perspective on Protein Families.”
 *Science* 278 (5338): 631–37.
