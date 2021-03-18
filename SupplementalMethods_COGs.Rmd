@@ -35,7 +35,7 @@ DpigPangenome <- DpigPangenome %>%
   mutate(accessory_vs_core=ifelse(grepl("Core", bin_name), "Core", "Accessory"))
 ```
 
-\*"Core" is used in the code to avoid problems with the "/" symbol and later replaced with "Soft/Core" for plotting.
+"Core" is used in the code to avoid problems with the "/" symbol and later replaced with "Soft/Core" for plotting.
 
 ```{r echo=FALSE, message=FALSE}
 vAccesory <- nrow(DpigPangenome %>% group_by(gene_cluster_id) %>% filter(accessory_vs_core =="Accessory") %>% summarise)
@@ -48,10 +48,12 @@ There are `r vAccesory` gene clusters (GC) (`r vAccesory.p`%) in the Accessory v
 
 ## COG Analysis at the Gene Level
 
-We define a new variable `COGs` to use in the plots. This variable is based on `COG20_CATEGORY` but with a cleaner definition of unclassified, uninformative or mixed assignments: 
-* COG categories "Function Unknown" and "General function predictions only" were considered as "Uninformative".
-* If the COG category is a mix (for example G|S|M) it gets labeled like "Ambiguous".
-* Also missing values (NA) are labeled as Unclassified".
+We define a new variable `COGs` to use in the plots. This variable is based on `COG20_CATEGORY` but with a cleaner definition of unclassified, uninformative, or mixed assignments: 
+
+  * COG categories "Function Unknown" and "General function predictions only" were considered as "Uninformative".
+  * If the COG category is mix (e.g.,G|S|M) it gets labeled as "Ambiguous".
+  * Missing values (NA) are labeled as "Unclassified".
+
 ```{r, message=FALSE}
 DpigPangenome$COGs <- DpigPangenome$COG20_CATEGORY_ACC
 DpigPangenome$COGs[DpigPangenome$COGs =="S"]<- "Uninformative"
@@ -60,7 +62,7 @@ DpigPangenome$COGs[grepl('|', DpigPangenome$COGs,fixed=TRUE)]<-"Ambiguous"
 DpigPangenome$COGs[is.na(DpigPangenome$COGs)]<-"Unclassified"
 ```
 
-Summary of GOC annotated genes:
+Summary of COG annotated genes:
 ```{r echo=FALSE}
 TableGene <- data.frame(
   "Genes" = c("Total in Dpig Pangenome", 
@@ -85,11 +87,11 @@ kable(TableGene)
 
 ## COG Analysis at the Gene Cluster Level
 
-This analysis was done at the pangenomic gene cluster level (GC). Since many gene clusters had mixed COG category assignments a solution is to assign each individual gene call to their corresponding Genome/AccessoryvsCore/COG grouping weighting their contribution by dividing their count by the number of genes in their GC.
+This analysis was done at the pangenomic gene cluster level (GC). Since many gene clusters had mixed COG category assignments a solution is to assign each individual gene call to their corresponding Genome/Accessory_vs_Core/COG grouping weighting their contribution by dividing their count by the number of genes in their GC.
 
 ### GCs by COG Category and Genome
 
-The table "GCsbyCOG_Genome" groups the genes by genome; and inside genomes by Accessory vs. Soft/Core status, and nested inside as the COG category. But, in this case, instead of counting the elements in each group we calculated the sum of 1/num_genes_in_gene_cluster.
+The table "GCsbyCOG_Genome" groups the genes by genome; and inside genomes by "Accessory" vs. "Soft/Core" status, and nested inside as the COG category. But, in this case, instead of counting the elements in each group we calculated the sum of 1/`num_genes_in_gene_cluster`.
 ```{r, message=FALSE}
 GCsbyCOG_Genome <- DpigPangenome %>%
   group_by(genome_name, accessory_vs_core, COGs) %>%
@@ -166,7 +168,7 @@ GCsbyCOG_Genome$genome_name <- recode_factor(GCsbyCOG_Genome$genome_name, "ATCC_
 
 ### GCs by COG Category 
 
-The table "GCsbyCOG" groups the genes by Accessory vs. Soft/Core status, and nested inside as the COG category.
+The table "GCsbyCOG" groups the genes by "Accessory" vs. "Soft/Core" status, and nested inside as the COG category.
 ```{r, message=FALSE}
 GCsbyCOG <- DpigPangenome %>%
   group_by(accessory_vs_core, COGs) %>%
@@ -180,7 +182,7 @@ GCsbyCOG$COGs <- recode_factor(GCsbyCOG$COGs, "Q"="Secondary metabolites biosynt
 
 #### Summary of GOC annotated GCs GCs by COG Category:
 
-New table "GCsbyCOG_CorevsAcc" in wide format. % of each category relative to the "Accessory" or "Soft/Core" calculated (pTotal. variables). Also, total GCs for each COG category calculated, as well as % of GCs in the "Accessory" and "Soft/Core" relative to each category (p. values). The ratio between the number of GC in the "Accessory" vs. the "Soft/Core" is calculated for each COG:
+New table "GCsbyCOG_CorevsAcc" in wide format. % of each category relative to the "Accessory" or "Soft/Core" was calculated (pTotal. variables). Total GCs for each COG category calculated, and % of GCs in the "Accessory" and "Soft/Core" relative to each category (p. values) were calculated as well. The ratio between the number of GC in the "Accessory" vs. the "Soft/Core" is calculated for each COG:
 ```{r}
 GCsbyCOG_CorevsAcc <- spread(GCsbyCOG, accessory_vs_core, num_corrected_genes)
 GCsbyCOG_CorevsAcc$pTotal.Accessory <- round(100*GCsbyCOG_CorevsAcc$Accessory/sum(GCsbyCOG_CorevsAcc$Accessory), 1)
