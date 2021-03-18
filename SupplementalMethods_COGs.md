@@ -24,8 +24,8 @@ DpigPangenome <- DpigPangenome %>%
   mutate(accessory_vs_core=ifelse(grepl("Core", bin_name), "Core", "Accessory"))
 ```
 
-\*“Core” is used in the code to avoid problems with the “/” symbol and
-later replaced with “Soft/Core” for plotting.
+`Core` is used in the code to avoid problems with the “/” symbol and
+later replaced with `Soft/Core` for plotting.
 
 There are 1517 gene clusters (GC) (52.2%) in the Accessory vs. 1388
 (47.8%) in the Soft/Core at the pangenome level
@@ -34,11 +34,11 @@ There are 1517 gene clusters (GC) (52.2%) in the Accessory vs. 1388
 
 We define a new variable `COGs` to use in the plots. This variable is
 based on `COG20_CATEGORY` but with a cleaner definition of unclassified,
-uninformative or mixed assignments: \* COG categories “Function Unknown”
+uninformative or mixed assignments: COG categories “Function Unknown”
 and “General function predictions only” were considered as
-“Uninformative”. \* If the COG category is a mix (for example G\|S\|M)
-it gets labeled like “Ambiguous”. \* Also missing values (NA) are
-labeled as Unclassified".
+“Uninformative”; if the COG category is a mix (e.g., G\|S\|M)
+it gets labeled as “Ambiguous”; missing values (NA) are
+labeled as "Unclassified".
 
 ``` r
 DpigPangenome$COGs <- DpigPangenome$COG20_CATEGORY_ACC
@@ -140,15 +140,15 @@ Informative COGs (Total - Uninformative, Ambiguous & Unclassified)
 This analysis was done at the pangenomic gene cluster level (GC). Since
 many gene clusters had mixed COG category assignments a solution is to
 assign each individual gene call to their corresponding
-Genome/AccessoryvsCore/COG grouping weighting their contribution by
+Genome/Accessory\_vs\_Core/COG grouping weighting their contribution by
 dividing their count by the number of genes in their GC.
 
 ### GCs by COG Category and Genome
 
-The table “GCsbyCOG\_Genome” groups the genes by genome; and inside
-genomes by Accessory vs. Soft/Core status, and nested inside as the COG
+The table “GCsbyCOG\_Genome” groups the genes by genome, inside
+genomes by "Accessory" vs. "Soft/Core" status, and nested inside as the COG
 category. But, in this case, instead of counting the elements in each
-group we calculated the sum of 1/num\_genes\_in\_gene\_cluster.
+group we calculated the sum of 1/`num_genes_in_gene_cluster`.
 
 ``` r
 GCsbyCOG_Genome <- DpigPangenome %>%
@@ -194,13 +194,13 @@ kable(TableGC)
 <thead>
 <tr>
 <th style="text-align:left;">
-accessory\_vs\_core
+accessory_vs_core
 </th>
 <th style="text-align:left;">
 Assignment
 </th>
 <th style="text-align:right;">
-corrected\_genes
+corrected_genes
 </th>
 <th style="text-align:right;">
 Percentages
@@ -340,13 +340,13 @@ kable(TableGCAccessory)
 <thead>
 <tr>
 <th style="text-align:left;">
-accessory\_vs\_core
+accessory_vs_core
 </th>
 <th style="text-align:left;">
 Assignment
 </th>
 <th style="text-align:right;">
-corrected\_genes
+corrected_genes
 </th>
 <th style="text-align:right;">
 Percentages
@@ -430,13 +430,13 @@ kable(TableGCCore)
 <thead>
 <tr>
 <th style="text-align:left;">
-accessory\_vs\_core
+accessory_vs_core
 </th>
 <th style="text-align:left;">
 Assignment
 </th>
 <th style="text-align:right;">
-corrected\_genes
+corrected_genes
 </th>
 <th style="text-align:right;">
 Percentages
@@ -517,20 +517,20 @@ kable(TableGenomes)
 <thead>
 <tr>
 <th style="text-align:left;">
-genome\_name
+genome_name
 </th>
 <th style="text-align:left;">
-accessory\_vs\_core
+accessory_vs_core
 </th>
 <th style="text-align:right;">
-corrected\_genes
+corrected_genes
 </th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align:left;">
-ATCC\_51524
+ATCC_51524
 </td>
 <td style="text-align:left;">
 Accessory
@@ -541,7 +541,7 @@ Accessory
 </tr>
 <tr>
 <td style="text-align:left;">
-ATCC\_51524
+ATCC_51524
 </td>
 <td style="text-align:left;">
 Core
@@ -574,7 +574,7 @@ Core
 </tr>
 <tr>
 <td style="text-align:left;">
-KPL1922\_CDC39\_95
+KPL1922_CDC39_95
 </td>
 <td style="text-align:left;">
 Accessory
@@ -585,7 +585,7 @@ Accessory
 </tr>
 <tr>
 <td style="text-align:left;">
-KPL1922\_CDC39\_95
+KPL1922_CDC39_95
 </td>
 <td style="text-align:left;">
 Core
@@ -596,7 +596,7 @@ Core
 </tr>
 <tr>
 <td style="text-align:left;">
-KPL1930\_CDC2949\_98
+KPL1930_CDC2949_98
 </td>
 <td style="text-align:left;">
 Accessory
@@ -607,7 +607,7 @@ Accessory
 </tr>
 <tr>
 <td style="text-align:left;">
-KPL1930\_CDC2949\_98
+KPL1930_CDC2949_98
 </td>
 <td style="text-align:left;">
 Core
@@ -618,7 +618,7 @@ Core
 </tr>
 <tr>
 <td style="text-align:left;">
-KPL1931\_CDC4294\_98
+KPL1931_CDC4294_98
 </td>
 <td style="text-align:left;">
 Accessory
@@ -629,7 +629,7 @@ Accessory
 </tr>
 <tr>
 <td style="text-align:left;">
-KPL1931\_CDC4294\_98
+KPL1931_CDC4294_98
 </td>
 <td style="text-align:left;">
 Core
@@ -640,7 +640,7 @@ Core
 </tr>
 <tr>
 <td style="text-align:left;">
-KPL1932\_CDC4420\_98
+KPL1932_CDC4420_98
 </td>
 <td style="text-align:left;">
 Accessory
@@ -651,7 +651,7 @@ Accessory
 </tr>
 <tr>
 <td style="text-align:left;">
-KPL1932\_CDC4420\_98
+KPL1932_CDC4420_98
 </td>
 <td style="text-align:left;">
 Core
@@ -662,7 +662,7 @@ Core
 </tr>
 <tr>
 <td style="text-align:left;">
-KPL1933\_CDC4545\_98
+KPL1933_CDC4545_98
 </td>
 <td style="text-align:left;">
 Accessory
@@ -673,7 +673,7 @@ Accessory
 </tr>
 <tr>
 <td style="text-align:left;">
-KPL1933\_CDC4545\_98
+KPL1933_CDC4545_98
 </td>
 <td style="text-align:left;">
 Core
@@ -684,7 +684,7 @@ Core
 </tr>
 <tr>
 <td style="text-align:left;">
-KPL1934\_CDC4709\_98
+KPL1934_CDC4709_98
 </td>
 <td style="text-align:left;">
 Accessory
@@ -695,7 +695,7 @@ Accessory
 </tr>
 <tr>
 <td style="text-align:left;">
-KPL1934\_CDC4709\_98
+KPL1934_CDC4709_98
 </td>
 <td style="text-align:left;">
 Core
@@ -706,7 +706,7 @@ Core
 </tr>
 <tr>
 <td style="text-align:left;">
-KPL1937\_CDC4199\_99
+KPL1937_CDC4199_99
 </td>
 <td style="text-align:left;">
 Accessory
@@ -717,7 +717,7 @@ Accessory
 </tr>
 <tr>
 <td style="text-align:left;">
-KPL1937\_CDC4199\_99
+KPL1937_CDC4199_99
 </td>
 <td style="text-align:left;">
 Core
@@ -728,7 +728,7 @@ Core
 </tr>
 <tr>
 <td style="text-align:left;">
-KPL1938\_CDC4791\_99
+KPL1938_CDC4791_99
 </td>
 <td style="text-align:left;">
 Accessory
@@ -739,7 +739,7 @@ Accessory
 </tr>
 <tr>
 <td style="text-align:left;">
-KPL1938\_CDC4791\_99
+KPL1938_CDC4791_99
 </td>
 <td style="text-align:left;">
 Core
@@ -750,7 +750,7 @@ Core
 </tr>
 <tr>
 <td style="text-align:left;">
-KPL1939\_CDC4792\_99
+KPL1939_CDC4792_99
 </td>
 <td style="text-align:left;">
 Accessory
@@ -761,7 +761,7 @@ Accessory
 </tr>
 <tr>
 <td style="text-align:left;">
-KPL1939\_CDC4792\_99
+KPL1939_CDC4792_99
 </td>
 <td style="text-align:left;">
 Core
@@ -1162,7 +1162,7 @@ GCsbyCOG_Genome$genome_name <- recode_factor(GCsbyCOG_Genome$genome_name, "ATCC_
 
 ### GCs by COG Category
 
-The table “GCsbyCOG” groups the genes by Accessory vs. Soft/Core status,
+The table “GCsbyCOG” groups the genes by "Accessory" vs. "Soft/Core" status,
 and nested inside as the COG category.
 
 ``` r
