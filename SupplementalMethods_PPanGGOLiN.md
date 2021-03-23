@@ -6,8 +6,8 @@ Supplemental Methods
 # PPanGGOLiN ANALYSIS
 
 [PPanGGOLiN v1.1.141](https://github.com/labgem/PPanGGOLiN/releases)
-(Gautreau et al. [2020](#ref-gautreau2020); Bazin et al.
-[2020](#ref-bazin2020)) was
+([Gautreau et al. 2020](#ref-gautreau2020); [Bazin et al.
+2020](#ref-bazin2020)) was
 [installed](https://github.com/labgem/PPanGGOLiN/wiki/Installation) in a
 Python environment called `PPanGGOLiN.`
 
@@ -23,8 +23,7 @@ In order to import the Anvi’o clustering into PPanGGOLiN we needed:
 
 Using the `anvi-summarize` output
 `analysis_Anvio7/Pangenomic_Results_Dpig/PAN_DPIG_prokka_gene_clusters_summary.txt.gz`
-described before we can create the .tsv
-file:
+described before we can create the .tsv file:
 
 ``` r
 Dpig_Anvio7 <- read_delim("analysis_Anvio7/Pangenomic_Results_Dpig/PAN_DPIG_prokka_gene_clusters_summary.txt.gz", "\t")
@@ -83,7 +82,7 @@ ppanggolin cluster -p analysis_PPanGGOLiN_Anvio7/OutputFromAnvio7/FromAnvio7.h5 
 ## Graphing and Partitioning
 
 The PPanGGOLiN`graph` subcommand has only a single other option, which
-is ‘-r’ or ‘–remove\_high\_copy\_number’. If used, it will remove the
+is ‘-r’ or ‘–remove\_high\_copy\_number.’ If used, it will remove the
 gene families that are too duplicated in your genomes. This is useful if
 you want to visualize your pangenome afterward and want to remove the
 biggest hubs to have a clearer view. It can also be used to limit the
@@ -136,94 +135,58 @@ ppanggolin info -p analysis_PPanGGOLiN_Anvio7/OutputFromAnvio7/FromAnvio7.h5 --p
 
 The output for this command was:
 
-<<<<<<< HEAD
--   annotation
+-   <u>**annotation**</u>
 
-    -   read\_annotations\_from\_file : True
+    -   `read_annotations_from_file`: True
 
--   cluster
+-   <u>**cluster**</u>
 
-    -   read\_clustering\_from\_file : True
-    -   infer\_singletons : True
+    -   `read_clustering_from_file`: True
+    -   `infer_singletons`: True
 
--   graph
+-   <u>**graph**</u>
 
-    -   removed\_high\_copy\_number\_families : False
+    -   `removed_high_copy_number_families`: False
 
--   partition
+-   <u>**partition**</u>
 
-    -   beta : 2.5
-    -   free\_dispersion : False
-    -   max\_node\_degree\_for\_smoothing : 10
-    -   computed\_K : True
-    -   K : 3
+    -   `beta`: 2.5
+    -   `free_dispersion`: False
+    -   `max_node_degree_for_smoothing`: 10
+    -   `computed_K`: True
+    -   `K`: 3
 
--   RGP
+-   <u>**RGP**</u>
 
-    -   persistent\_penalty : 3
-    -   variable\_gain : 1
-    -   min\_length : 3000
-    -   min\_score : 4
-    -   dup\_margin : 0.05
+    -   `persistent_penalty`: 3
+    -   `variable_gain`: 1
+    -   `min_length`: 3000
+    -   `min_score`: 4
+    -   `dup_margin`: 0.05
 
--   spots
+-   <u>**spots**</u>
 
-    -   set\_size : 3
-    -   overlapping\_match : 2
-=======
-  - <u>**annotation**</u>
-    
-      - `read_annotations_from_file`: True
-
-  - <u>**cluster**</u>
-    
-      - `read_clustering_from_file`: True
-      - `infer_singletons`: True
-
-  - <u>**graph**</u>
-    
-      - `removed_high_copy_number_families`: False
-
-  - <u>**partition**</u>
-    
-      - `beta`: 2.5
-      - `free_dispersion`: False
-      - `max_node_degree_for_smoothing`: 10
-      - `computed_K`: True
-      - `K`: 3
-
-  - <u>**RGP**</u>
-    
-      - `persistent_penalty`: 3
-      - `variable_gain`: 1
-      - `min_length`: 3000
-      - `min_score`: 4
-      - `dup_margin`: 0.05
-
-  - <u>**spots**</u>
-    
-      - `set_size`: 3
-      - `overlapping_match`: 2
-      - `exact_match`: 1
->>>>>>> 36646247008e55dad0d914a999bdf9d57eb6ca4c
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD - set\_size : 3 - overlapping\_match :
+2 ======= - `set_size`: 3 - `overlapping_match`: 2 - `exact_match`: 1
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; 36646247008e55dad0d914a999bdf9d57eb6ca4c
 
 -   exact\_match : 1
 
-# <span class="ul">REFERENCES</span>
+# <u>REFERENCES</u>
 
-<div id="refs" class="references">
+<div id="refs" class="references csl-bib-body hanging-indent">
 
-<div id="ref-bazin2020">
+<div id="ref-bazin2020" class="csl-entry">
 
 Bazin, Adelme, Guillaume Gautreau, Claudine Médigue, David Vallenet, and
-Alexandra Calteau. 2020. “PanRGP: A Pangenome-Based Method to Predict
+Alexandra Calteau. 2020. “panRGP: A Pangenome-Based Method to Predict
 Genomic Islands and Explore Their Diversity.” *Bioinformatics* 36
-(Supplement\_2): i651–i658.
+(Supplement\_2): i651–58.
 <https://doi.org/10.1093/bioinformatics/btaa792>.
 
 </div>
 
-<div id="ref-gautreau2020">
+<div id="ref-gautreau2020" class="csl-entry">
 
 Gautreau, Guillaume, Adelme Bazin, Mathieu Gachet, Rémi Planel, Laura
 Burlot, Mathieu Dubois, Amandine Perrin, et al. 2020. “PPanGGOLiN:

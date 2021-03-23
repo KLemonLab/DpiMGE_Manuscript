@@ -23,7 +23,7 @@ knitr::opts_chunk$set(message = FALSE)
 We import the output of `anvi-summarize` and select the most relevant variables for the functional analysis:
 
 ```{r message=FALSE}
-DpigPangenome <- read_delim("analysis_Anvio7/Pangenomic_Results_Dpig/PAN_DPIG_prokka_gene_clusters_summary.txt.gz", "\t")
+DpigPangenome <- read_delim("analysis_Anvio7/Pangenomic_Results_Dpig/Dpig-PAN-SUMMARY/PAN_DPIG_prokka_gene_clusters_summary.txt.gz", "\t")
 DpigPangenome <- DpigPangenome %>%
   select(-functional_homogeneity_index, -geometric_homogeneity_index, -combined_homogeneity_index, -aa_sequence)
 ```
@@ -357,7 +357,7 @@ pF
 
 ## Final Figures
 
-Main figure:
+###Main figure
 ```{r eval=TRUE}
 pMain <- ggarrange(ggarrange(get_legend(pB), pA, ncol = 1, heights = c(0.2, 1)),
                    gpF, ncol = 2, labels = c("A", "B"), hjust=-0.5, vjust=2, widths = c(0.7, 2))
@@ -369,7 +369,7 @@ ggsave("analysis_COGs/Fig4_COG_summary.tiff", pMain, width = 9, height = 4, dpi 
 pMain
 ```
 
-Supplemental Figure:
+###Supplemental Figure
 ```{r eval=TRUE}
 pSupple <- ggarrange(get_legend(pE),
                       ggarrange(pC+theme(axis.text.x = element_blank(), axis.ticks.x = element_blank()), pD+theme(legend.position="none"), ncol = 1,  align = "v", labels = c("i", "ii"), hjust=-0.5, vjust=1, heights = c(1, 1)),

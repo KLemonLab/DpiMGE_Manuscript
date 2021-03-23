@@ -72,7 +72,7 @@ done
 
 In this step the gene calls from Prokka and the reformatted fasta files
 get imported to generate Anvi’o contigs databases. We add the
-`--ignore-internal-stop-codons` flag to avoid errors downstream the
+`--ignore-internal-stop-codons` flag to avoid errors downstream in the
 pipeline. Only 1-2 genes with internal stop codons were identified in
 each genome.
 
@@ -217,7 +217,7 @@ The program `anvi-pan-genome`:
 
 2.  Uses ‘minbit heuristic’ ([Benedict et al. 2014](#ref-benedict2014))
     to filter weak hits based on the aligned fraction between the two
-    reads.
+    reads. We used the default 0.5
 
 3.  Uses the MCL algorithm ([van Dongen and Abreu-Goodger
     2011](#ref-vandongen2011)) to identify gene clusters in the
@@ -250,31 +250,32 @@ want and store then in a bin collection. In the “Search” tab we used
 “Search gene clusters using filters” and “Append splits to selected bin”
 to create the following bins:
 
--   Core: 1298/2905 (44.7%) gene clusters in all 28 genomes
+-   **Core**: 1298/2905 (44.7%) gene clusters in all 28 genomes
 
     -   Min number of genomes gene cluster occurs = 28
 
--   SC Core: 1111/2905 (38.2%) gene clusters detected in single copy in
-    all 28 genomes
+-   **SC Core**: 1111/2905 (38.2%) gene clusters detected in single copy
+    in all 28 genomes
 
     -   Min number of genomes gene cluster occurs = 28
     -   Max number of genes from each genome = 1
 
--   MC Core: 1298-1111=187 (6.4%) detected in multiple copy in all 28
-    genomes
+-   **MC Core**: 1298-1111=187 (6.4%) detected in multiple copy in all
+    28 genomes
 
--   SoftCore: 90/2905 (3.1%) gene clusters detected in 26-27 genomes
+-   **Soft Core**: 90/2905 (3.1%) gene clusters detected in 26-27
+    genomes
 
     -   Min number of genomes gene cluster occurs = 26
     -   Max number of genomes gene cluster occurs = 27
 
--   Shell: 805/2905 (27.7%) gene clusters detected in 3-25 genomes
+-   **Shell**: 805/2905 (27.7%) gene clusters detected in 3-25 genomes
 
     -   Min number of genomes gene cluster occurs = 3
     -   Max number of genomes gene cluster occurs = 25
 
--   Cloud: 712/2905 (24.5%) gene clusters detected in only 2 genomes or
-    less
+-   **Cloud**: 712/2905 (24.5%) gene clusters detected in only 2 genomes
+    or less
 
     -   Max number of genomes gene cluster occurs = 2
 

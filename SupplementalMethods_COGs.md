@@ -24,21 +24,23 @@ DpigPangenome <- DpigPangenome %>%
   mutate(accessory_vs_core=ifelse(grepl("Core", bin_name), "Core", "Accessory"))
 ```
 
-\*“Core” is used in the code to avoid problems with the “/” symbol and
+“Core” is used in the code to avoid problems with the “/” symbol and
 later replaced with “Soft/Core” for plotting.
 
-There are 1517 gene clusters (GC) (52.2%) in the Accessory vs. 1388
-(47.8%) in the Soft/Core at the pangenome level
+There are 1517 gene clusters (GC) (52.2%) in the “Accessory” vs. 1388
+(47.8%) in the “Soft/Core” at the pangenome level
 
 ## COG Analysis at the Gene Level
 
 We define a new variable `COGs` to use in the plots. This variable is
 based on `COG20_CATEGORY` but with a cleaner definition of unclassified,
-uninformative or mixed assignments: \* COG categories “Function Unknown”
-and “General function predictions only” were considered as
-“Uninformative”. \* If the COG category is a mix (for example G\|S\|M)
-it gets labeled like “Ambiguous”. \* Also missing values (NA) are
-labeled as Unclassified".
+uninformative, or mixed assignments:
+
+-   COG categories “Function Unknown” and “General function predictions
+    only” were considered as “Uninformative”.
+-   If the COG category is mix (e.g., G\|S\|M) it gets labeled as
+    “Ambiguous”.
+-   Missing values (NA) are labeled as “Unclassified”.
 
 ``` r
 DpigPangenome$COGs <- DpigPangenome$COG20_CATEGORY_ACC
@@ -48,7 +50,7 @@ DpigPangenome$COGs[grepl('|', DpigPangenome$COGs,fixed=TRUE)]<-"Ambiguous"
 DpigPangenome$COGs[is.na(DpigPangenome$COGs)]<-"Unclassified"
 ```
 
-Summary of GOC annotated genes:
+Summary of COG annotated genes:
 <table>
 <thead>
 <tr>
@@ -140,15 +142,15 @@ Informative COGs (Total - Uninformative, Ambiguous & Unclassified)
 This analysis was done at the pangenomic gene cluster level (GC). Since
 many gene clusters had mixed COG category assignments a solution is to
 assign each individual gene call to their corresponding
-Genome/AccessoryvsCore/COG grouping weighting their contribution by
+Genome/Accessory\_vs\_Core/COG grouping weighting their contribution by
 dividing their count by the number of genes in their GC.
 
 ### GCs by COG Category and Genome
 
 The table “GCsbyCOG\_Genome” groups the genes by genome; and inside
-genomes by Accessory vs. Soft/Core status, and nested inside as the COG
-category. But, in this case, instead of counting the elements in each
-group we calculated the sum of 1/num\_genes\_in\_gene\_cluster.
+genomes by “Accessory” vs. “Soft/Core” status, and nested inside as the
+COG category. But, in this case, instead of counting the elements in
+each group we calculated the sum of 1/`num_genes_in_gene_cluster`.
 
 ``` r
 GCsbyCOG_Genome <- DpigPangenome %>%
@@ -1162,8 +1164,8 @@ GCsbyCOG_Genome$genome_name <- recode_factor(GCsbyCOG_Genome$genome_name, "ATCC_
 
 ### GCs by COG Category
 
-The table “GCsbyCOG” groups the genes by Accessory vs. Soft/Core status,
-and nested inside as the COG category.
+The table “GCsbyCOG” groups the genes by “Accessory” vs. “Soft/Core”
+status, and nested inside as the COG category.
 
 ``` r
 GCsbyCOG <- DpigPangenome %>%
@@ -1174,17 +1176,38 @@ GCsbyCOG <- DpigPangenome %>%
 #### Renaming and ordering variables factor levels for plotting:
 
 ``` r
-GCsbyCOG$COGs <- recode_factor(GCsbyCOG$COGs, "Q"="Secondary metabolites biosynthesis, transport, and catabolism","P"="Inorganic ion transport and metabolism","I"="Lipid transport and metabolism","H"="Coenzyme transport and metabolism","G"="Carbohydrate transport and metabolism","F"="Nucleotide transport and metabolism","E"="Amino acid transport and metabolism","C"="Energy production and conversion","X"="Mobilome: prophages, transposons","L"="Replication, recombination and repair","K"="Transcription","J"="Translation, ribosomal structure and biogenesis","V"="Defense mechanisms","U"="Intracellular trafficking, secretion, and vesicular transport","T"="Signal transduction mechanisms","O"="Post-translational modification, protein turnover, and chaperones","N"="Cell Motility","M"="Cell wall/membrane/envelope biogenesis","D"="Cell cycle control, cell division, chromosome partitioning","Uninformative"="Uninformative","Ambiguous"="Ambiguous","Unclassified"="Unclassified", .ordered = TRUE)
+GCsbyCOG$COGs <- recode_factor(GCsbyCOG$COGs, "Q"="Secondary metabolites biosynthesis, transport, and catabolism",
+                               "P"="Inorganic ion transport and metabolism",
+                               "I"="Lipid transport and metabolism",
+                               "H"="Coenzyme transport and metabolism",
+                               "G"="Carbohydrate transport and metabolism",
+                               "F"="Nucleotide transport and metabolism",
+                               "E"="Amino acid transport and metabolism",
+                               "C"="Energy production and conversion",
+                               "X"="Mobilome: prophages, transposons",
+                               "L"="Replication, recombination and repair",
+                               "K"="Transcription",
+                               "J"="Translation, ribosomal structure and biogenesis",
+                               "V"="Defense mechanisms",
+                               "U"="Intracellular trafficking, secretion, and vesicular transport",
+                               "T"="Signal transduction mechanisms",
+                               "O"="Post-translational modification, protein turnover, and chaperones",
+                               "N"="Cell Motility",
+                               "M"="Cell wall/membrane/envelope biogenesis",
+                               "D"="Cell cycle control, cell division, chromosome partitioning",
+                               "Uninformative"="Uninformative",
+                               "Ambiguous"="Ambiguous",
+                               "Unclassified"="Unclassified", .ordered = TRUE)
 ```
 
 #### Summary of GOC annotated GCs GCs by COG Category:
 
 New table “GCsbyCOG\_CorevsAcc” in wide format. % of each category
-relative to the “Accessory” or “Soft/Core” calculated (pTotal.
-variables). Also, total GCs for each COG category calculated, as well as
-% of GCs in the “Accessory” and “Soft/Core” relative to each category
-(p. values). The ratio between the number of GC in the “Accessory”
-vs. the “Soft/Core” is calculated for each COG:
+relative to the “Accessory” or “Soft/Core” was calculated (pTotal.
+variables). Total GCs for each COG category calculated, and % of GCs in
+the “Accessory” and “Soft/Core” relative to each category (p. values)
+were calculated as well. The ratio between the number of GC in the
+“Accessory” vs. the “Soft/Core” is calculated for each COG:
 
 ``` r
 GCsbyCOG_CorevsAcc <- spread(GCsbyCOG, accessory_vs_core, num_corrected_genes)
@@ -1970,6 +1993,8 @@ pA <- ggplot(GCsbyCOG_Genome, aes(x = accessory_vs_core, y = num_corrected_genes
   theme(axis.title = element_text(size = 9), axis.text = element_text(size=7), plot.margin=unit(c(10,0,10,20),"pt"), legend.position = "none") 
 ```
 
+![](SupplementalMethods_COGs_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
+
 This plot is used for the grayscale legend:
 
 ``` r
@@ -1999,6 +2024,8 @@ pC <- ggplot(filter(GCsbyCOG_Genome, accessory_vs_core == "Accessory"), aes(x=ge
   theme(legend.position = "none", plot.margin=unit(c(15,15,-10,20),"pt")) 
 ```
 
+![](SupplementalMethods_COGs_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
+
 Panel B in supplemental figure:
 
 ``` r
@@ -2012,6 +2039,8 @@ pD <- ggplot(filter(GCsbyCOG_Genome %>% filter(COGs != "Uninformative", COGs !="
   theme(legend.position="bottom", legend.key.size = unit(0.7, "line"), legend.text = element_text(size = 8), plot.margin=unit(c(0,15,0,20),"pt")) +
   guides(fill=guide_legend(ncol=2, title.position = "top", title.hjust = 0.5)) 
 ```
+
+![](SupplementalMethods_COGs_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
 
 This plot is used for the grayscale legend:
 
@@ -2076,9 +2105,11 @@ gpF <- ggplotGrob(pF)
 gpF$layout$clip[gpF$layout$name=="panel"] <- "off"
 ```
 
+![](SupplementalMethods_COGs_files/figure-gfm/unnamed-chunk-24-1.png)<!-- -->
+
 ## Final Figures
 
-Main figure:
+\#\#\#Main figure
 
 ``` r
 pMain <- ggarrange(ggarrange(get_legend(pB), pA, ncol = 1, heights = c(0.2, 1)),
@@ -2087,7 +2118,9 @@ pMain <- ggarrange(ggarrange(get_legend(pB), pA, ncol = 1, heights = c(0.2, 1)),
 ggsave("analysis_COGs/Fig4_COG_summary.tiff", pMain, width = 9, height = 4, dpi = 150)
 ```
 
-Supplemental Figure:
+![](SupplementalMethods_COGs_files/figure-gfm/unnamed-chunk-26-1.png)<!-- -->
+
+\#\#\#Supplemental Figure
 
 ``` r
 pSupple <- ggarrange(get_legend(pE),
@@ -2097,3 +2130,5 @@ pSupple <- ggarrange(get_legend(pE),
 
 ggsave("analysis_COGs/FigS1D_COG_byGenome.tiff", pSupple, width = 8, height = 10, dpi = 150)
 ```
+
+![](SupplementalMethods_COGs_files/figure-gfm/unnamed-chunk-28-1.png)<!-- -->
