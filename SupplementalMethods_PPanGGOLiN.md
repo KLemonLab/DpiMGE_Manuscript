@@ -168,9 +168,8 @@ The output for this command was:
 
     -   set\_size : 3
     -   overlapping\_match : 2
-    -   exact\_match : 1
 
-## Spot Analysis
+-   exact\_match : 1
 
 # <u>REFERENCES</u>
 
