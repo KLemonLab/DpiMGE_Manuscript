@@ -117,7 +117,8 @@ For details on RGPs see:
 ``` bash
 #conda activate PPanGGOLiN
 ppanggolin rgp -p analysis_PPanGGOLiN_Anvio7/OutputFromAnvio7/FromAnvio7.h5
-ppanggolin spot -p analysis_PPanGGOLiN_Anvio7/OutputFromAnvio7/FromAnvio7.h5 --draw_hotspots -o analysis_PPanGGOLiN_Anvio7/OutputFromAnvio7/spots
+
+ppanggolin spot -p analysis_PPanGGOLiN_Anvio7/OutputFromAnvio7/FromAnvio7.h5 --label_priority ID --draw_hotspots -o analysis_PPanGGOLiN_Anvio7/OutputFromAnvio7/spots_ID -f
 
 ppanggolin write -p analysis_PPanGGOLiN_Anvio7/OutputFromAnvio7/FromAnvio7.h5 -o analysis_PPanGGOLiN_Anvio7/OutputFromAnvio7 --regions --spots -f
 ```
