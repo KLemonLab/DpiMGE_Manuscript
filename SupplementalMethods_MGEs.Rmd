@@ -22,7 +22,7 @@ knitr::opts_chunk$set(message = FALSE)
 We import the output of `anvi-summarize` and select the most relevant variables for this analysis:
 
 ```{r message=FALSE}
-DpigPangenome <-  read_delim("analysis_Anvio7/Pangenomic_Results_Dpig/PAN_DPIG_prokka_gene_clusters_summary.txt.gz", "\t", escape_double = FALSE, trim_ws = TRUE)
+DpigPangenome <-  read_delim("analysis_Anvio7/Pangenomic_Results_Dpig/Dpig-PAN-SUMMARY/PAN_DPIG_prokka_gene_clusters_summary.txt.gz", "\t", escape_double = FALSE, trim_ws = TRUE)
 DpigPangenome <- DpigPangenome %>%
   select(-unique_id, -aa_sequence, -SCG, -functional_homogeneity_index, -geometric_homogeneity_index, -combined_homogeneity_index)
 ```
@@ -106,61 +106,91 @@ The following files were created with the selected sequences and analyzed with t
 
 The groups of genes identified with BOFFO at minimum percent identity 85% and minimum coverage 80% were visualized using [clinker](https://github.com/gamcil/clinker) [@Gilchrist2021].
 
-Outputs concatenated by group:
+### Tables
 
-```{bash, eval=FALSE}
-cd ..
-cat AllMGE_BOFFO_80cov85id/Selected_Intron.faa-output/*/*.csv.gz  > SelectedGCs_Anvio/BOFFO/Intron.txt.gz
-cat AllMGE_BOFFO_80cov85id/Selected_Real_Transposases_v2-output/*/*.csv.gz  > SelectedGCs_Anvio/BOFFO/Real_Transposases.txt.gz
+We read the BOFFO outputs:
+
+```{r}
+Intron <- read_excel("analysis_MGEs/Intron.xlsx")
+Real_Transposases <- read_excel("analysis_MGEs/Real_Transposases.xlsx")
+Integrases_rve <- read_excel("analysis_MGEs/Integrases_rve.xlsx")
 ```
 
-Files unzipped and format cleaned in excel and imported into R:
+GCs renamed with MGE type
+```{r}
+Intron <- Intron %>% mutate(MGE = gsub("GC", "INTRON_GC", gene_name))
+Real_Transposases <- Real_Transposases %>% mutate(MGE = gsub("GC", "TRANSPOSASE_GC", gene_name))
+Integrases_rve <- Integrases_rve %>% mutate(MGE = gsub("GC", "INTEGRASE_GC", gene_name))
 
-```{r, eval=FALSE}
-Intron <- read_excel("BOFFO/Intron.xlsx")
-Real_Transposases <- read_excel("BOFFO/Real_Transposases.xlsx")
-ALL <- read_excel("BOFFO/ALL.xlsx")
+ALL <- rbind(Intron, Real_Transposases, Integrases_rve)
 ```
 
-### Final Tables
+Summary matrix table with a Genome in each row and each GC listed in each column. Genomes renamed with full IDs.
 
-Summary matrix table with a Genome in each row and each GC listed in each column.
-
-```{r, eval=FALSE, message=FALSE}
+```{r, message=FALSE}
 MatrixBOFFO_ALL <- ALL %>%
-  group_by(genome_name, gene_name) %>%
+  group_by(genome_name, MGE) %>%
   summarize(n = n())
-MatrixBOFFO_ALL <- spread(MatrixBOFFO_ALL, gene_name, n)
-MatrixBOFFO_ALL <- MatrixBOFFO_ALL %>% remove_rownames %>% column_to_rownames(var="genome_name")
+MatrixBOFFO_ALL <- spread(MatrixBOFFO_ALL, MGE, n)
+MatrixBOFFO_ALL$genomes <- c('ATCC_51524','KPL1914','KPL1922_CDC39_95','KPL1930_CDC2949_98','KPL1931_CDC4294_98','KPL1932_CDC4420_98','KPL1933_CDC4545_98','KPL1934_CDC4709_98','KPL1937_CDC4199_99','KPL1938_CDC4791_99','KPL1939_CDC4792_99','KPL3033','KPL3043','KPL3050','KPL3052','KPL3065','KPL3069','KPL3070','KPL3077','KPL3084','KPL3086','KPL3090','KPL3246','KPL3250','KPL3256','KPL3264','KPL3274','KPL3911')
+MatrixBOFFO_ALL <- MatrixBOFFO_ALL %>% remove_rownames %>% column_to_rownames(var="genomes")
+MatrixBOFFO_ALL <- select(MatrixBOFFO_ALL, -genome_name)
 ```
 
 Totals/Stats by column/row:
 
-```{r, eval=FALSE}
+```{r}
 GCTotal <- colSums(MatrixBOFFO_ALL, na.rm=TRUE)
 GCMean <- round(colMeans(MatrixBOFFO_ALL, na.rm=TRUE), 2)
 GCMedian <- round(colMedians(as.matrix(MatrixBOFFO_ALL), na.rm=TRUE), 2)
-GCVar <- round(colVars(as.matrix(MatrixBOFFO_ALL), na.rm=TRUE), 2) #Sample variance
+GCVariance <- round(colVars(as.matrix(MatrixBOFFO_ALL), na.rm=TRUE), 2) #Sample variance
 GCSD <- round(colSds(as.matrix(MatrixBOFFO_ALL), na.rm=TRUE), 2) #Sample standard deviation
 GCMAD <- round(colMads(as.matrix(MatrixBOFFO_ALL), na.rm=TRUE), 2) #Median absolute deviation
 GCMin <- round(colMins(as.matrix(MatrixBOFFO_ALL), na.rm=TRUE), 2) 
 GCMax <- round(colMaxs(as.matrix(MatrixBOFFO_ALL), na.rm=TRUE), 2) 
 
-MatrixBOFFO_ALL["GCTotal" ,] <- GCTotal
-MatrixBOFFO_ALL["GCMean" ,] <- GCMean
-MatrixBOFFO_ALL["GCMedian" ,] <- GCMedian
-MatrixBOFFO_ALL["GCVar" ,] <- GCVar
-MatrixBOFFO_ALL["GCSD" ,] <- GCSD
-MatrixBOFFO_ALL["GCMAD" ,] <- GCMAD
-MatrixBOFFO_ALL["GCMin" ,] <- GCMin
-MatrixBOFFO_ALL["GCMax" ,] <- GCMax
-
-MatrixBOFFO_ALL$Total <- rowSums(MatrixBOFFO_ALL, na.rm=TRUE)
+MatrixBOFFO_ALL["Total" ,] <- GCTotal
+MatrixBOFFO_ALL["Mean" ,] <- GCMean
+MatrixBOFFO_ALL["Median" ,] <- GCMedian
+MatrixBOFFO_ALL["Variance" ,] <- GCVariance
+MatrixBOFFO_ALL["SD" ,] <- GCSD
+MatrixBOFFO_ALL["MAD" ,] <- GCMAD
+MatrixBOFFO_ALL["Min" ,] <- GCMin
+MatrixBOFFO_ALL["Max" ,] <- GCMax
 ```
 
+Individual tables by MGE:
+```{r}
+Matrix_Intron <- MatrixBOFFO_ALL %>% select(starts_with("INTRON_GC"))
+Matrix_Transposases <- MatrixBOFFO_ALL %>% select(starts_with("TRANSPOSASE_GC"))
+Matrix_Integrases <- MatrixBOFFO_ALL %>% select(starts_with("INTEGRASE_GC"))
+
+Matrix_Transposases$Total <- rowSums(Matrix_Transposases, na.rm=TRUE)
+Matrix_Integrases$Total <- rowSums(Matrix_Integrases, na.rm=TRUE)
+```
+
+#### Intron Stats
+```{r}
+opts <- options(knitr.kable.NA = "")
+kable(Matrix_Intron, align = "c")
+```
+
+#### Transposases Stats
+```{r}
+opts <- options(knitr.kable.NA = "")
+kable(Matrix_Transposases, align = "c")
+```
+
+#### Integrases Stats
+```{r}
+opts <- options(knitr.kable.NA = "")
+kable(Matrix_Integrases, align = "c")
+```
 
 ```{r, eval=FALSE}
-write.csv(MatrixBOFFO_ALL, "Stats_MatrixBOFFO.csv", row.names = TRUE)
+write.csv(Matrix_Intron, "analysis_MGEs/Intron_Table.csv", row.names = TRUE)
+write.csv(Matrix_Transposases, "analysis_MGEs/Transposases_Table.csv", row.names = TRUE)
+write.csv(Matrix_Integrases, "analysis_MGEs/Integrases_Table.csv", row.names = TRUE)
 ```
 
 # [REFERENCES]{.ul}

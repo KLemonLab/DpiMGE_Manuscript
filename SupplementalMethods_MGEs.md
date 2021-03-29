@@ -114,47 +114,51 @@ aka [BOFFO](https://github.com/FredHutch/boffo) to identify the gene
 neighborhoods in which the selected genes were located across all 28 D.
 pigrum genomes
 
--   SelectedAnvio7\_Intron.faa: Representative sequence for the
+-   **SelectedAnvio7\_Intron.faa**: Representative sequence for the
     GC\_00000001 cluster.
--   SelectedAnvio7\_Real\_Transposases.faa: GCs initially identified
+-   **SelectedAnvio7\_Real\_Transposases.faa**: GCs initially identified
     with the word Transposase on the annotation search and with complete
     (80% coverage or more) PFam **Transposase** domains.
--   SelectedAnvio7\_Integrases\_rve.faa: GCs initially identified with
-    the word Transposase on the annotation search but with complete (80%
-    coverage or more) PFam **rve** domains.
+-   **SelectedAnvio7\_Integrases\_rve.faa**: GCs initially identified
+    with the word Transposase on the annotation search but with complete
+    (80% coverage or more) PFam **rve** domains.
 
 The groups of genes identified with BOFFO at minimum percent identity
 85% and minimum coverage 80% were visualized using
 [clinker](https://github.com/gamcil/clinker) ([Gilchrist et al.
 2021](#ref-Gilchrist2021)).
 
-Outputs concatenated by group:
+### Tables
 
-``` bash
-cd ..
-cat AllMGE_BOFFO_80cov85id/Selected_Intron.faa-output/*/*.csv.gz  > SelectedGCs_Anvio/BOFFO/Intron.txt.gz
-cat AllMGE_BOFFO_80cov85id/Selected_Real_Transposases_v2-output/*/*.csv.gz  > SelectedGCs_Anvio/BOFFO/Real_Transposases.txt.gz
-```
-
-Files unzipped and format cleaned in excel and imported into R:
+We read the BOFFO outputs:
 
 ``` r
-Intron <- read_excel("BOFFO/Intron.xlsx")
-Real_Transposases <- read_excel("BOFFO/Real_Transposases.xlsx")
-ALL <- read_excel("BOFFO/ALL.xlsx")
+Intron <- read_excel("analysis_MGEs/Intron.xlsx")
+Real_Transposases <- read_excel("analysis_MGEs/Real_Transposases.xlsx")
+Integrases_rve <- read_excel("analysis_MGEs/Integrases_rve.xlsx")
 ```
 
-### Final Tables
+GCs renamed with MGE type
+
+``` r
+Intron <- Intron %>% mutate(MGE = gsub("GC", "INTRON_GC", gene_name))
+Real_Transposases <- Real_Transposases %>% mutate(MGE = gsub("GC", "TRANSPOSASE_GC", gene_name))
+Integrases_rve <- Integrases_rve %>% mutate(MGE = gsub("GC", "INTEGRASE_GC", gene_name))
+
+ALL <- rbind(Intron, Real_Transposases, Integrases_rve)
+```
 
 Summary matrix table with a Genome in each row and each GC listed in
-each column.
+each column. Genomes renamed with full IDs.
 
 ``` r
 MatrixBOFFO_ALL <- ALL %>%
-  group_by(genome_name, gene_name) %>%
+  group_by(genome_name, MGE) %>%
   summarize(n = n())
-MatrixBOFFO_ALL <- spread(MatrixBOFFO_ALL, gene_name, n)
-MatrixBOFFO_ALL <- MatrixBOFFO_ALL %>% remove_rownames %>% column_to_rownames(var="genome_name")
+MatrixBOFFO_ALL <- spread(MatrixBOFFO_ALL, MGE, n)
+MatrixBOFFO_ALL$genomes <- c('ATCC_51524','KPL1914','KPL1922_CDC39_95','KPL1930_CDC2949_98','KPL1931_CDC4294_98','KPL1932_CDC4420_98','KPL1933_CDC4545_98','KPL1934_CDC4709_98','KPL1937_CDC4199_99','KPL1938_CDC4791_99','KPL1939_CDC4792_99','KPL3033','KPL3043','KPL3050','KPL3052','KPL3065','KPL3069','KPL3070','KPL3077','KPL3084','KPL3086','KPL3090','KPL3246','KPL3250','KPL3256','KPL3264','KPL3274','KPL3911')
+MatrixBOFFO_ALL <- MatrixBOFFO_ALL %>% remove_rownames %>% column_to_rownames(var="genomes")
+MatrixBOFFO_ALL <- select(MatrixBOFFO_ALL, -genome_name)
 ```
 
 Totals/Stats by column/row:
@@ -163,26 +167,175 @@ Totals/Stats by column/row:
 GCTotal <- colSums(MatrixBOFFO_ALL, na.rm=TRUE)
 GCMean <- round(colMeans(MatrixBOFFO_ALL, na.rm=TRUE), 2)
 GCMedian <- round(colMedians(as.matrix(MatrixBOFFO_ALL), na.rm=TRUE), 2)
-GCVar <- round(colVars(as.matrix(MatrixBOFFO_ALL), na.rm=TRUE), 2) #Sample variance
+GCVariance <- round(colVars(as.matrix(MatrixBOFFO_ALL), na.rm=TRUE), 2) #Sample variance
 GCSD <- round(colSds(as.matrix(MatrixBOFFO_ALL), na.rm=TRUE), 2) #Sample standard deviation
 GCMAD <- round(colMads(as.matrix(MatrixBOFFO_ALL), na.rm=TRUE), 2) #Median absolute deviation
 GCMin <- round(colMins(as.matrix(MatrixBOFFO_ALL), na.rm=TRUE), 2) 
 GCMax <- round(colMaxs(as.matrix(MatrixBOFFO_ALL), na.rm=TRUE), 2) 
 
-MatrixBOFFO_ALL["GCTotal" ,] <- GCTotal
-MatrixBOFFO_ALL["GCMean" ,] <- GCMean
-MatrixBOFFO_ALL["GCMedian" ,] <- GCMedian
-MatrixBOFFO_ALL["GCVar" ,] <- GCVar
-MatrixBOFFO_ALL["GCSD" ,] <- GCSD
-MatrixBOFFO_ALL["GCMAD" ,] <- GCMAD
-MatrixBOFFO_ALL["GCMin" ,] <- GCMin
-MatrixBOFFO_ALL["GCMax" ,] <- GCMax
-
-MatrixBOFFO_ALL$Total <- rowSums(MatrixBOFFO_ALL, na.rm=TRUE)
+MatrixBOFFO_ALL["Total" ,] <- GCTotal
+MatrixBOFFO_ALL["Mean" ,] <- GCMean
+MatrixBOFFO_ALL["Median" ,] <- GCMedian
+MatrixBOFFO_ALL["Variance" ,] <- GCVariance
+MatrixBOFFO_ALL["SD" ,] <- GCSD
+MatrixBOFFO_ALL["MAD" ,] <- GCMAD
+MatrixBOFFO_ALL["Min" ,] <- GCMin
+MatrixBOFFO_ALL["Max" ,] <- GCMax
 ```
 
+Individual tables by MGE:
+
 ``` r
-write.csv(MatrixBOFFO_ALL, "Stats_MatrixBOFFO.csv", row.names = TRUE)
+Matrix_Intron <- MatrixBOFFO_ALL %>% select(starts_with("INTRON_GC"))
+Matrix_Transposases <- MatrixBOFFO_ALL %>% select(starts_with("TRANSPOSASE_GC"))
+Matrix_Integrases <- MatrixBOFFO_ALL %>% select(starts_with("INTEGRASE_GC"))
+
+Matrix_Transposases$Total <- rowSums(Matrix_Transposases, na.rm=TRUE)
+Matrix_Integrases$Total <- rowSums(Matrix_Integrases, na.rm=TRUE)
+```
+
+#### Intron Stats
+
+``` r
+opts <- options(knitr.kable.NA = "")
+kable(Matrix_Intron, align = "c")
+```
+
+|                      | INTRON\_GC\_00000001 |
+|:---------------------|:--------------------:|
+| ATCC\_51524          |         1.00         |
+| KPL1914              |         2.00         |
+| KPL1922\_CDC39\_95   |         1.00         |
+| KPL1930\_CDC2949\_98 |         2.00         |
+| KPL1931\_CDC4294\_98 |         2.00         |
+| KPL1932\_CDC4420\_98 |         3.00         |
+| KPL1933\_CDC4545\_98 |         1.00         |
+| KPL1934\_CDC4709\_98 |        11.00         |
+| KPL1937\_CDC4199\_99 |         2.00         |
+| KPL1938\_CDC4791\_99 |         1.00         |
+| KPL1939\_CDC4792\_99 |         2.00         |
+| KPL3033              |         5.00         |
+| KPL3043              |         9.00         |
+| KPL3050              |        10.00         |
+| KPL3052              |         4.00         |
+| KPL3065              |         7.00         |
+| KPL3069              |         2.00         |
+| KPL3070              |         5.00         |
+| KPL3077              |         2.00         |
+| KPL3084              |         6.00         |
+| KPL3086              |         6.00         |
+| KPL3090              |        14.00         |
+| KPL3246              |         8.00         |
+| KPL3250              |         9.00         |
+| KPL3256              |         3.00         |
+| KPL3264              |         5.00         |
+| KPL3274              |         1.00         |
+| KPL3911              |         8.00         |
+| Total                |        132.00        |
+| Mean                 |         4.71         |
+| Median               |         3.50         |
+| Variance             |        12.88         |
+| SD                   |         3.59         |
+| MAD                  |         3.71         |
+| Min                  |         1.00         |
+| Max                  |        14.00         |
+
+#### Transposases Stats
+
+``` r
+opts <- options(knitr.kable.NA = "")
+kable(Matrix_Transposases, align = "c")
+```
+
+|                      | TRANSPOSASE\_GC\_00000003 | TRANSPOSASE\_GC\_00000040 | TRANSPOSASE\_GC\_00000055 | TRANSPOSASE\_GC\_00001693 | TRANSPOSASE\_GC\_00002092 | TRANSPOSASE\_GC\_00002210 | TRANSPOSASE\_GC\_00002310 | TRANSPOSASE\_GC\_00002501 | Total  |
+|:---------------------|:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:|:------:|
+| ATCC\_51524          |           3.00            |           1.00            |           1.00            |             1             |                           |                           |                           |                           |  6.00  |
+| KPL1914              |                           |                           |                           |                           |                           |                           |                           |                           |  0.00  |
+| KPL1922\_CDC39\_95   |           1.00            |                           |                           |                           |                           |                           |                           |                           |  1.00  |
+| KPL1930\_CDC2949\_98 |                           |                           |                           |                           |                           |                           |                           |                           |  0.00  |
+| KPL1931\_CDC4294\_98 |                           |                           |                           |                           |                           |                           |                           |             1             |  1.00  |
+| KPL1932\_CDC4420\_98 |           2.00            |                           |                           |                           |                           |                           |                           |                           |  2.00  |
+| KPL1933\_CDC4545\_98 |                           |           1.00            |                           |             1             |             1             |             1             |                           |                           |  4.00  |
+| KPL1934\_CDC4709\_98 |           6.00            |                           |                           |             1             |                           |                           |                           |                           |  7.00  |
+| KPL1937\_CDC4199\_99 |           2.00            |           1.00            |           1.00            |                           |                           |                           |                           |                           |  4.00  |
+| KPL1938\_CDC4791\_99 |           1.00            |                           |                           |             1             |                           |                           |                           |                           |  2.00  |
+| KPL1939\_CDC4792\_99 |                           |           1.00            |                           |                           |             1             |             1             |                           |                           |  3.00  |
+| KPL3033              |           1.00            |                           |                           |                           |                           |                           |                           |                           |  1.00  |
+| KPL3043              |           1.00            |                           |                           |                           |                           |                           |                           |                           |  1.00  |
+| KPL3050              |           4.00            |                           |                           |             1             |                           |                           |                           |                           |  5.00  |
+| KPL3052              |           1.00            |                           |                           |                           |                           |                           |             1             |                           |  2.00  |
+| KPL3065              |           1.00            |                           |                           |                           |                           |                           |                           |                           |  1.00  |
+| KPL3069              |           1.00            |                           |                           |                           |                           |                           |                           |                           |  1.00  |
+| KPL3070              |           5.00            |           1.00            |           1.00            |             1             |                           |                           |                           |                           |  8.00  |
+| KPL3077              |           11.00           |           1.00            |           1.00            |                           |                           |                           |                           |                           | 13.00  |
+| KPL3084              |           7.00            |           2.00            |           2.00            |             1             |                           |                           |                           |                           | 12.00  |
+| KPL3086              |           1.00            |                           |                           |                           |                           |                           |                           |                           |  1.00  |
+| KPL3090              |           6.00            |                           |                           |             1             |                           |                           |                           |                           |  7.00  |
+| KPL3246              |           3.00            |                           |                           |                           |                           |                           |                           |                           |  3.00  |
+| KPL3250              |           2.00            |           1.00            |                           |                           |             1             |             1             |                           |                           |  5.00  |
+| KPL3256              |           1.00            |           1.00            |           1.00            |             1             |                           |                           |                           |                           |  4.00  |
+| KPL3264              |           6.00            |                           |                           |             1             |                           |                           |                           |                           |  7.00  |
+| KPL3274              |                           |                           |                           |                           |                           |                           |             1             |                           |  1.00  |
+| KPL3911              |           8.00            |           2.00            |           2.00            |             1             |                           |                           |                           |                           | 13.00  |
+| Total                |           74.00           |           12.00           |           9.00            |            11             |             3             |             3             |             2             |             1             | 115.00 |
+| Mean                 |           3.36            |           1.20            |           1.29            |             1             |             1             |             1             |             1             |             1             | 10.85  |
+| Median               |           2.00            |           1.00            |           1.00            |             1             |             1             |             1             |             1             |             1             |  9.00  |
+| Variance             |           8.24            |           0.18            |           0.24            |             0             |             0             |             0             |             0             |                           |  8.66  |
+| SD                   |           2.87            |           0.42            |           0.49            |             0             |             0             |             0             |             0             |                           |  3.78  |
+| MAD                  |           1.48            |           0.00            |           0.00            |             0             |             0             |             0             |             0             |             0             |  1.48  |
+| Min                  |           1.00            |           1.00            |           1.00            |             1             |             1             |             1             |             1             |             1             |  8.00  |
+| Max                  |           11.00           |           2.00            |           2.00            |             1             |             1             |             1             |             1             |             1             | 20.00  |
+
+#### Integrases Stats
+
+``` r
+opts <- options(knitr.kable.NA = "")
+kable(Matrix_Integrases, align = "c")
+```
+
+|                      | INTEGRASE\_GC\_00000028 | INTEGRASE\_GC\_00000085 | INTEGRASE\_GC\_00001701 | INTEGRASE\_GC\_00001775 | INTEGRASE\_GC\_00002348 | Total |
+|:---------------------|:-----------------------:|:-----------------------:|:-----------------------:|:-----------------------:|:-----------------------:|:-----:|
+| ATCC\_51524          |                         |            1            |                         |                         |                         | 1.00  |
+| KPL1914              |                         |            1            |                         |            1            |                         | 2.00  |
+| KPL1922\_CDC39\_95   |                         |                         |                         |                         |                         | 0.00  |
+| KPL1930\_CDC2949\_98 |          1.00           |                         |                         |                         |                         | 1.00  |
+| KPL1931\_CDC4294\_98 |                         |                         |                         |                         |                         | 0.00  |
+| KPL1932\_CDC4420\_98 |                         |                         |          1.00           |            1            |                         | 2.00  |
+| KPL1933\_CDC4545\_98 |          2.00           |                         |                         |                         |                         | 2.00  |
+| KPL1934\_CDC4709\_98 |                         |            1            |          1.00           |                         |                         | 2.00  |
+| KPL1937\_CDC4199\_99 |                         |                         |                         |                         |                         | 0.00  |
+| KPL1938\_CDC4791\_99 |                         |            1            |                         |                         |                         | 1.00  |
+| KPL1939\_CDC4792\_99 |          1.00           |                         |                         |                         |                         | 1.00  |
+| KPL3033              |                         |            1            |                         |                         |                         | 1.00  |
+| KPL3043              |          1.00           |                         |                         |                         |                         | 1.00  |
+| KPL3050              |          2.00           |            1            |          3.00           |                         |                         | 6.00  |
+| KPL3052              |                         |            1            |          1.00           |                         |            1            | 3.00  |
+| KPL3065              |          1.00           |                         |                         |                         |                         | 1.00  |
+| KPL3069              |          1.00           |                         |          1.00           |                         |                         | 2.00  |
+| KPL3070              |                         |            1            |                         |                         |                         | 1.00  |
+| KPL3077              |          1.00           |                         |                         |            1            |                         | 2.00  |
+| KPL3084              |                         |            1            |                         |                         |                         | 1.00  |
+| KPL3086              |                         |                         |                         |                         |                         | 0.00  |
+| KPL3090              |          1.00           |            1            |          1.00           |                         |                         | 3.00  |
+| KPL3246              |                         |                         |                         |                         |                         | 0.00  |
+| KPL3250              |          1.00           |            1            |                         |                         |                         | 2.00  |
+| KPL3256              |                         |                         |                         |                         |                         | 0.00  |
+| KPL3264              |                         |            1            |                         |                         |                         | 1.00  |
+| KPL3274              |          5.00           |                         |                         |                         |            1            | 6.00  |
+| KPL3911              |                         |            1            |                         |                         |                         | 1.00  |
+| Total                |          17.00          |           13            |          8.00           |            3            |            2            | 43.00 |
+| Mean                 |          1.55           |            1            |          1.33           |            1            |            1            | 5.88  |
+| Median               |          1.00           |            1            |          1.00           |            1            |            1            | 5.00  |
+| Variance             |          1.47           |            0            |          0.67           |            0            |            0            | 2.14  |
+| SD                   |          1.21           |            0            |          0.82           |            0            |            0            | 2.03  |
+| MAD                  |          0.00           |            0            |          0.00           |            0            |            0            | 0.00  |
+| Min                  |          1.00           |            1            |          1.00           |            1            |            1            | 5.00  |
+| Max                  |          5.00           |            1            |          3.00           |            1            |            1            | 11.00 |
+
+``` r
+write.csv(Matrix_Intron, "analysis_MGEs/Intron_Table.csv", row.names = TRUE)
+write.csv(Matrix_Transposases, "analysis_MGEs/Transposases_Table.csv", row.names = TRUE)
+write.csv(Matrix_Integrases, "analysis_MGEs/Integrases_Table.csv", row.names = TRUE)
 ```
 
 # <u>REFERENCES</u>

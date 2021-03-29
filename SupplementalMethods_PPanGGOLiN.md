@@ -167,11 +167,11 @@ The output for this command was:
 
 -   <u>**spots**</u>
 
-&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD - set\_size : 3 - overlapping\_match :
-2 ======= - `set_size`: 3 - `overlapping_match`: 2 - `exact_match`: 1
-&gt;&gt;&gt;&gt;&gt;&gt;&gt; 36646247008e55dad0d914a999bdf9d57eb6ca4c
-
--   exact\_match : 1
+    -   `set_size` : 3
+    -   `overlapping_match` : 2
+    -   `set_size`: 3
+    -   `overlapping_match`: 2
+    -   `exact_match`: 1
 
 # <u>REFERENCES</u>
 
