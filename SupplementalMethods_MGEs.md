@@ -98,10 +98,8 @@ classified the initial 23 putative **Tranposase** GSs as:
 -   **Real Transposases:** GC\_00000003, GC\_00000040, GC\_00000055,
     GC\_00001693, GC\_00002092, GC\_00002210, GC\_00002310 and
     GC\_00002501.
-
 -   **Integrases (rve domain):** GC\_00000028, GC\_00000085,
     GC\_00001701, GC\_00001775 and GC\_00002348.
-
 -   **Other/Partial:** GC\_00000008, GC\_00001669, GC\_00001787,
     GC\_00002105, GC\_00002382, GC\_00002430, GC\_00002460,
     GC\_00002491, GC\_00002679 and GC\_00002805.
@@ -118,17 +116,24 @@ pigrum genomes
     GC\_00000001 cluster.
 -   **SelectedAnvio7\_Real\_Transposases.faa**: GCs initially identified
     with the word Transposase on the annotation search and with complete
-    (80% coverage or more) PFam **Transposase** domains.
+    (80% coverage or more) PFam **Transposase** domains
 -   **SelectedAnvio7\_Integrases\_rve.faa**: GCs initially identified
     with the word Transposase on the annotation search but with complete
-    (80% coverage or more) PFam **rve** domains.
+    (80% coverage or more) PFam **rve** domains:
 
 The groups of genes identified with BOFFO at minimum percent identity
 85% and minimum coverage 80% were visualized using
 [clinker](https://github.com/gamcil/clinker) ([Gilchrist et al.
-2021](#ref-Gilchrist2021)).
+2021](#ref-Gilchrist2021)). The following links display the whole
+clinker output:
 
-### Tables
+-   **Intron:**
+    [GC\_00000001](https://htmlpreview.github.io/?https://raw.githubusercontent.com/KLemonLab/DpiMGE_Manuscript/master/analysis_MGEs/BOFFO/Selected_Intron/GC_00000001/html/GC_00000001_FWD.html?token=ABXYP4EVFJWYFE2WC6AZZ63ANNNXO).
+-   **Real Transposases:** GC\_00000003, GC\_00000040, GC\_00000055,
+    GC\_00001693, GC\_00002092, GC\_00002210, GC\_00002310 and
+    GC\_00002501.
+-   **Integrases (rve domain):** GC\_00000028, GC\_00000085,
+    GC\_00001701, GC\_00001775 and GC\_00002348.
 
 We read the BOFFO outputs:
 
