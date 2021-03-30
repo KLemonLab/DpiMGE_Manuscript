@@ -117,8 +117,8 @@ done
 
 The `anvi-run-ncbi-cogs` command was used to annotate the .db genome
 files against the NCBI’s COGs database 2020 release ([Tatusov
-1997](#ref-tatusov1997); [Galperin et al. 2020](#ref-galperin2020)). We
-used the DIAMOND ([Buchfink, Xie, and Huson 2014](#ref-buchfink2014))
+1997](#ref-tatusov1997); [Galperin et al. 2021](#ref-galperin2021)). We
+used the DIAMOND ([Buchfink, Xie, and Huson 2015](#ref-buchfink2015))
 “sensitive” option instead of the default “fast” one.
 
 ``` bash
@@ -328,9 +328,9 @@ Exploration of Microbial Pan-Genomes.” *BMC Genomics* 15 (1): 8.
 
 </div>
 
-<div id="ref-buchfink2014" class="csl-entry">
+<div id="ref-buchfink2015" class="csl-entry">
 
-Buchfink, Benjamin, Chao Xie, and Daniel H Huson. 2014. “Fast and
+Buchfink, Benjamin, Chao Xie, and Daniel H Huson. 2015. “Fast and
 Sensitive Protein Alignment Using DIAMOND.” *Nature Methods* 12 (1):
 59–60. <https://doi.org/10.1038/nmeth.3176>.
 
@@ -370,10 +370,10 @@ Integrated, Reproducible Multi-Omics with Anvi’o.” *Nature Microbiology*
 
 </div>
 
-<div id="ref-galperin2020" class="csl-entry">
+<div id="ref-galperin2021" class="csl-entry">
 
 Galperin, Michael Y, Yuri I Wolf, Kira S Makarova, Roberto Vera Alvarez,
-David Landsman, and Eugene V Koonin. 2020. “COG Database Update: Focus
+David Landsman, and Eugene V Koonin. 2021. “COG Database Update: Focus
 on Microbial Diversity, Model Organisms, and Widespread Pathogens.”
 *Nucleic Acids Research* 49 (D1): D274–81.
 <https://doi.org/10.1093/nar/gkaa1018>.

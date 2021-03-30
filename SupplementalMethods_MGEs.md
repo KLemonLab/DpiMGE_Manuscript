@@ -18,7 +18,7 @@ DpigPangenome <- DpigPangenome %>%
 
 We search for individual genes annotated as **Transposases**/**Retrons**
 in either the Prokka ([Seemann 2014](#ref-Seemann2014)), COG20 ([Tatusov
-1997](#ref-Tatusov1997); [Galperin et al. 2020](#ref-Galperin2021)),
+1997](#ref-Tatusov1997); [Galperin et al. 2021](#ref-Galperin2021)),
 Pfam ([Mistry et al. 2020](#ref-mistry2020)) or KOfam ([Minoru Kanehisa
 et al. 2015](#ref-kanehisa2015); [M. Kanehisa 2000](#ref-kanehisa2000))
 annotations:
@@ -350,7 +350,7 @@ write.csv(Matrix_Integrases, "analysis_MGEs/Integrases_Table.csv", row.names = T
 <div id="ref-Galperin2021" class="csl-entry">
 
 Galperin, Michael Y, Yuri I Wolf, Kira S Makarova, Roberto Vera Alvarez,
-David Landsman, and Eugene V Koonin. 2020. “COG Database Update: Focus
+David Landsman, and Eugene V Koonin. 2021. “COG Database Update: Focus
 on Microbial Diversity, Model Organisms, and Widespread Pathogens.”
 *Nucleic Acids Research* 49 (D1): D274–81.
 <https://doi.org/10.1093/nar/gkaa1018>.
