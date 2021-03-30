@@ -127,8 +127,7 @@ The groups of genes identified with BOFFO at minimum percent identity
 2021](#ref-Gilchrist2021)). The following links display the whole
 clinker output:
 
--   **Intron:**
-    [GC\_00000001](https://htmlpreview.github.io/?https://raw.githubusercontent.com/KLemonLab/DpiMGE_Manuscript/master/analysis_MGEs/BOFFO/Selected_Intron/GC_00000001/html/GC_00000001_FWD.html?token=ABXYP4EVFJWYFE2WC6AZZ63ANNNXO).
+-   **Intron:** \[GC\_00000001\].
 -   **Real Transposases:** GC\_00000003, GC\_00000040, GC\_00000055,
     GC\_00001693, GC\_00002092, GC\_00002210, GC\_00002310 and
     GC\_00002501.
@@ -328,59 +327,14 @@ GCMin <- round(colMins(as.matrix(MatrixBOFFO_ALL), na.rm=TRUE), 2)
 GCMax <- round(colMaxs(as.matrix(MatrixBOFFO_ALL), na.rm=TRUE), 2) 
 
 Matrix_Integrases["Total" ,] <- GCTotal
-```
-
-    ## Warning in matrix(value, n, p): data length [14] is not a sub-multiple or
-    ## multiple of the number of columns [6]
-
-``` r
 Matrix_Integrases["Mean" ,] <- GCMean
-```
-
-    ## Warning in matrix(value, n, p): data length [14] is not a sub-multiple or
-    ## multiple of the number of columns [6]
-
-``` r
 Matrix_Integrases["Median" ,] <- GCMedian
-```
-
-    ## Warning in matrix(value, n, p): data length [14] is not a sub-multiple or
-    ## multiple of the number of columns [6]
-
-``` r
 Matrix_Integrases["Variance" ,] <- GCVariance
-```
-
-    ## Warning in matrix(value, n, p): data length [14] is not a sub-multiple or
-    ## multiple of the number of columns [6]
-
-``` r
 Matrix_Integrases["SD" ,] <- GCSD
-```
-
-    ## Warning in matrix(value, n, p): data length [14] is not a sub-multiple or
-    ## multiple of the number of columns [6]
-
-``` r
 Matrix_Integrases["MAD" ,] <- GCMAD
-```
-
-    ## Warning in matrix(value, n, p): data length [14] is not a sub-multiple or
-    ## multiple of the number of columns [6]
-
-``` r
 Matrix_Integrases["Min" ,] <- GCMin
-```
-
-    ## Warning in matrix(value, n, p): data length [14] is not a sub-multiple or
-    ## multiple of the number of columns [6]
-
-``` r
 Matrix_Integrases["Max" ,] <- GCMax
 ```
-
-    ## Warning in matrix(value, n, p): data length [14] is not a sub-multiple or
-    ## multiple of the number of columns [6]
 
 ``` r
 opts <- options(knitr.kable.NA = "")
