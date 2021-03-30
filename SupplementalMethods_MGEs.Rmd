@@ -138,28 +138,6 @@ MatrixBOFFO_ALL <- MatrixBOFFO_ALL %>% remove_rownames %>% column_to_rownames(va
 MatrixBOFFO_ALL <- select(MatrixBOFFO_ALL, -genome_name)
 ```
 
-Totals/Stats by column/row:
-
-```{r}
-GCTotal <- colSums(MatrixBOFFO_ALL, na.rm=TRUE)
-GCMean <- round(colMeans(MatrixBOFFO_ALL, na.rm=TRUE), 2)
-GCMedian <- round(colMedians(as.matrix(MatrixBOFFO_ALL), na.rm=TRUE), 2)
-GCVariance <- round(colVars(as.matrix(MatrixBOFFO_ALL), na.rm=TRUE), 2) #Sample variance
-GCSD <- round(colSds(as.matrix(MatrixBOFFO_ALL), na.rm=TRUE), 2) #Sample standard deviation
-GCMAD <- round(colMads(as.matrix(MatrixBOFFO_ALL), na.rm=TRUE), 2) #Median absolute deviation
-GCMin <- round(colMins(as.matrix(MatrixBOFFO_ALL), na.rm=TRUE), 2) 
-GCMax <- round(colMaxs(as.matrix(MatrixBOFFO_ALL), na.rm=TRUE), 2) 
-
-MatrixBOFFO_ALL["Total" ,] <- GCTotal
-MatrixBOFFO_ALL["Mean" ,] <- GCMean
-MatrixBOFFO_ALL["Median" ,] <- GCMedian
-MatrixBOFFO_ALL["Variance" ,] <- GCVariance
-MatrixBOFFO_ALL["SD" ,] <- GCSD
-MatrixBOFFO_ALL["MAD" ,] <- GCMAD
-MatrixBOFFO_ALL["Min" ,] <- GCMin
-MatrixBOFFO_ALL["Max" ,] <- GCMax
-```
-
 Individual tables by MGE:
 
 ```{r}
@@ -173,12 +151,56 @@ Matrix_Integrases$Total <- rowSums(Matrix_Integrases, na.rm=TRUE)
 
 #### Intron Stats
 
+Totals/Stats by column/row:
+
+```{r}
+GCTotal <- colSums(Matrix_Intron, na.rm=TRUE)
+GCMean <- round(colMeans(Matrix_Intron, na.rm=TRUE), 2)
+GCMedian <- round(colMedians(as.matrix(Matrix_Intron), na.rm=TRUE), 2)
+GCVariance <- round(colVars(as.matrix(Matrix_Intron), na.rm=TRUE), 2) #Sample variance
+GCSD <- round(colSds(as.matrix(Matrix_Intron), na.rm=TRUE), 2) #Sample standard deviation
+GCMAD <- round(colMads(as.matrix(Matrix_Intron), na.rm=TRUE), 2) #Median absolute deviation
+GCMin <- round(colMins(as.matrix(Matrix_Intron), na.rm=TRUE), 2) 
+GCMax <- round(colMaxs(as.matrix(Matrix_Intron), na.rm=TRUE), 2) 
+
+Matrix_Intron["Total" ,] <- GCTotal
+Matrix_Intron["Mean" ,] <- GCMean
+Matrix_Intron["Median" ,] <- GCMedian
+Matrix_Intron["Variance" ,] <- GCVariance
+Matrix_Intron["SD" ,] <- GCSD
+Matrix_Intron["MAD" ,] <- GCMAD
+Matrix_Intron["Min" ,] <- GCMin
+Matrix_Intron["Max" ,] <- GCMax
+```
+
 ```{r}
 opts <- options(knitr.kable.NA = "")
 kable(Matrix_Intron, align = "c")
 ```
 
 #### Transposases Stats
+
+Totals/Stats by column/row:
+
+```{r}
+GCTotal <- colSums(Matrix_Transposases, na.rm=TRUE)
+GCMean <- round(colMeans(Matrix_Transposases, na.rm=TRUE), 2)
+GCMedian <- round(colMedians(as.matrix(Matrix_Transposases), na.rm=TRUE), 2)
+GCVariance <- round(colVars(as.matrix(Matrix_Transposases), na.rm=TRUE), 2) #Sample variance
+GCSD <- round(colSds(as.matrix(Matrix_Transposases), na.rm=TRUE), 2) #Sample standard deviation
+GCMAD <- round(colMads(as.matrix(Matrix_Transposases), na.rm=TRUE), 2) #Median absolute deviation
+GCMin <- round(colMins(as.matrix(Matrix_Transposases), na.rm=TRUE), 2) 
+GCMax <- round(colMaxs(as.matrix(Matrix_Transposases), na.rm=TRUE), 2) 
+
+Matrix_Transposases["Total" ,] <- GCTotal
+Matrix_Transposases["Mean" ,] <- GCMean
+Matrix_Transposases["Median" ,] <- GCMedian
+Matrix_Transposases["Variance" ,] <- GCVariance
+Matrix_Transposases["SD" ,] <- GCSD
+Matrix_Transposases["MAD" ,] <- GCMAD
+Matrix_Transposases["Min" ,] <- GCMin
+Matrix_Transposases["Max" ,] <- GCMax
+```
 
 ```{r}
 opts <- options(knitr.kable.NA = "")
@@ -187,15 +209,37 @@ kable(Matrix_Transposases, align = "c")
 
 #### Integrases Stats
 
+Totals/Stats by column/row:
+
+```{r}
+GCTotal <- colSums(MatrixBOFFO_ALL, na.rm=TRUE)
+GCMean <- round(colMeans(MatrixBOFFO_ALL, na.rm=TRUE), 2)
+GCMedian <- round(colMedians(as.matrix(MatrixBOFFO_ALL), na.rm=TRUE), 2)
+GCVariance <- round(colVars(as.matrix(MatrixBOFFO_ALL), na.rm=TRUE), 2) #Sample variance
+GCSD <- round(colSds(as.matrix(MatrixBOFFO_ALL), na.rm=TRUE), 2) #Sample standard deviation
+GCMAD <- round(colMads(as.matrix(MatrixBOFFO_ALL), na.rm=TRUE), 2) #Median absolute deviation
+GCMin <- round(colMins(as.matrix(MatrixBOFFO_ALL), na.rm=TRUE), 2) 
+GCMax <- round(colMaxs(as.matrix(MatrixBOFFO_ALL), na.rm=TRUE), 2) 
+
+Matrix_Integrases["Total" ,] <- GCTotal
+Matrix_Integrases["Mean" ,] <- GCMean
+Matrix_Integrases["Median" ,] <- GCMedian
+Matrix_Integrases["Variance" ,] <- GCVariance
+Matrix_Integrases["SD" ,] <- GCSD
+Matrix_Integrases["MAD" ,] <- GCMAD
+Matrix_Integrases["Min" ,] <- GCMin
+Matrix_Integrases["Max" ,] <- GCMax
+```
+
 ```{r}
 opts <- options(knitr.kable.NA = "")
 kable(Matrix_Integrases, align = "c")
 ```
 
 ```{r, eval=FALSE}
-write.csv(Matrix_Intron, "analysis_MGEs/Intron_Table.csv", row.names = TRUE)
-write.csv(Matrix_Transposases, "analysis_MGEs/Transposases_Table.csv", row.names = TRUE)
-write.csv(Matrix_Integrases, "analysis_MGEs/Integrases_Table.csv", row.names = TRUE)
+write.csv(Matrix_Intron, "analysis_MGEs/Intron_Table.csv", row.names = TRUE, na = "")
+write.csv(Matrix_Transposases, "analysis_MGEs/Transposases_Table.csv", row.names = TRUE, na = "")
+write.csv(Matrix_Integrases, "analysis_MGEs/Integrases_Table.csv", row.names = TRUE, na = "")
 ```
 
 # [REFERENCES]{.ul}
