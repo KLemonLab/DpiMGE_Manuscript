@@ -212,14 +212,14 @@ kable(Matrix_Transposases, align = "c")
 Totals/Stats by column/row:
 
 ```{r}
-GCTotal <- colSums(MatrixBOFFO_ALL, na.rm=TRUE)
-GCMean <- round(colMeans(MatrixBOFFO_ALL, na.rm=TRUE), 2)
-GCMedian <- round(colMedians(as.matrix(MatrixBOFFO_ALL), na.rm=TRUE), 2)
-GCVariance <- round(colVars(as.matrix(MatrixBOFFO_ALL), na.rm=TRUE), 2) #Sample variance
-GCSD <- round(colSds(as.matrix(MatrixBOFFO_ALL), na.rm=TRUE), 2) #Sample standard deviation
-GCMAD <- round(colMads(as.matrix(MatrixBOFFO_ALL), na.rm=TRUE), 2) #Median absolute deviation
-GCMin <- round(colMins(as.matrix(MatrixBOFFO_ALL), na.rm=TRUE), 2) 
-GCMax <- round(colMaxs(as.matrix(MatrixBOFFO_ALL), na.rm=TRUE), 2) 
+GCTotal <- colSums(Matrix_Integrases, na.rm=TRUE)
+GCMean <- round(colMeans(Matrix_Integrases, na.rm=TRUE), 2)
+GCMedian <- round(colMedians(as.matrix(Matrix_Integrases), na.rm=TRUE), 2)
+GCVariance <- round(colVars(as.matrix(Matrix_Integrases), na.rm=TRUE), 2) #Sample variance
+GCSD <- round(colSds(as.matrix(Matrix_Integrases), na.rm=TRUE), 2) #Sample standard deviation
+GCMAD <- round(colMads(as.matrix(Matrix_Integrases), na.rm=TRUE), 2) #Median absolute deviation
+GCMin <- round(colMins(as.matrix(Matrix_Integrases), na.rm=TRUE), 2) 
+GCMax <- round(colMaxs(as.matrix(Matrix_Integrases), na.rm=TRUE), 2) 
 
 Matrix_Integrases["Total" ,] <- GCTotal
 Matrix_Integrases["Mean" ,] <- GCMean
