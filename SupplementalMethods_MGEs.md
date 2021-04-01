@@ -127,14 +127,26 @@ The groups of genes identified with BOFFO at minimum percent identity
 2021](#ref-Gilchrist2021)). The following links display the whole
 clinker output:
 
--   **Intron:** \[GC\_00000001\].
--   **Real Transposases:** GC\_00000003, GC\_00000040, GC\_00000055,
-    GC\_00001693, GC\_00002092, GC\_00002210, GC\_00002310 and
-    GC\_00002501.
--   **Integrases (rve domain):** GC\_00000028, GC\_00000085,
-    GC\_00001701, GC\_00001775 and GC\_00002348.
+-   **Intron:**
+    [GC\_00000001](https://htmlpreview.github.io/?https://raw.githubusercontent.com/KLemonLab/DpiMGE_Manuscript/master/analysis_MGEs/BOFFO/Selected_Intron/GC_00000001/html/GC_00000001_FWD.html?token=ABXYP4EVFJWYFE2WC6AZZ63ANNNXO).
+-   **Real Transposases:**
+    [GC\_00000003](https://htmlpreview.github.io/?https://raw.githubusercontent.com/KLemonLab/DpiMGE_Manuscript/master/analysis_MGEs/BOFFO/Selected_Real_Transposases/GC_00000003/html/GC_00000003_FWD.html?token=ABXYP4BN2H7BCSGETPR5JCLANTQWK),
+    [GC\_00000040](https://htmlpreview.github.io/?https://raw.githubusercontent.com/KLemonLab/DpiMGE_Manuscript/master/analysis_MGEs/BOFFO/Selected_Real_Transposases/GC_00000040/html/GC_00000040_FWD.html?token=ABXYP4ARKX24Y4SXK3K6Z3TANTQSG),
+    [GC\_00000055](https://htmlpreview.github.io/?https://raw.githubusercontent.com/KLemonLab/DpiMGE_Manuscript/master/analysis_MGEs/BOFFO/Selected_Real_Transposases/GC_00000055/html/GC_00000055_FWD.html?token=ABXYP4DVD723DXT72EE7PALANTRCK),
+    [GC\_00001693](https://htmlpreview.github.io/?https://raw.githubusercontent.com/KLemonLab/DpiMGE_Manuscript/master/analysis_MGEs/BOFFO/Selected_Real_Transposases/GC_00001693/html/GC_00001693_FWD.html?token=ABXYP4DWBLOH66HM3BPPQBLANTRCW),
+    [GC\_00002092](https://htmlpreview.github.io/?https://raw.githubusercontent.com/KLemonLab/DpiMGE_Manuscript/master/analysis_MGEs/BOFFO/Selected_Real_Transposases/GC_00002092/html/GC_00002092_FWD.html?token=ABXYP4FPCZNI6GFULB5BXSTANTSSS),
+    [GC\_00002210](https://htmlpreview.github.io/?https://raw.githubusercontent.com/KLemonLab/DpiMGE_Manuscript/master/analysis_MGEs/BOFFO/Selected_Real_Transposases/GC_00002210/html/GC_00002210_FWD.html?token=ABXYP4GROU5R72RPLTFMWJ3ANTS2I),
+    [GC\_00002310](https://htmlpreview.github.io/?https://raw.githubusercontent.com/KLemonLab/DpiMGE_Manuscript/master/analysis_MGEs/BOFFO/Selected_Real_Transposases/GC_00002310/html/GC_00002310_FWD.html?token=ABXYP4AIRKRNFNL5F6YOF6DANTTHS)
+    and GC\_00002501.
+-   **Integrases (rve domain):**
+    [GC\_00000028](https://htmlpreview.github.io/?https://raw.githubusercontent.com/KLemonLab/DpiMGE_Manuscript/master/analysis_MGEs/BOFFO/Selected_Integrases_rve/GC_00000028/html/GC_00000028_FWD.html?token=ABXYP4HY3YKMVHH54ORKPSLANTTBW),
+    [GC\_00000085](https://htmlpreview.github.io/?https://raw.githubusercontent.com/KLemonLab/DpiMGE_Manuscript/master/analysis_MGEs/BOFFO/Selected_Integrases_rve/GC_00000085/html/GC_00000085_FWD.html?token=ABXYP4GGQLFYWG3GPA45YTLANTTEY),
+    [GC\_00001701](https://htmlpreview.github.io/?https://raw.githubusercontent.com/KLemonLab/DpiMGE_Manuscript/master/analysis_MGEs/BOFFO/Selected_Integrases_rve/GC_00001701/html/GC_00001701_FWD.html?token=ABXYP4GWKU3RQ6TRA5APUWDANTTGK),
+    [GC\_00001775](https://htmlpreview.github.io/?https://raw.githubusercontent.com/KLemonLab/DpiMGE_Manuscript/master/analysis_MGEs/BOFFO/Selected_Integrases_rve/GC_00001775/html/GC_00001775_FWD.html?token=ABXYP4H26JYCBI4WNRWY5FTANTTUC)
+    and
+    [GC\_00002348](https://htmlpreview.github.io/?https://raw.githubusercontent.com/KLemonLab/DpiMGE_Manuscript/master/analysis_MGEs/BOFFO/Selected_Integrases_rve/GC_00002348/html/GC_00002348_FWD.html?token=ABXYP4HI4UTIO45SAG7BE43ANTURW).
 
-We read the BOFFO outputs:
+In order to calculate statistics we read the BOFFO outputs:
 
 ``` r
 Intron <- read_excel("analysis_MGEs/Intron.xlsx")
@@ -142,7 +154,7 @@ Real_Transposases <- read_excel("analysis_MGEs/Real_Transposases.xlsx")
 Integrases_rve <- read_excel("analysis_MGEs/Integrases_rve.xlsx")
 ```
 
-GCs renamed with MGE type
+GCs renamed with MGE type:
 
 ``` r
 Intron <- Intron %>% mutate(MGE = gsub("GC", "INTRON_GC", gene_name))
@@ -153,7 +165,7 @@ ALL <- rbind(Intron, Real_Transposases, Integrases_rve)
 ```
 
 Summary matrix table with a Genome in each row and each GC listed in
-each column. Genomes renamed with full IDs.
+each column. Genomes renamed with full IDs:
 
 ``` r
 MatrixBOFFO_ALL <- ALL %>%
@@ -178,7 +190,7 @@ Matrix_Integrases$Total <- rowSums(Matrix_Integrases, na.rm=TRUE)
 
 #### Intron Stats
 
-Totals/Stats by column/row:
+Totals/Stats by row:
 
 ``` r
 GCTotal <- colSums(Matrix_Intron, na.rm=TRUE)
@@ -246,7 +258,7 @@ kable(Matrix_Intron, align = "c")
 
 #### Transposases Stats
 
-Totals/Stats by column/row:
+Totals/Stats by row:
 
 ``` r
 GCTotal <- colSums(Matrix_Transposases, na.rm=TRUE)
@@ -314,7 +326,7 @@ kable(Matrix_Transposases, align = "c")
 
 #### Integrases Stats
 
-Totals/Stats by column/row:
+Totals/Stats by row:
 
 ``` r
 GCTotal <- colSums(Matrix_Integrases, na.rm=TRUE)
