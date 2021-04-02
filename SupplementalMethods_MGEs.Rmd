@@ -145,8 +145,8 @@ Matrix_Intron <- MatrixBOFFO_ALL %>% select(starts_with("INTRON_GC"))
 Matrix_Transposases <- MatrixBOFFO_ALL %>% select(starts_with("TRANSPOSASE_GC"))
 Matrix_Integrases <- MatrixBOFFO_ALL %>% select(starts_with("INTEGRASE_GC"))
 
-Matrix_Transposases$Total <- rowSums(Matrix_Transposases, na.rm=TRUE)
-Matrix_Integrases$Total <- rowSums(Matrix_Integrases, na.rm=TRUE)
+Matrix_Transposases$Total <- ifelse(apply(is.na(Matrix_Transposases),1,all),NA,rowSums(Matrix_Transposases,na.rm=TRUE))
+Matrix_Integrases$Total <- ifelse(apply(is.na(Matrix_Integrases),1,all),NA,rowSums(Matrix_Integrases,na.rm=TRUE))
 ```
 
 #### Intron Stats
