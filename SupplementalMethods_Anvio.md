@@ -215,11 +215,14 @@ The program `anvi-pan-genome`:
     1990](#ref-altschul1990)) instead of the default DIAMOND fast
     option.
 
-2.  Uses ‘minbit heuristic’ ([Benedict et al. 2014](#ref-benedict2014))
+2.  Uses [muscle](http://www.drive5.com/muscle) ([Edgar
+    2004](#ref-edgar2004)) to align sequences.
+
+3.  Uses ‘minbit heuristic’ ([Benedict et al. 2014](#ref-benedict2014))
     to filter weak hits based on the aligned fraction between the two
     reads. We used the default 0.5
 
-3.  Uses the MCL algorithm ([van Dongen and Abreu-Goodger
+4.  Uses the MCL algorithm ([van Dongen and Abreu-Goodger
     2011](#ref-vandongen2011)) to identify gene clusters in the
     remaining blastp search results. `--mcl-inflation` was set to 10, as
     recommended for very closely related genomes (i.e., ‘strains’ of the
@@ -349,6 +352,14 @@ e4320. <https://doi.org/10.7717/peerj.4320>.
 Eddy, Sean R. 2011. “Accelerated Profile HMM Searches.” Edited by
 William R. Pearson. *PLoS Computational Biology* 7 (10): e1002195.
 <https://doi.org/10.1371/journal.pcbi.1002195>.
+
+</div>
+
+<div id="ref-edgar2004" class="csl-entry">
+
+Edgar, R. C. 2004. “MUSCLE: Multiple Sequence Alignment with High
+Accuracy and High Throughput.” *Nucleic Acids Research* 32 (5): 1792–97.
+<https://doi.org/10.1093/nar/gkh340>.
 
 </div>
 

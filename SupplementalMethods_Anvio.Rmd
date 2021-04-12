@@ -176,9 +176,11 @@ The program `anvi-pan-genome`:
 
 1.  Calculates similarities of each amino acid sequence in every genome against every other amino acid sequence. We used the more sensitive blastp search (`--use-ncbi-blast`) [@altschul1990] instead of the default DIAMOND fast option.
 
-2.  Uses 'minbit heuristic' [@benedict2014] to filter weak hits based on the aligned fraction between the two reads. We used the default 0.5
+2.  Uses [muscle](http://www.drive5.com/muscle) [@edgar2004] to align sequences.
 
-3.  Uses the MCL algorithm [@vandongen2011] to identify gene clusters in the remaining blastp search results. `--mcl-inflation` was set to 10, as recommended for very closely related genomes (i.e., 'strains' of the same 'species').
+3.  Uses 'minbit heuristic' [@benedict2014] to filter weak hits based on the aligned fraction between the two reads. We used the default 0.5
+
+4.  Uses the MCL algorithm [@vandongen2011] to identify gene clusters in the remaining blastp search results. `--mcl-inflation` was set to 10, as recommended for very closely related genomes (i.e., 'strains' of the same 'species').
 
 ```{bash}
 #conda activate anvio-7
