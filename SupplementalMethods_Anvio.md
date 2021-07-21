@@ -15,7 +15,7 @@ We followed a pipeline modified from the tutorial: [Anvi’o workflow for
 microbial
 pangenomics](https://merenlab.org/2016/11/08/pangenomics-v2/ "An anvi'o workflow for microbial pangenomics").
 
-## Reformating genome fasta files
+## Reformatting genome fasta files
 
 The NCBI submitted .gb genome files were converted to .fa using SnapGene
 and renamed as indicated on `GENOMES/GenomeNames.txt`. The renamed
