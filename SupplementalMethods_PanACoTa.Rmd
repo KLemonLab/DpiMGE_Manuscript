@@ -20,7 +20,7 @@ knitr::opts_chunk$set(eval = FALSE, message = FALSE)
 
 ```{bash}
 #conda activate PanACoTa
-PanACoTA prepare --norefseq -o analysisPanACoTa -d GENOMES/renamed
+PanACoTA prepare --norefseq -o analysis_PanACoTa -d GENOMES/renamed
 ```
 
 # [REFERENCES]{.ul}

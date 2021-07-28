@@ -13,7 +13,7 @@ environment called `PanACoTa`.
 
 ``` bash
 #conda activate PanACoTa
-PanACoTA prepare --norefseq -o analysisPanACoTa -d GENOMES/renamed
+PanACoTA prepare --norefseq -o analysis_PanACoTa -d GENOMES/renamed
 ```
 
 # <u>REFERENCES</u>
