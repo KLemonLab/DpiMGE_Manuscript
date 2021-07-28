@@ -18,6 +18,8 @@ knitr::opts_chunk$set(eval = FALSE, message = FALSE)
 
 ## Mash Analysis
 
+We used `PanACoTa` in order to calculate `Mash` distances [@Ondov2016] between each pair of genomes:
+
 ```{bash}
 #conda activate PanACoTa
 PanACoTA prepare --norefseq -o analysis_PanACoTa -d GENOMES/renamed
