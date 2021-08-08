@@ -1,0 +1,82 @@
+---
+title: "Getting note/Branch information"
+output: pdf_document
+---
+
+Start by downloading the harriet package
+
+```{r}
+setRepositories(ind = 1:2)
+install.packages("harrietr", dependencies = TRUE)
+library("devtools")
+library("harrietr")
+library("phylotools")
+
+str(dpi_tree)
+```
+
+##Get the pairwise distance information for the unrooted phylogeny
+
+```{r}
+dpi_aln<-read.FASTA("Dpi_concat_core_CDSalignment_taxa28.fa", type="DNA")
+dist_df<-dist_long(dpi_aln, tree = dpi_tree)
+```
+
+```{r}
+dpi_tree<-read.tree("iqtree_CDSnrnogb_modGTRFR3_v2_t28_treefile.tre")
+Dpi_node_summary<-get_node_support(dpi_tree)
+```
+
+```{r}
+library(ggplot2)
+dist_df2 <- dist_long(aln = dpi_aln, order = dpi_tree$tip.label, dist = "N", tree = dpi_tree)
+p1<-ggplot(dist_df2, aes(x = dist, y =  evol_dist)) + 
+  geom_point() + stat_smooth(method = 'lm') +
+  ylab("Evolutionary distance") +
+  xlab("SNP distance")
+```
+
+```{r}
+write.csv(dist_df, "Dpi_SNPdata_unrootedtree.csv")
+```
+
+##Get the pairwise distance information for the rooted tree
+
+```{r}
+dpi_rtaln<-read.FASTA("Dpi_concat_core_CDSalignment_outgroupAO_taxa29.fa", type="DNA")
+dpi_rttree<-read.tree("iqtree_CDSrtAOghnogb_t29_treefile.tre")
+dist_df3<-dist_long(dpi_rtaln, tree = dpi_rttree)
+```
+
+```{r}
+write.csv(dist_df3, "Dpi_SNPdata_rootedtree.csv")
+```
+
+```{r}
+dist_df4 <- dist_long(aln = dpi_rtaln, order = dpi_rttree$tip.label, dist = "N", tree = dpi_rttree)
+p2<-ggplot(dist_df4, aes(x = dist, y =  evol_dist)) + 
+  geom_point() + stat_smooth(method = 'lm') +
+  ylab("Evolutionary distance") +
+  xlab("SNP distance")
+```
+
+```{r}
+comb_dist<-full_join(dist_df3,dist_df, by = c("iso1","iso2"))
+
+orphans<-comb_dist %>%
+  filter(is.na(dist.x)) %>%
+  select(iso2, iso1, dist.y,evol_dist.y)
+
+colnames(orphans)[colnames(orphans)=="iso2"] <- "iso1.x"
+colnames(orphans)[colnames(orphans)=="iso1"] <- "iso2"
+colnames(orphans)[colnames(orphans)=="iso1.x"] <- "iso1"
+
+comb_dist2<-left_join(dist_df3,dist_df,by = c("iso1","iso2"))
+comb_distf<-left_join(comb_dist2,orphans,by = c("iso1","iso2"))
+```
+
+```{r}
+write.csv(comb_distf, "Dpi_SNPdata_bothstrees.csv")
+```
+
+
