@@ -104,11 +104,11 @@ classified the initial 23 putative **Tranposase** GSs as:
     GC\_00002105, GC\_00002382, GC\_00002430, GC\_00002460,
     GC\_00002491, GC\_00002679 and GC\_00002805.
 
-## BOFFO/Clinker
+## OCTAPUS/Clinker
 
 The following files were created with the selected sequences and
 analyzed with the Bacterial Operon Finder for Functional Organization,
-aka [BOFFO](https://github.com/FredHutch/boffo) to identify the gene
+aka [OCTAPUS](https://github.com/FredHutch/octapus) to identify the gene
 neighborhoods in which the selected genes were located across all 28 D.
 pigrum genomes
 
@@ -121,7 +121,7 @@ pigrum genomes
     with the word Transposase on the annotation search but with complete
     (80% coverage or more) PFam **rve** domains:
 
-The groups of genes identified with BOFFO at minimum percent identity
+The groups of genes identified with OCTAPUS at minimum percent identity
 85% and minimum coverage 80% were visualized using
 [clinker](https://github.com/gamcil/clinker) ([Gilchrist et al.
 2021](#ref-Gilchrist2021)). The following links display the whole
@@ -146,7 +146,7 @@ clinker output:
     and
     [GC\_00002348](https://htmlpreview.github.io/?https://raw.githubusercontent.com/KLemonLab/DpiMGE_Manuscript/master/analysis_MGEs/BOFFO/Selected_Integrases_rve/GC_00002348/html/GC_00002348_FWD.html?token=ABXYP4HI4UTIO45SAG7BE43ANTURW).
 
-In order to calculate statistics we read the BOFFO outputs:
+In order to calculate statistics we read the OCTAPUS outputs:
 
 ``` r
 Intron <- read_excel("analysis_MGEs/Intron.xlsx")
@@ -168,21 +168,21 @@ Summary matrix table with a Genome in each row and each GC listed in
 each column. Genomes renamed with full IDs:
 
 ``` r
-MatrixBOFFO_ALL <- ALL %>%
+MatrixOCTAPUS_ALL <- ALL %>%
   group_by(genome_name, MGE) %>%
   summarize(n = n())
-MatrixBOFFO_ALL <- spread(MatrixBOFFO_ALL, MGE, n)
-MatrixBOFFO_ALL$genomes <- c('ATCC_51524','KPL1914','KPL1922_CDC39_95','KPL1930_CDC2949_98','KPL1931_CDC4294_98','KPL1932_CDC4420_98','KPL1933_CDC4545_98','KPL1934_CDC4709_98','KPL1937_CDC4199_99','KPL1938_CDC4791_99','KPL1939_CDC4792_99','KPL3033','KPL3043','KPL3050','KPL3052','KPL3065','KPL3069','KPL3070','KPL3077','KPL3084','KPL3086','KPL3090','KPL3246','KPL3250','KPL3256','KPL3264','KPL3274','KPL3911')
-MatrixBOFFO_ALL <- MatrixBOFFO_ALL %>% remove_rownames %>% column_to_rownames(var="genomes")
-MatrixBOFFO_ALL <- select(MatrixBOFFO_ALL, -genome_name)
+MatrixOCTAPUS_ALL <- spread(MatrixOCTAPUS_ALL, MGE, n)
+MatrixOCTAPUS_ALL$genomes <- c('ATCC_51524','KPL1914','KPL1922_CDC39_95','KPL1930_CDC2949_98','KPL1931_CDC4294_98','KPL1932_CDC4420_98','KPL1933_CDC4545_98','KPL1934_CDC4709_98','KPL1937_CDC4199_99','KPL1938_CDC4791_99','KPL1939_CDC4792_99','KPL3033','KPL3043','KPL3050','KPL3052','KPL3065','KPL3069','KPL3070','KPL3077','KPL3084','KPL3086','KPL3090','KPL3246','KPL3250','KPL3256','KPL3264','KPL3274','KPL3911')
+MatrixOCTAPUS_ALL <- MatrixOCTAPUS_ALL %>% remove_rownames %>% column_to_rownames(var="genomes")
+MatrixOCTAPUS_ALL <- select(MatrixOCTAPUS_ALL, -genome_name)
 ```
 
 Individual tables by MGE:
 
 ``` r
-Matrix_Intron <- MatrixBOFFO_ALL %>% select(starts_with("INTRON_GC"))
-Matrix_Transposases <- MatrixBOFFO_ALL %>% select(starts_with("TRANSPOSASE_GC"))
-Matrix_Integrases <- MatrixBOFFO_ALL %>% select(starts_with("INTEGRASE_GC"))
+Matrix_Intron <- MatrixOCTAPUS_ALL %>% select(starts_with("INTRON_GC"))
+Matrix_Transposases <- MatrixOCTAPUS_ALL %>% select(starts_with("TRANSPOSASE_GC"))
+Matrix_Integrases <- MatrixOCTAPUS_ALL %>% select(starts_with("INTEGRASE_GC"))
 
 Matrix_Transposases$Total <- ifelse(apply(is.na(Matrix_Transposases),1,all),NA,rowSums(Matrix_Transposases,na.rm=TRUE))
 Matrix_Integrases$Total <- ifelse(apply(is.na(Matrix_Integrases),1,all),NA,rowSums(Matrix_Integrases,na.rm=TRUE))
