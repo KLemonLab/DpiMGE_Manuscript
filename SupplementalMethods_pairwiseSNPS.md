@@ -5,7 +5,7 @@ Supplemental Methods
 
 # TREE SNP DISTANCE ANALYSIS
 
-## Get the pairwise distance information for the just *D. pigrum* phylogeny
+## Get the pairwise distance information for just the *D. pigrum* phylogeny
 
 ``` r
 # read in the nucleotide alignment 
@@ -15,8 +15,10 @@ dpi_aln<-read.FASTA("Dpi_concat_core_CDSalignment_taxa28.fa", type="DNA")
 dpi_tree<-read.tree("iqtree_CDSnrnogb_modGTRFR3_v2_t28_treefile.tre")
 ```
 
-Using the R package `harrietr`, we can calculate the evolutionary
-pairwise SNP distance in this phylogeny
+Using the R package
+[`harrietr`](https://cran.r-project.org/web/packages/harrietr/README.html)
+, we can calculate the evolutionary pairwise SNP distance in this
+phylogeny
 
 ``` r
 dist_df<-dist_long(dpi_aln, tree = dpi_tree)
