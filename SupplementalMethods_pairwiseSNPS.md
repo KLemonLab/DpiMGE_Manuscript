@@ -17,7 +17,7 @@ dpi_tree<-read.tree("iqtree_CDSnrnogb_modGTRFR3_v2_t28_treefile.tre")
 
 Using the R package
 [`harrietr`](https://cran.r-project.org/web/packages/harrietr/README.html)
-, we can calculate the evolutionary pairwise SNP distance in this
+, we can calculate the evolutionary pairwise SNP distances in this
 phylogeny
 
 ``` r
@@ -50,7 +50,7 @@ file
 write.csv(dist_df3, "Dpi_SNPdata_rootedtree.csv")
 ```
 
-## Combining the results from the roote and unrooted tree into one file that will become our **Table S1a**
+## Combining the results from the rooted and unrooted tree into one file that will become our **Table S1a**
 
 ``` r
 comb_dist<-full_join(dist_df3,dist_df, by = c("iso1","iso2"))
