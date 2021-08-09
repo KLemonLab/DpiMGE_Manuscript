@@ -1,64 +1,56 @@
 ---
-title: "Getting note/Branch information"
-output: pdf_document
+title: \"Genomic Stability and Genetic Defense Systems in *Dolosigranulum pigrum* a Candidate Beneficial Bacterium from the Human Microbiome\" Supplemental Methods
+output: rmarkdown::github_document
 ---
 
-Start by downloading the harriet package
-
-```{r}
+```{r message=FALSE, include=FALSE}
 setRepositories(ind = 1:2)
-install.packages("harrietr", dependencies = TRUE)
 library("devtools")
 library("harrietr")
 library("phylotools")
-
-str(dpi_tree)
+library("ggplot2")
 ```
 
-##Get the pairwise distance information for the unrooted phylogeny
+# TREE SNP DISTANCE ANALYSIS
+
+##Get the pairwise distance information for the just *D. pigrum* phylogeny
 
 ```{r}
+# read in the nucleotide alignment 
 dpi_aln<-read.FASTA("Dpi_concat_core_CDSalignment_taxa28.fa", type="DNA")
+
+# read in the IQTree
+dpi_tree<-read.tree("iqtree_CDSnrnogb_modGTRFR3_v2_t28_treefile.tre")
+```
+
+Using the R package `harrietr`, we can calculate the evolutionary pairwise SNP distance in this phylogeny
+```{r}
 dist_df<-dist_long(dpi_aln, tree = dpi_tree)
 ```
 
-```{r}
-dpi_tree<-read.tree("iqtree_CDSnrnogb_modGTRFR3_v2_t28_treefile.tre")
-Dpi_node_summary<-get_node_support(dpi_tree)
-```
-
-```{r}
-library(ggplot2)
-dist_df2 <- dist_long(aln = dpi_aln, order = dpi_tree$tip.label, dist = "N", tree = dpi_tree)
-p1<-ggplot(dist_df2, aes(x = dist, y =  evol_dist)) + 
-  geom_point() + stat_smooth(method = 'lm') +
-  ylab("Evolutionary distance") +
-  xlab("SNP distance")
-```
-
+Save the resulting files in a CSV file 
 ```{r}
 write.csv(dist_df, "Dpi_SNPdata_unrootedtree.csv")
 ```
 
-##Get the pairwise distance information for the rooted tree
+##Get the pairwise distance information for the tree with *A. otitis* ATCC 51267 as an outgroup
 
 ```{r}
+# read in the nucleotide alignment 
 dpi_rtaln<-read.FASTA("Dpi_concat_core_CDSalignment_outgroupAO_taxa29.fa", type="DNA")
-dpi_rttree<-read.tree("iqtree_CDSrtAOghnogb_t29_treefile.tre")
+# read in the IQTree
+dpi_rttree<-read.tree("iqtree_CDSrtAOghnogb_t29_contree.tre")
+
+#calculate the pairwise SNP distance using harrietr
 dist_df3<-dist_long(dpi_rtaln, tree = dpi_rttree)
 ```
 
+Save the resulting files in a CSV file
 ```{r}
 write.csv(dist_df3, "Dpi_SNPdata_rootedtree.csv")
 ```
 
-```{r}
-dist_df4 <- dist_long(aln = dpi_rtaln, order = dpi_rttree$tip.label, dist = "N", tree = dpi_rttree)
-p2<-ggplot(dist_df4, aes(x = dist, y =  evol_dist)) + 
-  geom_point() + stat_smooth(method = 'lm') +
-  ylab("Evolutionary distance") +
-  xlab("SNP distance")
-```
+##Combining the results from the roote and unrooted tree into one file that will become our **Table S1a**
 
 ```{r}
 comb_dist<-full_join(dist_df3,dist_df, by = c("iso1","iso2"))
@@ -75,6 +67,7 @@ comb_dist2<-left_join(dist_df3,dist_df,by = c("iso1","iso2"))
 comb_distf<-left_join(comb_dist2,orphans,by = c("iso1","iso2"))
 ```
 
+Save the resulting files in a CSV file
 ```{r}
 write.csv(comb_distf, "Dpi_SNPdata_bothstrees.csv")
 ```
