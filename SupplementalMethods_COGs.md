@@ -51,6 +51,7 @@ DpigPangenome$COGs[is.na(DpigPangenome$COGs)]<-"Unclassified"
 ```
 
 Summary of COG annotated genes:
+
 <table>
 <thead>
 <tr>
@@ -2109,18 +2110,18 @@ gpF$layout$clip[gpF$layout$name=="panel"] <- "off"
 
 ## Final Figures
 
-\#\#\#Main figure
+### Main figure
 
 ``` r
 pMain <- ggarrange(ggarrange(get_legend(pB), pA, ncol = 1, heights = c(0.2, 1)),
                    gpF, ncol = 2, labels = c("A", "B"), hjust=-0.5, vjust=2, widths = c(0.7, 2))
 
-ggsave("analysis_COGs/Fig4_COG_summary.tiff", pMain, width = 9, height = 4, dpi = 150)
+ggsave("analysis_COGs/Fig4_COG_summary.tiff", pMain, width = 9, height = 4, dpi = 150, units="in")
 ```
 
 ![](SupplementalMethods_COGs_files/figure-gfm/unnamed-chunk-26-1.png)<!-- -->
 
-\#\#\#Supplemental Figure
+### Supplemental Figure
 
 ``` r
 pSupple <- ggarrange(get_legend(pE),
