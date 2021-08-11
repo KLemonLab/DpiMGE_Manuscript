@@ -107,10 +107,10 @@ classified the initial 23 putative **Tranposase** GSs as:
 ## OCTAPUS/Clinker
 
 The following files were created with the selected sequences and
-analyzed with the Bacterial Operon Finder for Functional Organization,
-aka [OCTAPUS](https://github.com/FredHutch/octapus) to identify the gene
-neighborhoods in which the selected genes were located across all 28 D.
-pigrum genomes
+analyzed with the “Operon ConTextulization Across Prokaryotes to Uncover
+Synteny,” aka [OCTAPUS](https://github.com/FredHutch/octapus), to
+identify the gene neighborhoods in which the selected genes were located
+across all 28 *D. pigrum* genomes:
 
 -   **SelectedAnvio7\_Intron.faa**: Representative sequence for the
     GC\_00000001 cluster.
