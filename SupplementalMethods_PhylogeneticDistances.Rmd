@@ -23,7 +23,7 @@ knitr::opts_chunk$set(eval = FALSE, message = FALSE)
 dpi_aln<-read.FASTA("analysis_PhylogeneticDistances/SNPs/Dpi_concat_core_CDSalignment_taxa28.fa", type="DNA")
 
 # read in the IQTree
-dpi_tree<-read.tree("analysis_PhylogeneticDistances/SNPs/iqtree_CDSnrnogb_modGTRFR3_v2_t28_treefile.tre")
+dpi_tree<-read.tree("analysis_PhylogeneticDistances/SNPs/iqtree_CDSnrnogb_modGTRFR3_v2_t28_contree.tre")
 ```
 
 Using the R package [`harrietr`](https://cran.r-project.org/web/packages/harrietr/README.html), we can calculate the evolutionary pairwise SNP distances in this phylogeny
