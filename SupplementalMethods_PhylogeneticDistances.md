@@ -22,7 +22,216 @@ phylogeny
 
 ``` r
 dist_df<-dist_long(dpi_aln, tree = dpi_tree)
+kable(head(dist_df))
 ```
+
+<table>
+
+<thead>
+
+<tr>
+
+<th style="text-align:left;">
+
+iso1
+
+</th>
+
+<th style="text-align:left;">
+
+iso2
+
+</th>
+
+<th style="text-align:right;">
+
+dist
+
+</th>
+
+<th style="text-align:right;">
+
+evol\_dist
+
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td style="text-align:left;">
+
+D.pigrum\_KPL1914
+
+</td>
+
+<td style="text-align:left;">
+
+D.pigrum\_ATCC\_51524
+
+</td>
+
+<td style="text-align:right;">
+
+21506
+
+</td>
+
+<td style="text-align:right;">
+
+0.0344338
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+D.pigrum\_KPL1931\_CDC4294-98
+
+</td>
+
+<td style="text-align:left;">
+
+D.pigrum\_ATCC\_51524
+
+</td>
+
+<td style="text-align:right;">
+
+21576
+
+</td>
+
+<td style="text-align:right;">
+
+0.0346119
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+D.pigrum\_KPL3077
+
+</td>
+
+<td style="text-align:left;">
+
+D.pigrum\_ATCC\_51524
+
+</td>
+
+<td style="text-align:right;">
+
+21229
+
+</td>
+
+<td style="text-align:right;">
+
+0.0345185
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+D.pigrum\_KPL1932\_CDC4420-98
+
+</td>
+
+<td style="text-align:left;">
+
+D.pigrum\_ATCC\_51524
+
+</td>
+
+<td style="text-align:right;">
+
+22348
+
+</td>
+
+<td style="text-align:right;">
+
+0.0360584
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+D.pigrum\_KPL1938\_CDC4791-99
+
+</td>
+
+<td style="text-align:left;">
+
+D.pigrum\_ATCC\_51524
+
+</td>
+
+<td style="text-align:right;">
+
+23149
+
+</td>
+
+<td style="text-align:right;">
+
+0.0374657
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+D.pigrum\_KPL3050
+
+</td>
+
+<td style="text-align:left;">
+
+D.pigrum\_ATCC\_51524
+
+</td>
+
+<td style="text-align:right;">
+
+23099
+
+</td>
+
+<td style="text-align:right;">
+
+0.0388156
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
 
 Save the resulting files in a CSV
 file
@@ -41,7 +250,216 @@ dpi_rttree<-read.tree("analysis_PhylogeneticDistances/SNPs/iqtree_CDSrtAOghnogb_
 
 #calculate the pairwise SNP distance using harrietr
 dist_df3<-dist_long(dpi_rtaln, tree = dpi_rttree)
+kable(head(dist_df3))
 ```
+
+<table>
+
+<thead>
+
+<tr>
+
+<th style="text-align:left;">
+
+iso1
+
+</th>
+
+<th style="text-align:left;">
+
+iso2
+
+</th>
+
+<th style="text-align:right;">
+
+dist
+
+</th>
+
+<th style="text-align:right;">
+
+evol\_dist
+
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td style="text-align:left;">
+
+D.pigrum\_ATCC\_51524
+
+</td>
+
+<td style="text-align:left;">
+
+A.otitis\_ATCC\_51267
+
+</td>
+
+<td style="text-align:right;">
+
+276773
+
+</td>
+
+<td style="text-align:right;">
+
+1.780329
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+D.pigrum\_KPL1930\_CDC2949-98
+
+</td>
+
+<td style="text-align:left;">
+
+A.otitis\_ATCC\_51267
+
+</td>
+
+<td style="text-align:right;">
+
+276726
+
+</td>
+
+<td style="text-align:right;">
+
+1.779906
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+D.pigrum\_KPL1934\_CDC4709-98
+
+</td>
+
+<td style="text-align:left;">
+
+A.otitis\_ATCC\_51267
+
+</td>
+
+<td style="text-align:right;">
+
+276719
+
+</td>
+
+<td style="text-align:right;">
+
+1.779341
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+D.pigrum\_KPL1939\_CDC4792-99
+
+</td>
+
+<td style="text-align:left;">
+
+A.otitis\_ATCC\_51267
+
+</td>
+
+<td style="text-align:right;">
+
+276654
+
+</td>
+
+<td style="text-align:right;">
+
+1.780876
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+D.pigrum\_KPL3250
+
+</td>
+
+<td style="text-align:left;">
+
+A.otitis\_ATCC\_51267
+
+</td>
+
+<td style="text-align:right;">
+
+276762
+
+</td>
+
+<td style="text-align:right;">
+
+1.780435
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+D.pigrum\_KPL1932\_CDC4420-98
+
+</td>
+
+<td style="text-align:left;">
+
+A.otitis\_ATCC\_51267
+
+</td>
+
+<td style="text-align:right;">
+
+276682
+
+</td>
+
+<td style="text-align:right;">
+
+1.780915
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
 
 Save the resulting files in a CSV
 file
@@ -65,7 +483,385 @@ colnames(orphans)[colnames(orphans)=="iso1.x"] <- "iso1"
 
 comb_dist2<-left_join(dist_df3,dist_df,by = c("iso1","iso2"))
 comb_distf<-left_join(comb_dist2,orphans,by = c("iso1","iso2"))
+
+kable(head(comb_distf))
 ```
+
+<table>
+
+<thead>
+
+<tr>
+
+<th style="text-align:left;">
+
+iso1
+
+</th>
+
+<th style="text-align:left;">
+
+iso2
+
+</th>
+
+<th style="text-align:right;">
+
+dist.x
+
+</th>
+
+<th style="text-align:right;">
+
+evol\_dist.x
+
+</th>
+
+<th style="text-align:right;">
+
+dist.y.x
+
+</th>
+
+<th style="text-align:right;">
+
+evol\_dist.y.x
+
+</th>
+
+<th style="text-align:right;">
+
+dist.y.y
+
+</th>
+
+<th style="text-align:right;">
+
+evol\_dist.y.y
+
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td style="text-align:left;">
+
+D.pigrum\_ATCC\_51524
+
+</td>
+
+<td style="text-align:left;">
+
+A.otitis\_ATCC\_51267
+
+</td>
+
+<td style="text-align:right;">
+
+276773
+
+</td>
+
+<td style="text-align:right;">
+
+1.780329
+
+</td>
+
+<td style="text-align:right;">
+
+NA
+
+</td>
+
+<td style="text-align:right;">
+
+NA
+
+</td>
+
+<td style="text-align:right;">
+
+NA
+
+</td>
+
+<td style="text-align:right;">
+
+NA
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+D.pigrum\_KPL1930\_CDC2949-98
+
+</td>
+
+<td style="text-align:left;">
+
+A.otitis\_ATCC\_51267
+
+</td>
+
+<td style="text-align:right;">
+
+276726
+
+</td>
+
+<td style="text-align:right;">
+
+1.779906
+
+</td>
+
+<td style="text-align:right;">
+
+NA
+
+</td>
+
+<td style="text-align:right;">
+
+NA
+
+</td>
+
+<td style="text-align:right;">
+
+NA
+
+</td>
+
+<td style="text-align:right;">
+
+NA
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+D.pigrum\_KPL1934\_CDC4709-98
+
+</td>
+
+<td style="text-align:left;">
+
+A.otitis\_ATCC\_51267
+
+</td>
+
+<td style="text-align:right;">
+
+276719
+
+</td>
+
+<td style="text-align:right;">
+
+1.779341
+
+</td>
+
+<td style="text-align:right;">
+
+NA
+
+</td>
+
+<td style="text-align:right;">
+
+NA
+
+</td>
+
+<td style="text-align:right;">
+
+NA
+
+</td>
+
+<td style="text-align:right;">
+
+NA
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+D.pigrum\_KPL1939\_CDC4792-99
+
+</td>
+
+<td style="text-align:left;">
+
+A.otitis\_ATCC\_51267
+
+</td>
+
+<td style="text-align:right;">
+
+276654
+
+</td>
+
+<td style="text-align:right;">
+
+1.780876
+
+</td>
+
+<td style="text-align:right;">
+
+NA
+
+</td>
+
+<td style="text-align:right;">
+
+NA
+
+</td>
+
+<td style="text-align:right;">
+
+NA
+
+</td>
+
+<td style="text-align:right;">
+
+NA
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+D.pigrum\_KPL3250
+
+</td>
+
+<td style="text-align:left;">
+
+A.otitis\_ATCC\_51267
+
+</td>
+
+<td style="text-align:right;">
+
+276762
+
+</td>
+
+<td style="text-align:right;">
+
+1.780435
+
+</td>
+
+<td style="text-align:right;">
+
+NA
+
+</td>
+
+<td style="text-align:right;">
+
+NA
+
+</td>
+
+<td style="text-align:right;">
+
+NA
+
+</td>
+
+<td style="text-align:right;">
+
+NA
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+D.pigrum\_KPL1932\_CDC4420-98
+
+</td>
+
+<td style="text-align:left;">
+
+A.otitis\_ATCC\_51267
+
+</td>
+
+<td style="text-align:right;">
+
+276682
+
+</td>
+
+<td style="text-align:right;">
+
+1.780915
+
+</td>
+
+<td style="text-align:right;">
+
+NA
+
+</td>
+
+<td style="text-align:right;">
+
+NA
+
+</td>
+
+<td style="text-align:right;">
+
+NA
+
+</td>
+
+<td style="text-align:right;">
+
+NA
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
 
 Save the resulting files in a CSV
 file

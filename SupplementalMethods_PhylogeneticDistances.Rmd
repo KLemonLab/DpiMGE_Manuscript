@@ -11,6 +11,7 @@ library(knitr)
 library(readr)
 library(harrietr)
 library(phylotools)
+library(kableExtra)
 knitr::opts_chunk$set(eval = FALSE, message = FALSE)
 ```
 
@@ -18,7 +19,7 @@ knitr::opts_chunk$set(eval = FALSE, message = FALSE)
 
 ## Pairwise distance information for just the *D. pigrum* phylogeny
 
-```{r, eval=FALSE}
+```{r, eval=TRUE}
 # read in the nucleotide alignment 
 dpi_aln<-read.FASTA("analysis_PhylogeneticDistances/SNPs/Dpi_concat_core_CDSalignment_taxa28.fa", type="DNA")
 
@@ -27,8 +28,9 @@ dpi_tree<-read.tree("analysis_PhylogeneticDistances/SNPs/iqtree_CDSnrnogb_modGTR
 ```
 
 Using the R package [`harrietr`](https://cran.r-project.org/web/packages/harrietr/README.html), we can calculate the evolutionary pairwise SNP distances in this phylogeny
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 dist_df<-dist_long(dpi_aln, tree = dpi_tree)
+kable(head(dist_df))
 ```
 
 Save the resulting files in a CSV file 
@@ -38,7 +40,7 @@ write.csv(dist_df, "analysis_PhylogeneticDistances/SNPs/Dpi_SNPdata_unrootedtree
 
 ## Pairwise distance information for the tree with *A. otitis* ATCC 51267 as an outgroup
 
-```{r, eval=FALSE}
+```{r, eval=TRUE}
 # read in the nucleotide alignment 
 dpi_rtaln<-read.FASTA("analysis_PhylogeneticDistances/SNPs/Dpi_concat_core_CDSalignment_outgroupAO_taxa29.fa", type="DNA")
 # read in the IQTree
@@ -46,6 +48,7 @@ dpi_rttree<-read.tree("analysis_PhylogeneticDistances/SNPs/iqtree_CDSrtAOghnogb_
 
 #calculate the pairwise SNP distance using harrietr
 dist_df3<-dist_long(dpi_rtaln, tree = dpi_rttree)
+kable(head(dist_df3))
 ```
 
 Save the resulting files in a CSV file
@@ -55,7 +58,7 @@ write.csv(dist_df3, "analysis_PhylogeneticDistances/SNPs/Dpi_SNPdata_rootedtree.
 
 ## Combining the results from the rooted and unrooted tree into one file that will become our **Table S1a**
 
-```{r, eval=FALSE}
+```{r, eval=TRUE}
 comb_dist<-full_join(dist_df3,dist_df, by = c("iso1","iso2"))
 
 orphans<-comb_dist %>%
@@ -68,6 +71,8 @@ colnames(orphans)[colnames(orphans)=="iso1.x"] <- "iso1"
 
 comb_dist2<-left_join(dist_df3,dist_df,by = c("iso1","iso2"))
 comb_distf<-left_join(comb_dist2,orphans,by = c("iso1","iso2"))
+
+kable(head(comb_distf))
 ```
 
 Save the resulting files in a CSV file
