@@ -26,215 +26,111 @@ kable(head(dist_df))
 ```
 
 <table>
-
 <thead>
-
 <tr>
-
 <th style="text-align:left;">
-
 iso1
-
 </th>
-
 <th style="text-align:left;">
-
 iso2
-
 </th>
-
 <th style="text-align:right;">
-
 dist
-
 </th>
-
 <th style="text-align:right;">
-
 evol\_dist
-
 </th>
-
 </tr>
-
 </thead>
-
 <tbody>
-
 <tr>
-
 <td style="text-align:left;">
-
 D.pigrum\_KPL1914
-
 </td>
-
 <td style="text-align:left;">
-
 D.pigrum\_ATCC\_51524
-
 </td>
-
 <td style="text-align:right;">
-
 21506
-
 </td>
-
 <td style="text-align:right;">
-
 0.0344338
-
 </td>
-
 </tr>
-
 <tr>
-
 <td style="text-align:left;">
-
 D.pigrum\_KPL1931\_CDC4294-98
-
 </td>
-
 <td style="text-align:left;">
-
 D.pigrum\_ATCC\_51524
-
 </td>
-
 <td style="text-align:right;">
-
 21576
-
 </td>
-
 <td style="text-align:right;">
-
 0.0346119
-
 </td>
-
 </tr>
-
 <tr>
-
 <td style="text-align:left;">
-
 D.pigrum\_KPL3077
-
 </td>
-
 <td style="text-align:left;">
-
 D.pigrum\_ATCC\_51524
-
 </td>
-
 <td style="text-align:right;">
-
 21229
-
 </td>
-
 <td style="text-align:right;">
-
 0.0345185
-
 </td>
-
 </tr>
-
 <tr>
-
 <td style="text-align:left;">
-
 D.pigrum\_KPL1932\_CDC4420-98
-
 </td>
-
 <td style="text-align:left;">
-
 D.pigrum\_ATCC\_51524
-
 </td>
-
 <td style="text-align:right;">
-
 22348
-
 </td>
-
 <td style="text-align:right;">
-
 0.0360584
-
 </td>
-
 </tr>
-
 <tr>
-
 <td style="text-align:left;">
-
 D.pigrum\_KPL1938\_CDC4791-99
-
 </td>
-
 <td style="text-align:left;">
-
 D.pigrum\_ATCC\_51524
-
 </td>
-
 <td style="text-align:right;">
-
 23149
-
 </td>
-
 <td style="text-align:right;">
-
 0.0374657
-
 </td>
-
 </tr>
-
 <tr>
-
 <td style="text-align:left;">
-
 D.pigrum\_KPL3050
-
 </td>
-
 <td style="text-align:left;">
-
 D.pigrum\_ATCC\_51524
-
 </td>
-
 <td style="text-align:right;">
-
 23099
-
 </td>
-
 <td style="text-align:right;">
-
 0.0388156
-
 </td>
-
 </tr>
-
 </tbody>
-
 </table>
 
-Save the resulting files in a CSV
-file
+Save the resulting files in a CSV file
 
 ``` r
 write.csv(dist_df, "analysis_PhylogeneticDistances/SNPs/Dpi_SNPdata_unrootedtree.csv")
@@ -254,215 +150,111 @@ kable(head(dist_df3))
 ```
 
 <table>
-
 <thead>
-
 <tr>
-
 <th style="text-align:left;">
-
 iso1
-
 </th>
-
 <th style="text-align:left;">
-
 iso2
-
 </th>
-
 <th style="text-align:right;">
-
 dist
-
 </th>
-
 <th style="text-align:right;">
-
 evol\_dist
-
 </th>
-
 </tr>
-
 </thead>
-
 <tbody>
-
 <tr>
-
 <td style="text-align:left;">
-
 D.pigrum\_ATCC\_51524
-
 </td>
-
 <td style="text-align:left;">
-
 A.otitis\_ATCC\_51267
-
 </td>
-
 <td style="text-align:right;">
-
 276773
-
 </td>
-
 <td style="text-align:right;">
-
 1.780329
-
 </td>
-
 </tr>
-
 <tr>
-
 <td style="text-align:left;">
-
 D.pigrum\_KPL1930\_CDC2949-98
-
 </td>
-
 <td style="text-align:left;">
-
 A.otitis\_ATCC\_51267
-
 </td>
-
 <td style="text-align:right;">
-
 276726
-
 </td>
-
 <td style="text-align:right;">
-
 1.779906
-
 </td>
-
 </tr>
-
 <tr>
-
 <td style="text-align:left;">
-
 D.pigrum\_KPL1934\_CDC4709-98
-
 </td>
-
 <td style="text-align:left;">
-
 A.otitis\_ATCC\_51267
-
 </td>
-
 <td style="text-align:right;">
-
 276719
-
 </td>
-
 <td style="text-align:right;">
-
 1.779341
-
 </td>
-
 </tr>
-
 <tr>
-
 <td style="text-align:left;">
-
 D.pigrum\_KPL1939\_CDC4792-99
-
 </td>
-
 <td style="text-align:left;">
-
 A.otitis\_ATCC\_51267
-
 </td>
-
 <td style="text-align:right;">
-
 276654
-
 </td>
-
 <td style="text-align:right;">
-
 1.780876
-
 </td>
-
 </tr>
-
 <tr>
-
 <td style="text-align:left;">
-
 D.pigrum\_KPL3250
-
 </td>
-
 <td style="text-align:left;">
-
 A.otitis\_ATCC\_51267
-
 </td>
-
 <td style="text-align:right;">
-
 276762
-
 </td>
-
 <td style="text-align:right;">
-
 1.780435
-
 </td>
-
 </tr>
-
 <tr>
-
 <td style="text-align:left;">
-
 D.pigrum\_KPL1932\_CDC4420-98
-
 </td>
-
 <td style="text-align:left;">
-
 A.otitis\_ATCC\_51267
-
 </td>
-
 <td style="text-align:right;">
-
 276682
-
 </td>
-
 <td style="text-align:right;">
-
 1.780915
-
 </td>
-
 </tr>
-
 </tbody>
-
 </table>
 
-Save the resulting files in a CSV
-file
+Save the resulting files in a CSV file
 
 ``` r
 write.csv(dist_df3, "analysis_PhylogeneticDistances/SNPs/Dpi_SNPdata_rootedtree.csv")
@@ -488,383 +280,195 @@ kable(head(comb_distf))
 ```
 
 <table>
-
 <thead>
-
 <tr>
-
 <th style="text-align:left;">
-
 iso1
-
 </th>
-
 <th style="text-align:left;">
-
 iso2
-
 </th>
-
 <th style="text-align:right;">
-
 dist.x
-
 </th>
-
 <th style="text-align:right;">
-
 evol\_dist.x
-
 </th>
-
 <th style="text-align:right;">
-
 dist.y.x
-
 </th>
-
 <th style="text-align:right;">
-
 evol\_dist.y.x
-
 </th>
-
 <th style="text-align:right;">
-
 dist.y.y
-
 </th>
-
 <th style="text-align:right;">
-
 evol\_dist.y.y
-
 </th>
-
 </tr>
-
 </thead>
-
 <tbody>
-
 <tr>
-
 <td style="text-align:left;">
-
 D.pigrum\_ATCC\_51524
-
 </td>
-
 <td style="text-align:left;">
-
 A.otitis\_ATCC\_51267
-
 </td>
-
 <td style="text-align:right;">
-
 276773
-
 </td>
-
 <td style="text-align:right;">
-
 1.780329
-
 </td>
-
 <td style="text-align:right;">
-
 NA
-
 </td>
-
 <td style="text-align:right;">
-
 NA
-
 </td>
-
 <td style="text-align:right;">
-
 NA
-
 </td>
-
 <td style="text-align:right;">
-
 NA
-
 </td>
-
 </tr>
-
 <tr>
-
 <td style="text-align:left;">
-
 D.pigrum\_KPL1930\_CDC2949-98
-
 </td>
-
 <td style="text-align:left;">
-
 A.otitis\_ATCC\_51267
-
 </td>
-
 <td style="text-align:right;">
-
 276726
-
 </td>
-
 <td style="text-align:right;">
-
 1.779906
-
 </td>
-
 <td style="text-align:right;">
-
 NA
-
 </td>
-
 <td style="text-align:right;">
-
 NA
-
 </td>
-
 <td style="text-align:right;">
-
 NA
-
 </td>
-
 <td style="text-align:right;">
-
 NA
-
 </td>
-
 </tr>
-
 <tr>
-
 <td style="text-align:left;">
-
 D.pigrum\_KPL1934\_CDC4709-98
-
 </td>
-
 <td style="text-align:left;">
-
 A.otitis\_ATCC\_51267
-
 </td>
-
 <td style="text-align:right;">
-
 276719
-
 </td>
-
 <td style="text-align:right;">
-
 1.779341
-
 </td>
-
 <td style="text-align:right;">
-
 NA
-
 </td>
-
 <td style="text-align:right;">
-
 NA
-
 </td>
-
 <td style="text-align:right;">
-
 NA
-
 </td>
-
 <td style="text-align:right;">
-
 NA
-
 </td>
-
 </tr>
-
 <tr>
-
 <td style="text-align:left;">
-
 D.pigrum\_KPL1939\_CDC4792-99
-
 </td>
-
 <td style="text-align:left;">
-
 A.otitis\_ATCC\_51267
-
 </td>
-
 <td style="text-align:right;">
-
 276654
-
 </td>
-
 <td style="text-align:right;">
-
 1.780876
-
 </td>
-
 <td style="text-align:right;">
-
 NA
-
 </td>
-
 <td style="text-align:right;">
-
 NA
-
 </td>
-
 <td style="text-align:right;">
-
 NA
-
 </td>
-
 <td style="text-align:right;">
-
 NA
-
 </td>
-
 </tr>
-
 <tr>
-
 <td style="text-align:left;">
-
 D.pigrum\_KPL3250
-
 </td>
-
 <td style="text-align:left;">
-
 A.otitis\_ATCC\_51267
-
 </td>
-
 <td style="text-align:right;">
-
 276762
-
 </td>
-
 <td style="text-align:right;">
-
 1.780435
-
 </td>
-
 <td style="text-align:right;">
-
 NA
-
 </td>
-
 <td style="text-align:right;">
-
 NA
-
 </td>
-
 <td style="text-align:right;">
-
 NA
-
 </td>
-
 <td style="text-align:right;">
-
 NA
-
 </td>
-
 </tr>
-
 <tr>
-
 <td style="text-align:left;">
-
 D.pigrum\_KPL1932\_CDC4420-98
-
 </td>
-
 <td style="text-align:left;">
-
 A.otitis\_ATCC\_51267
-
 </td>
-
 <td style="text-align:right;">
-
 276682
-
 </td>
-
 <td style="text-align:right;">
-
 1.780915
-
 </td>
-
 <td style="text-align:right;">
-
 NA
-
 </td>
-
 <td style="text-align:right;">
-
 NA
-
 </td>
-
 <td style="text-align:right;">
-
 NA
-
 </td>
-
 <td style="text-align:right;">
-
 NA
-
 </td>
-
 </tr>
-
 </tbody>
-
 </table>
 
-Save the resulting files in a CSV
-file
+Save the resulting files in a CSV file
 
 ``` r
 write.csv(comb_distf, "analysis_PhylogeneticDistances/SNPs/Dpi_SNPdata_bothstrees.csv")
@@ -872,38 +476,39 @@ write.csv(comb_distf, "analysis_PhylogeneticDistances/SNPs/Dpi_SNPdata_bothstree
 
 # PanACoTa ANALYSIS
 
-[PanACoTa, v1.2.0](https://github.com/gem-pasteur/PanACoTA) (Perrin and
-Rocha [2021](#ref-10.1093/nargab/lqaa106)) was installed in a Python
+[PanACoTa, v1.2.0](https://github.com/gem-pasteur/PanACoTA) ([Perrin and
+Rocha 2021](#ref-10.1093/nargab/lqaa106)) was installed in a Python
 environment called `PanACoTa`.
 
 ## Mash Analysis
 
-We used `PanACoTa` in order to calculate `Mash` distances (Ondov et al.
-[2016](#ref-Ondov2016)) between each pair of genomes:
+We used `PanACoTa` in order to calculate `Mash` distances ([Ondov et al.
+2016](#ref-Ondov2016)) between each pair of genomes:
 
 ``` bash
 #conda activate PanACoTa
 PanACoTA prepare --norefseq -o analysis_PanACoTa -d GENOMES/renamed
 ```
 
-# <span class="ul">REFERENCES</span>
+# <u>REFERENCES</u>
 
-<div id="refs" class="references">
+<div id="refs" class="references csl-bib-body hanging-indent">
 
-<div id="ref-Ondov2016">
+<div id="ref-Ondov2016" class="csl-entry">
 
 Ondov, Brian D., Todd J. Treangen, Páll Melsted, Adam B. Mallonee,
 Nicholas H. Bergman, Sergey Koren, and Adam M. Phillippy. 2016. “Mash:
-Fast Genome and Metagenome Distance Estimation Using Minhash.” *Genome
+Fast Genome and Metagenome Distance Estimation Using MinHash.” *Genome
 Biology* 17 (1). <https://doi.org/10.1186/s13059-016-0997-x>.
 
 </div>
 
-<div id="ref-10.1093/nargab/lqaa106">
+<div id="ref-10.1093/nargab/lqaa106" class="csl-entry">
 
-Perrin, Amandine, and Eduardo P C Rocha. 2021. “PanACoTA: a modular tool
-for massive microbial comparative genomics.” *NAR Genomics and
-Bioinformatics* 3 (1). <https://doi.org/10.1093/nargab/lqaa106>.
+Perrin, Amandine, and Eduardo P C Rocha. 2021. “<span
+class="nocase">PanACoTA: a modular tool for massive microbial
+comparative genomics</span>.” *NAR Genomics and Bioinformatics* 3 (1).
+<https://doi.org/10.1093/nargab/lqaa106>.
 
 </div>
 
