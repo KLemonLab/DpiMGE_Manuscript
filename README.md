@@ -1,5 +1,7 @@
 # "Genomic Stability and Genetic Defense Systems in *Dolosigranulum pigrum* a Candidate Beneficial Bacterium from the Human Microbiome" Supplemental Methods
 
+Supplemental Methods for https://doi.org/10.1128/msystems.00425-21
+
 This repository includes:
 
 -   Analysis files for the Prokka v1.14.6 annotation.
